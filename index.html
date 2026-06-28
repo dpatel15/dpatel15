@@ -1107,6 +1107,268 @@
       .d5-curtain-left, .d5-curtain-right,
       .marquee-track, .scroll-line { animation: none; }
     }
+
+    /* ============================
+       HAMBURGER + MOBILE NAV
+    ============================ */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px; height: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 601;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 22px; height: 1.5px;
+      background: var(--black);
+      transition: transform 0.3s, opacity 0.3s;
+      transform-origin: center;
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 600;
+      background: var(--white);
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 6rem 2rem 3rem;
+      gap: 0;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav-links {
+      list-style: none;
+      width: 100%;
+      margin-bottom: 3rem;
+    }
+
+    .mobile-nav-links li {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-nav-links a {
+      display: block;
+      font-family: var(--ff-display);
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: var(--black);
+      text-decoration: none;
+      padding: 1rem 0;
+      transition: color 0.2s;
+    }
+
+    .mobile-nav-links a:hover { color: var(--gold); }
+
+    /* ============================
+       TABLET — ≤1024px
+    ============================ */
+    @media (max-width: 1024px) {
+      #nav { padding: 1.4rem 2.5rem; }
+
+      #hero {
+        grid-template-columns: 1fr;
+        padding: 9rem 2.5rem 5rem;
+        gap: 3rem;
+      }
+
+      .hero-right { height: 340px; }
+
+      #manifesto { padding: 7rem 2.5rem; }
+
+      #stats { padding: 4rem 2.5rem; }
+
+      #for-whom { padding: 6rem 2.5rem; }
+      .fw-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .process-intro { padding: 6rem 2.5rem 2rem; }
+      .p-panel { padding: 0 2.5rem; }
+      .p-inner { gap: 4rem; }
+
+      #portfolio { padding: 6rem 2.5rem; }
+      .portfolio-grid { grid-template-columns: 1fr 1fr; }
+      .pf-card:first-child { grid-row: span 1; min-height: 320px; }
+      .pf-card:first-child { grid-column: span 2; }
+
+      #awards { padding: 6rem 2.5rem; }
+      .awards-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 2.5rem; }
+
+      #cta { padding: 8rem 2.5rem; }
+
+      footer { padding: 2.5rem 2.5rem; }
+    }
+
+    /* ============================
+       MOBILE — ≤768px
+    ============================ */
+    @media (max-width: 768px) {
+      #nav { padding: 1.2rem 1.5rem; }
+
+      .nav-links { display: none; }
+      .nav-cta   { display: none; }
+      .nav-hamburger { display: flex; }
+
+      /* Hero */
+      #hero {
+        grid-template-columns: 1fr;
+        padding: 7rem 1.5rem 3rem;
+        gap: 0;
+        min-height: auto;
+      }
+
+      .hero-right { display: none; }
+
+      .hero-headline {
+        font-size: clamp(2.8rem, 10vw, 4.2rem);
+      }
+
+      .hero-slot-wrap { height: 1.15em; }
+
+      .hero-body { font-size: 0.9rem; max-width: 100%; }
+
+      .hero-btns {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        text-align: center;
+        padding: 1rem 1.5rem;
+      }
+
+      .hero-scroll-hint { left: 1.5rem; }
+
+      /* Manifesto */
+      #manifesto { padding: 4rem 1.5rem; }
+
+      .manifesto-pull {
+        font-size: clamp(1.4rem, 5.5vw, 2rem);
+      }
+
+      .manifesto-sub { flex-direction: column; gap: 1rem; }
+      .manifesto-sub::before { width: 28px; }
+
+      /* Stats */
+      #stats { padding: 3rem 1.5rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+
+      /* For Whom */
+      #for-whom { padding: 4rem 1.5rem; }
+      .fw-grid  { grid-template-columns: 1fr; gap: 1rem; }
+      .fw-card  { padding: 1.8rem; }
+
+      /* Process — vertical stack on mobile */
+      .process-intro { padding: 4rem 1.5rem 2rem; }
+      .process-intro-sub { margin-left: 0; margin-top: 1rem; font-size: 0.85rem; }
+      .process-intro-hdr { flex-wrap: wrap; gap: 0.3rem; }
+
+      #process-pin {
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      #process-track {
+        flex-direction: column !important;
+        width: 100% !important;
+        height: auto !important;
+        transform: none !important;
+      }
+
+      .p-panel {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        padding: 3rem 1.5rem 5rem !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .p-inner {
+        grid-template-columns: 1fr !important;
+        gap: 2.5rem !important;
+      }
+
+      .p-panel-bg-num { font-size: 12rem; right: 0; }
+
+      .p-title { font-size: clamp(2.2rem, 9vw, 3.5rem); }
+
+      .p-visual { height: 220px; }
+
+      .d1-wrap { width: 200px; height: 200px; }
+      .d1-r1, .d1-r2, .d1-r3 { width: 200px; height: 200px; }
+      .d1-sat-n { top: calc(50% - 86px); }
+      .d1-sat-e { left: calc(50% + 83px); }
+      .d1-sat-s { top: calc(50% + 80px); }
+      .d1-sat-w { left: calc(50% - 89px); }
+
+      .d2-grid { width: 220px; }
+
+      .d4-doc { width: 100%; max-width: 260px; }
+
+      .d5-wrap { width: 220px; height: 220px; }
+
+      .process-progress-bar {
+        left: 1.5rem;
+        bottom: 1.5rem;
+      }
+
+      /* Portfolio */
+      #portfolio { padding: 4rem 1.5rem; }
+      .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .pf-card:first-child { grid-column: span 1; grid-row: span 1; min-height: 320px; }
+      .pf-card:not(:first-child) { aspect-ratio: 16/9; }
+      .pf-info { opacity: 1 !important; transform: translateY(0) !important; }
+
+      /* Awards */
+      #awards { padding: 4rem 1.5rem; }
+      .awards-grid { grid-template-columns: 1fr; gap: 2rem; }
+
+      /* CTA */
+      #cta { padding: 5rem 1.5rem; }
+      .cta-title { font-size: clamp(2.5rem, 10vw, 4rem); }
+      .cta-btns { flex-direction: column; align-items: center; gap: 0.8rem; }
+      .btn-gold, .btn-outline {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+      }
+
+      /* Footer */
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.2rem;
+        padding: 2rem 1.5rem;
+      }
+    }
+
+    /* ============================
+       SMALL MOBILE — ≤480px
+    ============================ */
+    @media (max-width: 480px) {
+      .hero-headline { font-size: clamp(2.4rem, 11vw, 3.2rem); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-val   { font-size: clamp(2.4rem, 10vw, 3.5rem); }
+      .section-heading { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+    }
   </style>
 </head>
 <body>
@@ -1128,7 +1390,23 @@
     <li><a href="#awards">Awards</a></li>
   </ul>
   <button class="nav-cta">Start a Project</button>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </nav>
+
+<!-- MOBILE NAV OVERLAY -->
+<div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+  <ul class="mobile-nav-links">
+    <li><a href="#for-whom" class="mobile-nav-link">Services</a></li>
+    <li><a href="#process"  class="mobile-nav-link">Process</a></li>
+    <li><a href="#portfolio" class="mobile-nav-link">Work</a></li>
+    <li><a href="#awards"   class="mobile-nav-link">Awards</a></li>
+  </ul>
+  <button class="btn-primary" style="width:100%;max-width:260px;">Start a Project</button>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -2043,30 +2321,32 @@ function initAnimations() {
     start: 'top 88%'
   });
 
-  /* D-Process Horizontal Scroll */
+  /* D-Process Horizontal Scroll — desktop only */
   const track = document.getElementById('process-track');
   const pin   = document.getElementById('process-pin');
   const ppLabels = document.querySelectorAll('.pp-label');
 
-  const processScrollTween = gsap.to(track, {
-    x: () => -(track.scrollWidth - window.innerWidth),
-    ease: 'none',
-    scrollTrigger: {
-      trigger: pin,
-      start: 'top top',
-      end: () => '+=' + (track.scrollWidth - window.innerWidth),
-      pin: true,
-      scrub: 1.2,
-      invalidateOnRefresh: true,
-      onUpdate(self) {
-        const idx = Math.round(self.progress * 4);
-        document.querySelectorAll('.pp-dot').forEach(d => {
-          d.classList.toggle('on', parseInt(d.dataset.i) === idx);
-        });
-        ppLabels.forEach(l => { l.textContent = (idx + 1) + ' of 5'; });
+  if (window.innerWidth >= 768) {
+    gsap.to(track, {
+      x: () => -(track.scrollWidth - window.innerWidth),
+      ease: 'none',
+      scrollTrigger: {
+        trigger: pin,
+        start: 'top top',
+        end: () => '+=' + (track.scrollWidth - window.innerWidth),
+        pin: true,
+        scrub: 1.2,
+        invalidateOnRefresh: true,
+        onUpdate(self) {
+          const idx = Math.round(self.progress * 4);
+          document.querySelectorAll('.pp-dot').forEach(d => {
+            d.classList.toggle('on', parseInt(d.dataset.i) === idx);
+          });
+          ppLabels.forEach(l => { l.textContent = (idx + 1) + ' of 5'; });
+        }
       }
-    }
-  });
+    });
+  }
 
   /* Portfolio cards */
   ScrollTrigger.batch('.pf-card', {
@@ -2095,9 +2375,33 @@ function initAnimations() {
 }
 
 /* ============================================================
+   HAMBURGER MENU
+============================================================ */
+function initHamburger() {
+  const btn     = document.getElementById('nav-hamburger');
+  const mobileNav = document.getElementById('mobile-nav');
+  const links   = document.querySelectorAll('.mobile-nav-link');
+
+  function toggle(open) {
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open);
+    mobileNav.classList.toggle('open', open);
+    mobileNav.setAttribute('aria-hidden', !open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  btn.addEventListener('click', () => toggle(!btn.classList.contains('open')));
+
+  links.forEach(link => {
+    link.addEventListener('click', () => toggle(false));
+  });
+}
+
+/* ============================================================
    BOOT
 ============================================================ */
 function initAll() {
+  initHamburger();
   initHeroRotation();
   loopD3();
   loopD4();
