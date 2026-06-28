@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Design TWG — Commercial Interior Design Studio</title>
-  <meta name="description" content="Design TWG is Toronto's premier award-winning commercial interior design studio. 3× NEWH Award Winner. Specialists in hotel and franchise interiors. The D-Process: from Discovery to Delivery.">
+  <meta name="description" content="Design TWG is Toronto's premier award-winning commercial interior design studio. 3× NEWH Award Winner. Specialists in hotel, restaurant, spa, dental, and franchise interiors. The D-Process: from Discovery to Delivery.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,33 +15,30 @@
        DESIGN SYSTEM
     ============================ */
     :root {
-      --black:        #060606;
-      --black-2:      #0E0D0A;
-      --gold:         #C9A96E;
-      --gold-light:   #E8D5B0;
-      --gold-dark:    #8B6C42;
-      --gold-muted:   rgba(201, 169, 110, 0.12);
-      --cream:        #F2EDE4;
-      --muted:        #6E6860;
-      --border:       rgba(201, 169, 110, 0.15);
-      --border-soft:  rgba(201, 169, 110, 0.07);
+      --white:      #FFFFFF;
+      --off-white:  #F7F5F2;
+      --black:      #111111;
+      --body:       #444444;
+      --muted:      #888888;
+      --border:     #E8E4DF;
+      --gold:       #C9A96E;
+      --gold-dark:  #8B6C42;
+      --gold-light: #F0E6D3;
+      --gold-bg:    #FAF6F0;
 
       --ff-display: 'Cormorant Garamond', serif;
       --ff-body:    'DM Sans', sans-serif;
-
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { font-size: 16px; scroll-behavior: auto; }
 
     body {
-      background: var(--black);
-      color: var(--cream);
+      background: var(--white);
+      color: var(--black);
       font-family: var(--ff-body);
       overflow-x: hidden;
-      cursor: none;
     }
 
     /* ============================
@@ -49,7 +46,7 @@
     ============================ */
     #loader {
       position: fixed; inset: 0; z-index: 9000;
-      background: var(--black);
+      background: var(--white);
       display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 2.4rem;
     }
@@ -60,7 +57,7 @@
       font-weight: 500;
       letter-spacing: 0.5em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--black);
       opacity: 0;
       transform: translateY(12px);
       transition: opacity 0.6s, transform 0.6s;
@@ -68,13 +65,13 @@
 
     .loader-track {
       width: 220px; height: 1px;
-      background: rgba(201, 169, 110, 0.15);
+      background: var(--border);
       position: relative; overflow: hidden;
     }
 
     .loader-bar {
       position: absolute; top: 0; left: 0; height: 100%;
-      background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+      background: var(--gold);
       width: 0%;
       transition: width 0.08s linear;
     }
@@ -87,43 +84,19 @@
     }
 
     /* ============================
-       CUSTOM CURSOR
-    ============================ */
-    #cursor-dot, #cursor-ring {
-      position: fixed;
-      pointer-events: none;
-      z-index: 8000;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition-property: width, height, opacity;
-      transition-duration: 0.3s;
-    }
-
-    #cursor-dot {
-      width: 6px; height: 6px;
-      background: var(--gold);
-    }
-
-    #cursor-ring {
-      width: 36px; height: 36px;
-      border: 1px solid rgba(201, 169, 110, 0.6);
-    }
-
-    /* ============================
        NAVIGATION
     ============================ */
     #nav {
       position: fixed; top: 0; left: 0; right: 0;
       z-index: 500;
-      padding: 2rem 5rem;
+      padding: 1.8rem 5rem;
       display: flex; align-items: center; justify-content: space-between;
-      transition: background 0.4s, backdrop-filter 0.4s;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.4s;
     }
 
-    #nav.scrolled {
-      background: rgba(6, 6, 6, 0.92);
-      backdrop-filter: blur(20px);
-    }
+    #nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.07); }
 
     .nav-logo {
       font-family: var(--ff-display);
@@ -131,18 +104,16 @@
       font-weight: 600;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--black);
     }
 
-    .nav-links {
-      display: flex; gap: 3rem; list-style: none;
-    }
+    .nav-links { display: flex; gap: 3rem; list-style: none; }
 
     .nav-links a {
       font-size: 0.7rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(242, 237, 228, 0.65);
+      color: var(--body);
       text-decoration: none;
       transition: color 0.3s;
     }
@@ -158,86 +129,152 @@
       border: 1px solid var(--gold);
       background: transparent;
       padding: 0.7rem 1.8rem;
-      cursor: none;
+      cursor: pointer;
       transition: background 0.3s, color 0.3s;
     }
 
-    .nav-cta:hover {
-      background: var(--gold);
-      color: var(--black);
-    }
+    .nav-cta:hover { background: var(--gold); color: var(--white); }
 
     /* ============================
        HERO
     ============================ */
     #hero {
+      width: 100%; min-height: 100vh;
+      display: grid;
+      grid-template-columns: 58fr 42fr;
+      align-items: center;
+      padding: 10rem 5rem 6rem 5rem;
+      gap: 4rem;
       position: relative;
-      width: 100%; height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
     }
 
-    #hero-canvas {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-    }
-
-    .hero-overlay {
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at center, transparent 30%, rgba(6,6,6,0.6) 100%);
-      pointer-events: none;
-    }
-
-    .hero-content {
-      position: relative; z-index: 2;
-      text-align: center;
-    }
+    .hero-left { position: relative; z-index: 2; }
 
     .hero-eyebrow {
       display: block;
       font-size: 0.65rem;
-      letter-spacing: 0.45em;
+      letter-spacing: 0.4em;
       text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 2rem;
       opacity: 0;
     }
 
-    .hero-title {
+    .hero-headline {
       font-family: var(--ff-display);
-      font-size: clamp(5rem, 14vw, 13rem);
-      font-weight: 600;
-      line-height: 0.88;
-      letter-spacing: -0.01em;
-      color: var(--cream);
+      font-size: clamp(3.8rem, 7vw, 7rem);
+      font-weight: 400;
+      line-height: 1.12;
+      color: var(--black);
+    }
+
+    .hero-slot-wrap {
+      display: inline-block;
       overflow: hidden;
+      height: 1.18em;
+      vertical-align: bottom;
+      position: relative;
+      white-space: nowrap;
     }
 
-    .title-line {
+    .hero-slot-word {
       display: block;
-      overflow: hidden;
+      font-style: italic;
+      color: var(--gold);
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%;
     }
 
-    .title-inner {
+    .hero-slot-sizer {
+      visibility: hidden;
+      font-style: italic;
+      color: var(--gold);
       display: block;
-      transform: translateY(105%);
     }
 
-    .hero-tagline {
+    .hero-static-end {
+      display: block;
+      font-family: var(--ff-display);
+      font-size: clamp(3.8rem, 7vw, 7rem);
+      font-weight: 400;
+      line-height: 1.12;
+      color: var(--black);
+    }
+
+    .hero-body {
       margin-top: 2.5rem;
-      font-size: 0.85rem;
+      font-size: 1rem;
       font-weight: 300;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--muted);
+      color: var(--body);
+      line-height: 1.75;
+      max-width: 440px;
       opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .hero-btns {
+      margin-top: 2.8rem;
+      display: flex; gap: 1.2rem;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .btn-primary {
+      font-family: var(--ff-body);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: var(--gold);
+      color: var(--white);
+      border: 1px solid var(--gold);
+      padding: 1rem 2.6rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .btn-primary:hover { background: var(--gold-dark); border-color: var(--gold-dark); }
+
+    .btn-secondary {
+      font-family: var(--ff-body);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--black);
+      border: 1px solid var(--border);
+      padding: 1rem 2.6rem;
+      cursor: pointer;
+      font-weight: 300;
+      transition: border-color 0.3s, color 0.3s;
+    }
+
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Hero SVG visual right */
+    .hero-right {
+      position: relative;
+      height: 520px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .hero-svg-plan {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .hero-svg-plan svg {
+      width: 100%; height: 100%;
+      max-width: 460px; max-height: 480px;
     }
 
     .hero-scroll-hint {
       position: absolute;
-      bottom: 3.5rem; left: 50%;
-      transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+      bottom: 3rem; left: 5rem;
+      display: flex; align-items: center; gap: 1rem;
       z-index: 2; opacity: 0;
     }
 
@@ -249,14 +286,14 @@
     }
 
     .scroll-line {
-      width: 1px; height: 50px;
-      background: linear-gradient(to bottom, var(--gold), transparent);
+      width: 40px; height: 1px;
+      background: var(--gold);
       animation: scrollPulse 2s ease-in-out infinite;
     }
 
     @keyframes scrollPulse {
-      0%, 100% { opacity: 0.3; transform: scaleY(0.8) translateY(-5px); }
-      50%       { opacity: 0.9; transform: scaleY(1) translateY(5px); }
+      0%, 100% { opacity: 0.4; transform: scaleX(0.7); }
+      50%       { opacity: 1; transform: scaleX(1); }
     }
 
     /* ============================
@@ -267,12 +304,12 @@
       border-bottom: 1px solid var(--border);
       padding: 1.1rem 0;
       overflow: hidden;
-      background: var(--gold-muted);
+      background: var(--gold-bg);
     }
 
     .marquee-track {
       display: flex; gap: 0;
-      animation: ticker 25s linear infinite;
+      animation: ticker 28s linear infinite;
       white-space: nowrap;
     }
 
@@ -285,7 +322,7 @@
       font-size: 0.65rem;
       letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--black);
       font-weight: 400;
     }
 
@@ -293,7 +330,7 @@
       display: inline-block;
       width: 4px; height: 4px;
       border-radius: 50%;
-      background: var(--gold-dark);
+      background: var(--gold);
       flex-shrink: 0;
     }
 
@@ -327,41 +364,30 @@
       font-size: clamp(2.4rem, 4vw, 3.8rem);
       font-weight: 500;
       line-height: 1.05;
-      color: var(--cream);
+      color: var(--black);
     }
 
     /* ============================
        MANIFESTO
     ============================ */
     #manifesto {
-      padding: 11rem 10rem;
+      padding: 10rem 10rem;
       max-width: 1500px;
       margin: 0 auto;
+      border-top: 1px solid var(--border);
     }
 
     .manifesto-pull {
       font-family: var(--ff-display);
-      font-size: clamp(1.9rem, 3.8vw, 3.4rem);
+      font-size: clamp(1.9rem, 3.5vw, 3.2rem);
       font-weight: 400;
-      line-height: 1.5;
-      color: var(--cream);
+      line-height: 1.55;
+      color: var(--black);
     }
 
-    .manifesto-pull .w {
-      display: inline-block;
-      overflow: hidden;
-      vertical-align: bottom;
-    }
-
-    .manifesto-pull .wi {
-      display: inline-block;
-      transform: translateY(110%);
-    }
-
-    .manifesto-pull em {
-      font-style: italic;
-      color: var(--gold);
-    }
+    .manifesto-pull .w { display: inline-block; overflow: hidden; vertical-align: bottom; }
+    .manifesto-pull .wi { display: inline-block; transform: translateY(110%); }
+    .manifesto-pull em { font-style: italic; color: var(--gold); }
 
     .manifesto-sub {
       margin-top: 3.5rem;
@@ -379,10 +405,10 @@
     .manifesto-sub p {
       font-size: 0.9rem;
       font-weight: 300;
-      color: var(--muted);
+      color: var(--body);
       letter-spacing: 0.03em;
-      line-height: 1.7;
-      max-width: 400px;
+      line-height: 1.75;
+      max-width: 420px;
       opacity: 0;
       transform: translateX(20px);
     }
@@ -391,9 +417,10 @@
        STATS
     ============================ */
     #stats {
-      border-top: 1px solid var(--border-soft);
-      border-bottom: 1px solid var(--border-soft);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
       padding: 5rem 10rem;
+      background: var(--off-white);
     }
 
     .stats-grid {
@@ -431,10 +458,11 @@
     }
 
     /* ============================
-       FOR WHOM
+       FOR WHOM — 6-card grid
     ============================ */
     #for-whom {
       padding: 8rem 10rem;
+      background: var(--white);
     }
 
     .fw-header {
@@ -442,79 +470,55 @@
       margin-bottom: 4rem;
     }
 
-    .fw-panels {
+    .fw-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      height: 72vh;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .fw-card {
+      background: var(--white);
       border: 1px solid var(--border);
-    }
-
-    .fw-panel {
-      position: relative;
-      overflow: hidden;
+      border-left: 3px solid var(--gold);
+      padding: 2.5rem;
+      transition: box-shadow 0.35s, transform 0.35s;
       opacity: 0;
+      transform: translateY(24px);
+      cursor: default;
     }
 
-    .fw-panel + .fw-panel {
-      border-left: 1px solid var(--border);
+    .fw-card:hover {
+      box-shadow: 0 8px 32px rgba(201,169,110,0.12);
+      transform: translateY(-4px);
     }
 
-    .fw-panel-bg {
-      position: absolute; inset: 0;
-      transition: transform 0.9s var(--ease-out);
+    .fw-card-icon {
+      width: 28px; height: 28px;
+      margin-bottom: 1.4rem;
     }
 
-    .fw-panel:hover .fw-panel-bg { transform: scale(1.04); }
+    .fw-card-icon svg { width: 100%; height: 100%; }
 
-    .fw-panel-fill {
-      position: absolute; inset: 0;
-      background: linear-gradient(160deg, rgba(20,14,6,0.95) 0%, rgba(8,6,3,0.98) 100%);
-    }
-
-    .fw-blueprint {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0.07;
-    }
-
-    .fw-content {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 3.5rem;
-      background: linear-gradient(to top, rgba(6,6,6,0.98) 50%, transparent);
-    }
-
-    .fw-tag {
-      display: inline-block;
-      font-size: 0.6rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gold);
-      border: 1px solid rgba(201, 169, 110, 0.35);
-      padding: 0.35rem 0.9rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .fw-title {
+    .fw-card-title {
       font-family: var(--ff-display);
-      font-size: clamp(1.8rem, 2.8vw, 2.8rem);
-      font-weight: 600;
-      color: var(--cream);
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--black);
+      margin-bottom: 0.8rem;
       line-height: 1.1;
-      margin-bottom: 1rem;
     }
 
-    .fw-desc {
+    .fw-card-desc {
       font-size: 0.85rem;
       font-weight: 300;
-      line-height: 1.8;
-      color: rgba(242, 237, 228, 0.5);
-      max-width: 380px;
+      color: var(--body);
+      line-height: 1.75;
     }
 
     /* ============================
        PROCESS SECTION
     ============================ */
-    #process { position: relative; }
+    #process { position: relative; background: var(--white); }
 
     .process-intro {
       padding: 8rem 10rem 3rem;
@@ -526,15 +530,14 @@
     }
 
     .process-intro-sub {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 300;
-      color: var(--muted);
+      color: var(--body);
       max-width: 440px;
       line-height: 1.8;
       margin-left: 3.2rem;
     }
 
-    /* Horizontal scroll pin */
     #process-pin {
       width: 100%;
       height: 100vh;
@@ -557,7 +560,8 @@
       align-items: center;
       padding: 0 10rem;
       position: relative;
-      border-right: 1px solid var(--border-soft);
+      border-right: 1px solid var(--border);
+      background: var(--white);
     }
 
     .p-panel-bg-num {
@@ -567,12 +571,10 @@
       font-weight: 700;
       line-height: 0.8;
       color: transparent;
-      -webkit-text-stroke: 1px rgba(201, 169, 110, 0.06);
-      right: 6rem;
-      top: 50%;
+      -webkit-text-stroke: 1px rgba(201,169,110,0.05);
+      right: 6rem; top: 50%;
       transform: translateY(-50%);
-      pointer-events: none;
-      user-select: none;
+      pointer-events: none; user-select: none;
     }
 
     .p-inner {
@@ -601,14 +603,14 @@
       color: var(--gold);
       line-height: 0.85;
       margin-bottom: 0.5rem;
-      opacity: 0.18;
+      opacity: 0.15;
     }
 
     .p-title {
       font-family: var(--ff-display);
       font-size: clamp(3rem, 5vw, 5.5rem);
       font-weight: 600;
-      color: var(--cream);
+      color: var(--black);
       line-height: 0.9;
       margin-bottom: 2rem;
     }
@@ -616,21 +618,18 @@
     .p-desc {
       font-size: 0.9rem;
       font-weight: 300;
-      color: rgba(242, 237, 228, 0.6);
+      color: var(--body);
       line-height: 1.85;
       max-width: 380px;
       margin-bottom: 2.5rem;
     }
 
-    .p-list {
-      list-style: none;
-      display: flex; flex-direction: column; gap: 0.55rem;
-    }
+    .p-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
 
     .p-list li {
       font-size: 0.78rem;
       letter-spacing: 0.04em;
-      color: rgba(242, 237, 228, 0.45);
+      color: var(--muted);
       display: flex; align-items: center; gap: 0.9rem;
     }
 
@@ -643,10 +642,199 @@
 
     .p-visual {
       display: flex; align-items: center; justify-content: center;
-      height: 380px;
+      height: 380px; position: relative;
     }
 
-    .p-visual svg { width: 100%; height: 100%; }
+    /* D-phase animation containers */
+    .p-anim-wrap {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── D1: PULSE SCAN ── */
+    .d1-wrap { position: relative; width: 280px; height: 280px; }
+
+    .d1-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.2);
+      border-radius: 50%;
+      border: 1px solid var(--gold);
+      opacity: 0;
+    }
+
+    .d1-r1 { width: 280px; height: 280px; animation: d1-pulse 3s ease-out 0s infinite; }
+    .d1-r2 { width: 280px; height: 280px; animation: d1-pulse 3s ease-out 1s infinite; }
+    .d1-r3 { width: 280px; height: 280px; animation: d1-pulse 3s ease-out 2s infinite; }
+
+    @keyframes d1-pulse {
+      0%   { transform: translate(-50%, -50%) scale(0.15); opacity: 0.85; }
+      80%  { transform: translate(-50%, -50%) scale(1);    opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1);    opacity: 0; }
+    }
+
+    .d1-dot {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      z-index: 2;
+    }
+
+    .d1-spoke {
+      position: absolute; top: 50%; left: 50%;
+      width: 1px; height: 120px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      transform-origin: top center;
+      opacity: 0.4;
+    }
+
+    .d1-s1 { transform: rotate(0deg);   }
+    .d1-s2 { transform: rotate(90deg);  }
+    .d1-s3 { transform: rotate(180deg); }
+    .d1-s4 { transform: rotate(270deg); }
+
+    .d1-sat {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      animation: d1-sat-appear 3s ease-out 1.5s infinite;
+    }
+
+    @keyframes d1-sat-appear {
+      0%, 30% { opacity: 0; }
+      50%, 80% { opacity: 0.7; }
+      100% { opacity: 0; }
+    }
+
+    .d1-sat-n { top: calc(50% - 120px); left: calc(50% - 3px); animation-delay: 1.5s; }
+    .d1-sat-e { top: calc(50% - 3px); left: calc(50% + 117px); animation-delay: 1.7s; }
+    .d1-sat-s { top: calc(50% + 114px); left: calc(50% - 3px); animation-delay: 1.9s; }
+    .d1-sat-w { top: calc(50% - 3px); left: calc(50% - 123px); animation-delay: 2.1s; }
+
+    /* ── D2: MATERIAL GRID FILL ── */
+    .d2-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 280px;
+    }
+
+    .d2-swatch {
+      height: 80px;
+      border-radius: 8px;
+      opacity: 0;
+      transform: scale(0.85);
+      animation: d2-fill 5.4s ease-in-out infinite;
+    }
+
+    @keyframes d2-fill {
+      0%, 8%   { opacity: 0; transform: scale(0.85); }
+      22%, 72% { opacity: 1; transform: scale(1); }
+      86%, 100%{ opacity: 0; transform: scale(0.85); }
+    }
+
+    .d2-sw1 { background: var(--gold);       animation-delay: 0s;    }
+    .d2-sw2 { background: #D4B896;            animation-delay: 0.3s;  }
+    .d2-sw3 { background: var(--gold-light);  animation-delay: 0.6s;  }
+    .d2-sw4 { background: #C8BEB4;            animation-delay: 0.9s;  }
+    .d2-sw5 { background: var(--gold-bg);     animation-delay: 1.2s;  }
+    .d2-sw6 { background: var(--gold-dark);   animation-delay: 1.5s;  }
+
+    /* ── D3: BLUEPRINT DRAW (GSAP) ── */
+    #d3-svg { width: 320px; height: 280px; }
+
+    #d3-walls, #d3-partition, #d3-furniture {
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 1.2;
+    }
+
+    #d3-furniture { opacity: 0; }
+    #d3-label { opacity: 0; font-family: var(--ff-body); font-size: 8px; letter-spacing: 3px; fill: var(--gold); }
+
+    /* ── D4: LAYER STACK (GSAP) ── */
+    .d4-wrap {
+      position: relative;
+      width: 280px; height: 280px;
+      display: flex; align-items: flex-end; justify-content: center;
+      overflow: visible;
+    }
+
+    .d4-doc {
+      position: absolute;
+      width: 240px; height: 56px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      display: flex; align-items: center;
+      padding: 0 1.2rem;
+      gap: 0.8rem;
+      opacity: 0;
+    }
+
+    .d4-doc-num {
+      font-family: var(--ff-display);
+      font-size: 0.7rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      flex-shrink: 0;
+    }
+
+    .d4-doc-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    #d4-doc1 { bottom: 170px; }
+    #d4-doc2 { bottom: 110px; }
+    #d4-doc3 { bottom: 50px;  }
+    #d4-doc4 { bottom: -10px; }
+
+    /* ── D5: CURTAIN REVEAL (CSS) ── */
+    .d5-wrap {
+      position: relative;
+      width: 280px; height: 280px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .d5-interior {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, var(--gold-light) 0%, var(--gold-bg) 60%, var(--off-white) 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .d5-interior svg { width: 70%; height: 70%; }
+
+    .d5-curtain-left, .d5-curtain-right {
+      position: absolute; top: 0; bottom: 0;
+      width: 50%;
+      background: var(--gold-dark);
+      z-index: 2;
+    }
+
+    .d5-curtain-left  { left: 0;  animation: d5-left  5s ease-in-out infinite; }
+    .d5-curtain-right { right: 0; animation: d5-right 5s ease-in-out infinite; }
+
+    @keyframes d5-left {
+      0%, 5%   { transform: translateX(0); }
+      35%, 70% { transform: translateX(-100%); }
+      95%, 100%{ transform: translateX(0); }
+    }
+
+    @keyframes d5-right {
+      0%, 5%   { transform: translateX(0); }
+      35%, 70% { transform: translateX(100%); }
+      95%, 100%{ transform: translateX(0); }
+    }
 
     /* Progress bar */
     .process-progress-bar {
@@ -656,21 +844,16 @@
       z-index: 10;
     }
 
-    .pp-dots {
-      display: flex; gap: 0.7rem;
-    }
+    .pp-dots { display: flex; gap: 0.7rem; }
 
     .pp-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: rgba(201, 169, 110, 0.2);
+      background: var(--border);
       transition: all 0.4s var(--ease-out);
     }
 
-    .pp-dot.on {
-      background: var(--gold);
-      width: 24px; border-radius: 3px;
-    }
+    .pp-dot.on { background: var(--gold); width: 24px; border-radius: 3px; }
 
     .pp-label {
       font-size: 0.6rem;
@@ -682,7 +865,7 @@
     /* ============================
        PORTFOLIO
     ============================ */
-    #portfolio { padding: 8rem 10rem; }
+    #portfolio { padding: 8rem 10rem; background: var(--off-white); }
 
     .portfolio-hdr {
       display: flex; align-items: baseline;
@@ -699,44 +882,34 @@
     .pf-card {
       position: relative;
       overflow: hidden;
-      background: var(--black-2);
+      background: var(--white);
+      border: 1px solid var(--border);
       opacity: 0;
       transform: translateY(40px);
+      cursor: default;
+      transition: box-shadow 0.4s, transform 0.4s;
     }
 
-    .pf-card:first-child {
-      grid-row: span 2;
-      aspect-ratio: auto;
-      min-height: 600px;
+    .pf-card:hover {
+      box-shadow: 0 8px 32px rgba(201,169,110,0.12);
+      transform: translateY(-4px) !important;
     }
 
+    .pf-card:first-child { grid-row: span 2; min-height: 600px; }
     .pf-card:not(:first-child) { aspect-ratio: 4/3; }
-
-    .pf-bg {
-      position: absolute; inset: 0;
-      background: linear-gradient(145deg, #18120A 0%, #08060340 100%);
-    }
 
     .pf-art {
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      opacity: 0.12;
+      opacity: 0.2;
     }
 
     .pf-art svg { width: 70%; height: 70%; }
 
-    .pf-hover-overlay {
-      position: absolute; inset: 0;
-      background: rgba(6,6,6,0);
-      transition: background 0.5s;
-    }
-
-    .pf-card:hover .pf-hover-overlay { background: rgba(6,6,6,0.35); }
-
     .pf-info {
       position: absolute; bottom: 0; left: 0; right: 0;
       padding: 2.5rem;
-      background: linear-gradient(to top, rgba(6,6,6,0.97) 0%, transparent 100%);
+      background: linear-gradient(to top, rgba(255,255,255,0.98) 40%, transparent);
       transform: translateY(8px);
       opacity: 0;
       transition: all 0.45s var(--ease-out);
@@ -756,7 +929,7 @@
       font-family: var(--ff-display);
       font-size: clamp(1.2rem, 1.8vw, 1.8rem);
       font-weight: 500;
-      color: var(--cream);
+      color: var(--black);
     }
 
     /* ============================
@@ -764,7 +937,8 @@
     ============================ */
     #awards {
       padding: 8rem 10rem;
-      border-top: 1px solid var(--border-soft);
+      border-top: 1px solid var(--border);
+      background: var(--white);
     }
 
     .awards-hdr {
@@ -779,7 +953,7 @@
     }
 
     .award-card {
-      border-left: 1px solid rgba(201, 169, 110, 0.25);
+      border-left: 3px solid var(--gold);
       padding-left: 2rem;
       opacity: 0;
       transform: translateX(-24px);
@@ -797,7 +971,7 @@
       font-family: var(--ff-display);
       font-size: 1.35rem;
       font-weight: 500;
-      color: var(--cream);
+      color: var(--black);
       margin-bottom: 0.4rem;
     }
 
@@ -814,16 +988,9 @@
     #cta {
       padding: 11rem 10rem;
       text-align: center;
+      background: var(--gold);
       position: relative;
       overflow: hidden;
-    }
-
-    .cta-glow {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 700px; height: 700px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(201, 169, 110, 0.04) 0%, transparent 70%);
-      pointer-events: none;
     }
 
     .cta-content { position: relative; z-index: 1; }
@@ -833,7 +1000,7 @@
       font-size: 0.62rem;
       letter-spacing: 0.4em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: rgba(255,255,255,0.7);
       margin-bottom: 2rem;
       opacity: 0;
     }
@@ -842,19 +1009,19 @@
       font-family: var(--ff-display);
       font-size: clamp(3.5rem, 7vw, 8rem);
       font-weight: 500;
-      color: var(--cream);
+      color: var(--white);
       line-height: 1.05;
       margin-bottom: 2.5rem;
       opacity: 0;
       transform: translateY(40px);
     }
 
-    .cta-title em { font-style: italic; color: var(--gold); }
+    .cta-title em { font-style: italic; opacity: 0.8; }
 
     .cta-sub {
       font-size: 0.9rem;
       font-weight: 300;
-      color: var(--muted);
+      color: rgba(255,255,255,0.75);
       line-height: 1.8;
       max-width: 520px;
       margin: 0 auto 4rem;
@@ -872,11 +1039,11 @@
       font-size: 0.72rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      background: var(--gold);
-      color: var(--black);
-      border: 1px solid var(--gold);
+      background: var(--white);
+      color: var(--gold-dark);
+      border: 1px solid var(--white);
       padding: 1rem 3rem;
-      cursor: none;
+      cursor: pointer;
       font-weight: 500;
       transition: background 0.3s, color 0.3s;
     }
@@ -889,15 +1056,15 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       background: transparent;
-      color: var(--cream);
-      border: 1px solid rgba(242, 237, 228, 0.2);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.5);
       padding: 1rem 3rem;
-      cursor: none;
+      cursor: pointer;
       font-weight: 300;
-      transition: border-color 0.3s, color 0.3s;
+      transition: border-color 0.3s;
     }
 
-    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-outline:hover { border-color: var(--white); }
 
     /* ============================
        FOOTER
@@ -906,6 +1073,7 @@
       border-top: 1px solid var(--border);
       padding: 3rem 10rem;
       display: flex; align-items: center; justify-content: space-between;
+      background: var(--off-white);
     }
 
     .footer-logo {
@@ -913,14 +1081,10 @@
       font-size: 1.2rem;
       font-weight: 600;
       letter-spacing: 0.12em;
-      color: var(--gold);
+      color: var(--black);
     }
 
-    .footer-copy {
-      font-size: 0.7rem;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-    }
+    .footer-copy { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em; }
 
     .footer-links { display: flex; gap: 2rem; }
 
@@ -934,28 +1098,27 @@
     }
 
     .footer-links a:hover { color: var(--gold); }
+
+    /* ============================
+       REDUCED MOTION
+    ============================ */
+    @media (prefers-reduced-motion: reduce) {
+      .d1-ring, .d1-sat, .d2-swatch,
+      .d5-curtain-left, .d5-curtain-right,
+      .marquee-track, .scroll-line { animation: none; }
+    }
   </style>
 </head>
 <body>
 
-<!-- ============================
-     LOADER
-============================ -->
+<!-- LOADER -->
 <div id="loader">
   <div class="loader-wordmark">Design TWG</div>
   <div class="loader-track"><div class="loader-bar" id="lbar"></div></div>
   <div class="loader-label" id="lpct">0%</div>
 </div>
 
-<!-- ============================
-     CURSOR
-============================ -->
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
-
-<!-- ============================
-     NAV
-============================ -->
+<!-- NAV -->
 <nav id="nav">
   <div class="nav-logo">Design TWG</div>
   <ul class="nav-links">
@@ -967,32 +1130,154 @@
   <button class="nav-cta">Start a Project</button>
 </nav>
 
-<!-- ============================
-     HERO
-============================ -->
+<!-- HERO -->
 <section id="hero">
-  <canvas id="hero-canvas"></canvas>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <span class="hero-eyebrow">Toronto's Premier Commercial Design Studio</span>
-    <h1 class="hero-title">
-      <span class="title-line"><span class="title-inner">Design</span></span>
-      <span class="title-line"><span class="title-inner">TWG</span></span>
+  <div class="hero-left">
+    <span class="hero-eyebrow">Commercial Interior Design · Mississauga, Canada</span>
+    <h1 class="hero-headline" aria-live="polite">
+      We design<br>
+      <span class="hero-slot-wrap" id="hero-slot-wrap">
+        <span class="hero-slot-sizer" id="hero-slot-sizer">Franchise Businesses</span>
+        <span class="hero-slot-word" id="hw-0">Hotels</span>
+        <span class="hero-slot-word" id="hw-1">Restaurants</span>
+        <span class="hero-slot-word" id="hw-2">Franchise Businesses</span>
+        <span class="hero-slot-word" id="hw-3">Spas &amp; Wellness</span>
+        <span class="hero-slot-word" id="hw-4">Dental Clinics</span>
+        <span class="hero-slot-word" id="hw-5">Office Spaces</span>
+      </span>
+      <span class="hero-static-end">that leave a lasting impression.</span>
     </h1>
-    <p class="hero-tagline">Where Space Meets Strategy</p>
+    <p class="hero-body">A 360° commercial interior design studio crafting spaces that drive business — from boutique hotels to national franchise chains.</p>
+    <div class="hero-btns">
+      <button class="btn-primary">Start a Project</button>
+      <button class="btn-secondary">View Our Work</button>
+    </div>
   </div>
+
+  <div class="hero-right" aria-hidden="true">
+    <!-- Hotel floor plan -->
+    <div class="hero-svg-plan" id="hv-0">
+      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
+        <rect x="50" y="50" width="150" height="120" stroke="#C9A96E" stroke-width="1"/>
+        <rect x="220" y="50" width="150" height="70" stroke="#C9A96E" stroke-width="1"/>
+        <rect x="220" y="140" width="150" height="60" stroke="#C9A96E" stroke-width="0.6"/>
+        <rect x="50" y="190" width="320" height="150" stroke="#C9A96E" stroke-width="1"/>
+        <rect x="70" y="210" width="110" height="80" stroke="#C9A96E" stroke-width="0.6"/>
+        <rect x="230" y="210" width="110" height="80" stroke="#C9A96E" stroke-width="0.6"/>
+        <rect x="140" y="308" width="140" height="12" stroke="#C9A96E" stroke-width="0.6"/>
+        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
+        <line x1="30"  y1="14" x2="30"  y2="22" stroke="#C9A96E" stroke-width="0.4"/>
+        <line x1="390" y1="14" x2="390" y2="22" stroke="#C9A96E" stroke-width="0.4"/>
+        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">HOTEL FLOOR PLAN</text>
+        <text x="125" y="117" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">SUITE</text>
+        <text x="295" y="82" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">LOBBY</text>
+        <text x="210" y="272" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">DINING</text>
+      </svg>
+    </div>
+    <!-- Restaurant floor plan -->
+    <div class="hero-svg-plan" id="hv-1">
+      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
+        <rect x="50" y="50" width="320" height="90" stroke="#C9A96E" stroke-width="1"/>
+        <text x="210" y="100" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3" opacity="0.6">KITCHEN</text>
+        <circle cx="100" cy="220" r="34" stroke="#C9A96E" stroke-width="1"/>
+        <circle cx="210" cy="220" r="34" stroke="#C9A96E" stroke-width="1"/>
+        <circle cx="320" cy="220" r="34" stroke="#C9A96E" stroke-width="1"/>
+        <circle cx="155" cy="318" r="34" stroke="#C9A96E" stroke-width="1"/>
+        <circle cx="265" cy="318" r="34" stroke="#C9A96E" stroke-width="1"/>
+        <rect x="165" y="355" width="90" height="10" stroke="#C9A96E" stroke-width="0.8"/>
+        <text x="210" y="362" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">ENTRANCE</text>
+        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
+        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">RESTAURANT PLAN</text>
+      </svg>
+    </div>
+    <!-- Franchise plan -->
+    <div class="hero-svg-plan" id="hv-2">
+      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
+        <rect x="50" y="50" width="320" height="60" stroke="#C9A96E" stroke-width="1"/>
+        <text x="210" y="85" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3" opacity="0.6">COUNTER / SERVICE</text>
+        <rect x="50" y="130" width="100" height="200" stroke="#C9A96E" stroke-width="0.8"/>
+        <rect x="170" y="130" width="200" height="90" stroke="#C9A96E" stroke-width="0.8"/>
+        <rect x="170" y="240" width="200" height="90" stroke="#C9A96E" stroke-width="0.8"/>
+        <text x="100" y="235" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">WAITING</text>
+        <text x="270" y="189" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">SEATING A</text>
+        <text x="270" y="289" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">SEATING B</text>
+        <rect x="175" y="345" width="70" height="20" stroke="#C9A96E" stroke-width="0.8"/>
+        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
+        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">FRANCHISE PLAN</text>
+      </svg>
+    </div>
+    <!-- Spa plan -->
+    <div class="hero-svg-plan" id="hv-3">
+      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
+        <rect x="50" y="50" width="140" height="100" stroke="#C9A96E" stroke-width="1"/>
+        <text x="120" y="105" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">RECEPTION</text>
+        <rect x="210" y="50" width="160" height="160" stroke="#C9A96E" stroke-width="1"/>
+        <rect x="228" y="68" width="124" height="124" stroke="#C9A96E" stroke-width="0.5" stroke-dasharray="4 3"/>
+        <text x="290" y="135" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">TREATMENT</text>
+        <rect x="50" y="170" width="140" height="180" stroke="#C9A96E" stroke-width="1"/>
+        <circle cx="120" cy="260" r="45" stroke="#C9A96E" stroke-width="0.6" opacity="0.5"/>
+        <text x="120" y="264" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">RELAXATION</text>
+        <rect x="210" y="230" width="160" height="120" stroke="#C9A96E" stroke-width="1"/>
+        <text x="290" y="295" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">CHANGING</text>
+        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
+        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">SPA FLOOR PLAN</text>
+      </svg>
+    </div>
+    <!-- Dental plan -->
+    <div class="hero-svg-plan" id="hv-4">
+      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
+        <rect x="50" y="50" width="200" height="80" stroke="#C9A96E" stroke-width="1"/>
+        <text x="150" y="94" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">WAITING AREA</text>
+        <rect x="270" y="50" width="100" height="80" stroke="#C9A96E" stroke-width="1"/>
+        <text x="320" y="94" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">ADMIN</text>
+        <rect x="50" y="150" width="140" height="100" stroke="#C9A96E" stroke-width="1"/>
+        <ellipse cx="120" cy="200" rx="50" ry="28" stroke="#C9A96E" stroke-width="0.6" opacity="0.6"/>
+        <text x="120" y="204" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="6" letter-spacing="1" opacity="0.5">CHAIR 1</text>
+        <rect x="210" y="150" width="160" height="100" stroke="#C9A96E" stroke-width="1"/>
+        <ellipse cx="290" cy="200" rx="50" ry="28" stroke="#C9A96E" stroke-width="0.6" opacity="0.6"/>
+        <text x="290" y="204" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="6" letter-spacing="1" opacity="0.5">CHAIR 2</text>
+        <rect x="50" y="270" width="320" height="80" stroke="#C9A96E" stroke-width="0.8"/>
+        <text x="210" y="315" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">STERILIZATION / LAB</text>
+        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
+        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">DENTAL CLINIC PLAN</text>
+      </svg>
+    </div>
+    <!-- Office plan -->
+    <div class="hero-svg-plan" id="hv-5">
+      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
+        <rect x="50" y="50" width="100" height="120" stroke="#C9A96E" stroke-width="1"/>
+        <text x="100" y="115" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">RECEPTION</text>
+        <rect x="170" y="50" width="200" height="120" stroke="#C9A96E" stroke-width="1"/>
+        <text x="270" y="115" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">MEETING ROOM</text>
+        <rect x="50" y="190" width="320" height="150" stroke="#C9A96E" stroke-width="1"/>
+        <line x1="157" y1="190" x2="157" y2="340" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
+        <line x1="264" y1="190" x2="264" y2="340" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
+        <line x1="50"  y1="265" x2="370" y2="265" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
+        <text x="104" y="232" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="6" letter-spacing="1" opacity="0.5">WS A</text>
+        <text x="211" y="232" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="6" letter-spacing="1" opacity="0.5">WS B</text>
+        <text x="318" y="232" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="6" letter-spacing="1" opacity="0.5">WS C</text>
+        <text x="210" y="308" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">OPEN PLAN</text>
+        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
+        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">OFFICE FLOOR PLAN</text>
+      </svg>
+    </div>
+  </div>
+
   <div class="hero-scroll-hint">
     <span>Scroll to Explore</span>
     <div class="scroll-line"></div>
   </div>
 </section>
 
-<!-- ============================
-     MARQUEE
-============================ -->
+<!-- MARQUEE -->
 <div class="marquee-bar" aria-hidden="true">
-  <div class="marquee-track" id="mtk">
-    <!-- Original set -->
+  <div class="marquee-track">
     <div class="marquee-item"><span>Interior Design</span><span class="marquee-sep"></span></div>
     <div class="marquee-item"><span>Brand Strategy</span><span class="marquee-sep"></span></div>
     <div class="marquee-item"><span>Visual Identity</span><span class="marquee-sep"></span></div>
@@ -1002,7 +1287,6 @@
     <div class="marquee-item"><span>3× NEWH Award Winner</span><span class="marquee-sep"></span></div>
     <div class="marquee-item"><span>360° Solutions</span><span class="marquee-sep"></span></div>
     <div class="marquee-item"><span>Lighting Design</span><span class="marquee-sep"></span></div>
-    <!-- Duplicate for seamless loop -->
     <div class="marquee-item"><span>Interior Design</span><span class="marquee-sep"></span></div>
     <div class="marquee-item"><span>Brand Strategy</span><span class="marquee-sep"></span></div>
     <div class="marquee-item"><span>Visual Identity</span><span class="marquee-sep"></span></div>
@@ -1015,9 +1299,7 @@
   </div>
 </div>
 
-<!-- ============================
-     MANIFESTO
-============================ -->
+<!-- MANIFESTO -->
 <section id="manifesto">
   <p class="manifesto-pull" id="manifesto-pull">
     We don't just design <em>spaces</em> — we craft <em>experiences</em>
@@ -1029,9 +1311,7 @@
   </div>
 </section>
 
-<!-- ============================
-     STATS
-============================ -->
+<!-- STATS -->
 <section id="stats">
   <div class="stats-grid">
     <div class="stat-card">
@@ -1053,79 +1333,103 @@
   </div>
 </section>
 
-<!-- ============================
-     FOR WHOM
-============================ -->
+<!-- FOR WHOM -->
 <section id="for-whom">
   <div class="fw-header">
     <span class="section-num">01</span>
     <h2 class="section-heading">Who We Design For</h2>
   </div>
-  <div class="fw-panels">
+  <div class="fw-grid">
 
-    <!-- Hotels -->
-    <div class="fw-panel" id="fw-hotels">
-      <div class="fw-panel-bg fw-panel-fill"></div>
-      <div class="fw-blueprint">
-        <svg viewBox="0 0 480 560" xmlns="http://www.w3.org/2000/svg">
-          <!-- Hotel room blueprint -->
-          <rect x="20" y="20" width="440" height="520" fill="none" stroke="#C9A96E" stroke-width="0.8"/>
-          <rect x="40" y="40" width="200" height="160" fill="none" stroke="#C9A96E" stroke-width="1"/>
-          <rect x="260" y="40" width="180" height="100" fill="none" stroke="#C9A96E" stroke-width="1"/>
-          <rect x="260" y="160" width="180" height="80" fill="none" stroke="#C9A96E" stroke-width="0.6"/>
-          <rect x="40" y="220" width="400" height="280" fill="none" stroke="#C9A96E" stroke-width="1"/>
-          <rect x="80" y="260" width="140" height="100" fill="none" stroke="#C9A96E" stroke-width="0.6"/>
-          <rect x="260" y="260" width="140" height="100" fill="none" stroke="#C9A96E" stroke-width="0.6"/>
-          <rect x="160" y="380" width="160" height="80" fill="none" stroke="#C9A96E" stroke-width="0.6"/>
-          <!-- Dimension lines -->
-          <line x1="20" y1="8" x2="460" y2="8" stroke="#C9A96E" stroke-width="0.4"/>
-          <line x1="20" y1="5" x2="20" y2="11" stroke="#C9A96E" stroke-width="0.4"/>
-          <line x1="460" y1="5" x2="460" y2="11" stroke="#C9A96E" stroke-width="0.4"/>
-          <text x="240" y="5" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="9" letter-spacing="3">SUITE FLOOR PLAN</text>
+    <div class="fw-card">
+      <div class="fw-card-icon">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="8" width="24" height="18" stroke="#C9A96E" stroke-width="1.2"/>
+          <rect x="6" y="12" width="6" height="6" stroke="#C9A96E" stroke-width="0.8"/>
+          <rect x="16" y="12" width="6" height="6" stroke="#C9A96E" stroke-width="0.8"/>
+          <line x1="2" y1="8" x2="14" y2="2" stroke="#C9A96E" stroke-width="1"/>
+          <line x1="26" y1="8" x2="14" y2="2" stroke="#C9A96E" stroke-width="1"/>
         </svg>
       </div>
-      <div class="fw-content">
-        <span class="fw-tag">Hospitality</span>
-        <h3 class="fw-title">Hotels &amp;<br>Hospitality Spaces</h3>
-        <p class="fw-desc">From boutique retreats to 164-room airport hotels, we transform hospitality spaces into experiences guests remember — and brands that properties are proud of.</p>
-      </div>
+      <div class="fw-card-title">Hotels &amp; Hospitality</div>
+      <div class="fw-card-desc">From boutique retreats to 164-room airport hotels, we transform hospitality spaces into experiences guests remember — and brands that properties are proud of.</div>
     </div>
 
-    <!-- Franchises -->
-    <div class="fw-panel" id="fw-franchise">
-      <div class="fw-panel-bg fw-panel-fill"></div>
-      <div class="fw-blueprint">
-        <svg viewBox="0 0 480 560" xmlns="http://www.w3.org/2000/svg">
-          <!-- Franchise restaurant blueprint -->
-          <rect x="20" y="20" width="440" height="520" fill="none" stroke="#C9A96E" stroke-width="0.8"/>
-          <!-- Kitchen zone -->
-          <rect x="40" y="40" width="400" height="120" fill="none" stroke="#C9A96E" stroke-width="1"/>
-          <text x="240" y="105" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="8" letter-spacing="3">KITCHEN</text>
-          <!-- Tables circular -->
-          <circle cx="110" cy="270" r="38" fill="none" stroke="#C9A96E" stroke-width="1"/>
-          <circle cx="240" cy="270" r="38" fill="none" stroke="#C9A96E" stroke-width="1"/>
-          <circle cx="370" cy="270" r="38" fill="none" stroke="#C9A96E" stroke-width="1"/>
-          <circle cx="175" cy="390" r="38" fill="none" stroke="#C9A96E" stroke-width="1"/>
-          <circle cx="305" cy="390" r="38" fill="none" stroke="#C9A96E" stroke-width="1"/>
-          <!-- Entrance -->
-          <rect x="180" y="490" width="120" height="30" fill="none" stroke="#C9A96E" stroke-width="1"/>
-          <path d="M180 490 Q180 460 240 460 Q300 460 300 490" fill="none" stroke="#C9A96E" stroke-width="0.6"/>
-          <text x="240" y="510" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="8" letter-spacing="3">ENTRANCE</text>
+    <div class="fw-card">
+      <div class="fw-card-icon">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="6" width="24" height="20" stroke="#C9A96E" stroke-width="1.2"/>
+          <circle cx="8"  cy="18" r="4" stroke="#C9A96E" stroke-width="0.8"/>
+          <circle cx="20" cy="18" r="4" stroke="#C9A96E" stroke-width="0.8"/>
+          <rect x="4" y="7" width="20" height="6" stroke="#C9A96E" stroke-width="0.6"/>
         </svg>
       </div>
-      <div class="fw-content">
-        <span class="fw-tag">Franchise</span>
-        <h3 class="fw-title">Franchise &amp;<br>Multi-Location Brands</h3>
-        <p class="fw-desc">Juicy Birds. Atul Bakery. Ice Flame Grill &amp; Chill. Honest Restaurants. We build seamless visual language across every location — consistent identity, flawless execution.</p>
+      <div class="fw-card-title">Restaurants</div>
+      <div class="fw-card-desc">Dining environments crafted to elevate the culinary experience — from layout and lighting to material palettes that match your brand's flavour.</div>
+    </div>
+
+    <div class="fw-card">
+      <div class="fw-card-icon">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="4" width="24" height="20" stroke="#C9A96E" stroke-width="1.2"/>
+          <line x1="2" y1="10" x2="26" y2="10" stroke="#C9A96E" stroke-width="0.8"/>
+          <rect x="5" y="14" width="6" height="6" stroke="#C9A96E" stroke-width="0.7"/>
+          <rect x="17" y="14" width="6" height="6" stroke="#C9A96E" stroke-width="0.7"/>
+          <rect x="11" y="14" width="6" height="10" stroke="#C9A96E" stroke-width="0.7"/>
+        </svg>
       </div>
+      <div class="fw-card-title">Franchise Businesses</div>
+      <div class="fw-card-desc">Juicy Birds. Atul Bakery. Ice Flame. Honest Restaurants. We build seamless visual language across every location — consistent identity, flawless execution.</div>
+    </div>
+
+    <div class="fw-card">
+      <div class="fw-card-icon">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="14" r="11" stroke="#C9A96E" stroke-width="1.2"/>
+          <circle cx="14" cy="14" r="6" stroke="#C9A96E" stroke-width="0.7"/>
+          <line x1="14" y1="3" x2="14" y2="8" stroke="#C9A96E" stroke-width="0.7"/>
+          <line x1="14" y1="20" x2="14" y2="25" stroke="#C9A96E" stroke-width="0.7"/>
+          <line x1="3" y1="14" x2="8" y2="14" stroke="#C9A96E" stroke-width="0.7"/>
+          <line x1="20" y1="14" x2="25" y2="14" stroke="#C9A96E" stroke-width="0.7"/>
+        </svg>
+      </div>
+      <div class="fw-card-title">Spas &amp; Wellness</div>
+      <div class="fw-card-desc">Tranquil, restorative environments designed to signal luxury — where every material choice and spatial flow communicates calm and care.</div>
+    </div>
+
+    <div class="fw-card">
+      <div class="fw-card-icon">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="6" width="24" height="20" stroke="#C9A96E" stroke-width="1.2"/>
+          <rect x="6" y="10" width="16" height="8" stroke="#C9A96E" stroke-width="0.7"/>
+          <rect x="10" y="20" width="8" height="4" stroke="#C9A96E" stroke-width="0.6"/>
+          <circle cx="14" cy="14" r="2" stroke="#C9A96E" stroke-width="0.7"/>
+          <line x1="8" y1="4" x2="8" y2="6" stroke="#C9A96E" stroke-width="1"/>
+          <line x1="20" y1="4" x2="20" y2="6" stroke="#C9A96E" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="fw-card-title">Dental Clinics</div>
+      <div class="fw-card-desc">Clinical environments that reduce patient anxiety and project professionalism — clean, considered design that works as hard as your team.</div>
+    </div>
+
+    <div class="fw-card">
+      <div class="fw-card-icon">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="4" width="24" height="20" stroke="#C9A96E" stroke-width="1.2"/>
+          <rect x="5" y="8"  width="8" height="6" stroke="#C9A96E" stroke-width="0.7"/>
+          <rect x="15" y="8" width="8" height="6" stroke="#C9A96E" stroke-width="0.7"/>
+          <rect x="5" y="16" width="8" height="6" stroke="#C9A96E" stroke-width="0.7"/>
+          <rect x="15" y="16" width="8" height="6" stroke="#C9A96E" stroke-width="0.7"/>
+        </svg>
+      </div>
+      <div class="fw-card-title">Office Spaces</div>
+      <div class="fw-card-desc">Workplaces designed for focus, collaboration, and culture — translating your brand's values into a physical environment that attracts and retains talent.</div>
     </div>
 
   </div>
 </section>
 
-<!-- ============================
-     D-PROCESS
-============================ -->
+<!-- D-PROCESS -->
 <section id="process">
   <div class="process-intro">
     <div class="process-intro-hdr">
@@ -1135,11 +1439,10 @@
     <p class="process-intro-sub">Five phases. One seamless journey. From the first conversation to the final reveal — this is how we turn your vision into a space that works for the real world.</p>
   </div>
 
-  <!-- Pinned horizontal scroll -->
   <div id="process-pin">
     <div id="process-track">
 
-      <!-- D1: DISCOVER -->
+      <!-- D1: DISCOVER — Pulse Scan -->
       <div class="p-panel">
         <div class="p-panel-bg-num" aria-hidden="true">D1</div>
         <div class="p-inner">
@@ -1156,35 +1459,24 @@
             </ul>
           </div>
           <div class="p-visual">
-            <svg viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg">
-              <!-- Radar / discovery radial -->
-              <circle cx="200" cy="180" r="140" fill="none" stroke="rgba(201,169,110,0.1)" stroke-width="1"/>
-              <circle cx="200" cy="180" r="105" fill="none" stroke="rgba(201,169,110,0.12)" stroke-width="0.8"/>
-              <circle cx="200" cy="180" r="70"  fill="none" stroke="rgba(201,169,110,0.16)" stroke-width="0.8"/>
-              <circle cx="200" cy="180" r="35"  fill="none" stroke="rgba(201,169,110,0.22)" stroke-width="1"/>
-              <!-- Radial spokes -->
-              <line x1="200" y1="40"  x2="200" y2="145" stroke="#C9A96E" stroke-width="1" opacity="0.5"/>
-              <line x1="200" y1="215" x2="200" y2="320" stroke="#C9A96E" stroke-width="1" opacity="0.5"/>
-              <line x1="60"  y1="180" x2="165" y2="180" stroke="#C9A96E" stroke-width="1" opacity="0.5"/>
-              <line x1="235" y1="180" x2="340" y2="180" stroke="#C9A96E" stroke-width="1" opacity="0.5"/>
-              <line x1="101" y1="81"  x2="175" y2="155" stroke="#C9A96E" stroke-width="0.7" opacity="0.35"/>
-              <line x1="299" y1="81"  x2="225" y2="155" stroke="#C9A96E" stroke-width="0.7" opacity="0.35"/>
-              <line x1="101" y1="279" x2="175" y2="205" stroke="#C9A96E" stroke-width="0.7" opacity="0.35"/>
-              <line x1="299" y1="279" x2="225" y2="205" stroke="#C9A96E" stroke-width="0.7" opacity="0.35"/>
-              <!-- Center dot -->
-              <circle cx="200" cy="180" r="7" fill="#C9A96E" opacity="0.9"/>
-              <!-- Outer dots -->
-              <circle cx="200" cy="40"  r="4" fill="#C9A96E" opacity="0.55"/>
-              <circle cx="200" cy="320" r="4" fill="#C9A96E" opacity="0.55"/>
-              <circle cx="60"  cy="180" r="4" fill="#C9A96E" opacity="0.55"/>
-              <circle cx="340" cy="180" r="4" fill="#C9A96E" opacity="0.55"/>
-              <!-- Scan line -->
-              <line x1="200" y1="180" x2="200" y2="40" stroke="#C9A96E" stroke-width="1.5" opacity="0.7" transform="rotate(45 200 180)"/>
-              <path d="M200,180 L200,40 A140,140 0 0,1 299,81 Z" fill="rgba(201,169,110,0.04)"/>
-            </svg>
+            <div class="p-anim-wrap">
+              <div class="d1-wrap">
+                <div class="d1-ring d1-r1"></div>
+                <div class="d1-ring d1-r2"></div>
+                <div class="d1-ring d1-r3"></div>
+                <div class="d1-spoke d1-s1"></div>
+                <div class="d1-spoke d1-s2"></div>
+                <div class="d1-spoke d1-s3"></div>
+                <div class="d1-spoke d1-s4"></div>
+                <div class="d1-sat d1-sat-n"></div>
+                <div class="d1-sat d1-sat-e"></div>
+                <div class="d1-sat d1-sat-s"></div>
+                <div class="d1-sat d1-sat-w"></div>
+                <div class="d1-dot"></div>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- Progress dots -->
         <div class="process-progress-bar">
           <div class="pp-dots">
             <div class="pp-dot on" data-i="0"></div>
@@ -1197,7 +1489,7 @@
         </div>
       </div>
 
-      <!-- D2: DEFINE -->
+      <!-- D2: DEFINE — Material Grid Fill -->
       <div class="p-panel">
         <div class="p-panel-bg-num" aria-hidden="true">D2</div>
         <div class="p-inner">
@@ -1214,28 +1506,16 @@
             </ul>
           </div>
           <div class="p-visual">
-            <svg viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg">
-              <!-- Floor plan schematic -->
-              <rect x="30"  y="30"  width="340" height="300" fill="none" stroke="rgba(201,169,110,0.25)" stroke-width="0.6"/>
-              <!-- Rooms -->
-              <rect x="30"  y="30"  width="150" height="130" fill="rgba(201,169,110,0.04)" stroke="#C9A96E" stroke-width="1.2" opacity="0.8"/>
-              <rect x="200" y="30"  width="170" height="85"  fill="rgba(201,169,110,0.03)" stroke="#C9A96E" stroke-width="1.2" opacity="0.8"/>
-              <rect x="200" y="135" width="170" height="75"  fill="rgba(201,169,110,0.03)" stroke="#C9A96E" stroke-width="0.8" opacity="0.6"/>
-              <rect x="30"  y="180" width="340" height="100" fill="rgba(201,169,110,0.05)" stroke="#C9A96E" stroke-width="1.2" opacity="0.8"/>
-              <rect x="30"  y="300" width="340" height="30"  fill="rgba(201,169,110,0.02)" stroke="#C9A96E" stroke-width="0.6" opacity="0.5"/>
-              <!-- Door swing -->
-              <path d="M30 160 Q80 160 80 110" fill="none" stroke="#C9A96E" stroke-width="0.7" opacity="0.5"/>
-              <path d="M200 135 Q240 135 240 95" fill="none" stroke="#C9A96E" stroke-width="0.7" opacity="0.5"/>
-              <!-- Labels -->
-              <text x="105" y="102" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="8" letter-spacing="2" opacity="0.5">LOUNGE</text>
-              <text x="285" y="78"  text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="8" letter-spacing="2" opacity="0.5">RECEPTION</text>
-              <text x="200" y="238" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="8" letter-spacing="2" opacity="0.5">DINING</text>
-              <!-- Dimension lines -->
-              <line x1="30"  y1="16" x2="370" y2="16" stroke="#C9A96E" stroke-width="0.4" opacity="0.4"/>
-              <line x1="30"  y1="13" x2="30"  y2="19" stroke="#C9A96E" stroke-width="0.4" opacity="0.4"/>
-              <line x1="370" y1="13" x2="370" y2="19" stroke="#C9A96E" stroke-width="0.4" opacity="0.4"/>
-              <text x="200" y="13" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.4">CONCEPT PLAN</text>
-            </svg>
+            <div class="p-anim-wrap">
+              <div class="d2-grid">
+                <div class="d2-swatch d2-sw1"></div>
+                <div class="d2-swatch d2-sw2"></div>
+                <div class="d2-swatch d2-sw3"></div>
+                <div class="d2-swatch d2-sw4"></div>
+                <div class="d2-swatch d2-sw5"></div>
+                <div class="d2-swatch d2-sw6"></div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="process-progress-bar">
@@ -1250,7 +1530,7 @@
         </div>
       </div>
 
-      <!-- D3: DESIGN -->
+      <!-- D3: DESIGN — Blueprint Draw -->
       <div class="p-panel">
         <div class="p-panel-bg-num" aria-hidden="true">D3</div>
         <div class="p-inner">
@@ -1267,30 +1547,35 @@
             </ul>
           </div>
           <div class="p-visual">
-            <svg viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg">
-              <!-- Isometric room render -->
-              <!-- Floor -->
-              <polygon points="200,280 340,210 340,230 200,300 60,230 60,210" fill="rgba(201,169,110,0.06)" stroke="#C9A96E" stroke-width="0.8" opacity="0.7"/>
-              <!-- Back wall left -->
-              <polygon points="60,210 60,90 200,160 200,280" fill="rgba(201,169,110,0.04)" stroke="#C9A96E" stroke-width="1" opacity="0.8"/>
-              <!-- Back wall right -->
-              <polygon points="200,160 340,90 340,210 200,280" fill="rgba(201,169,110,0.07)" stroke="#C9A96E" stroke-width="1" opacity="0.8"/>
-              <!-- Ceiling left -->
-              <polygon points="60,90 60,70 200,140 200,160" fill="rgba(201,169,110,0.03)" stroke="#C9A96E" stroke-width="0.6" opacity="0.5"/>
-              <!-- Ceiling right -->
-              <polygon points="200,140 340,70 340,90 200,160" fill="rgba(201,169,110,0.02)" stroke="#C9A96E" stroke-width="0.6" opacity="0.5"/>
-              <!-- Top edge -->
-              <line x1="60" y1="70" x2="200" y2="40" stroke="#C9A96E" stroke-width="0.8" opacity="0.5"/>
-              <line x1="200" y1="40" x2="340" y2="70" stroke="#C9A96E" stroke-width="0.8" opacity="0.5"/>
-              <!-- Center vanishing point -->
-              <circle cx="200" cy="160" r="4" fill="#C9A96E" opacity="0.8"/>
-              <!-- Furniture sketch in room -->
-              <rect x="90" y="190" width="60" height="35" fill="rgba(201,169,110,0.08)" stroke="#C9A96E" stroke-width="0.7" opacity="0.6" transform="skewY(-15)"/>
-              <rect x="240" y="185" width="65" height="30" fill="rgba(201,169,110,0.06)" stroke="#C9A96E" stroke-width="0.7" opacity="0.5" transform="skewY(12)"/>
-              <!-- Light from above -->
-              <line x1="200" y1="100" x2="200" y2="270" stroke="#C9A96E" stroke-width="0.4" opacity="0.25" stroke-dasharray="4,6"/>
-              <text x="200" y="340" text-anchor="middle" fill="#C9A96E" font-family="Cormorant Garamond" font-size="10" font-style="italic" opacity="0.45">3D Visualization</text>
-            </svg>
+            <div class="p-anim-wrap">
+              <svg id="d3-svg" viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer walls path -->
+                <path id="d3-walls"
+                  d="M20,20 L300,20 L300,260 L20,260 Z"
+                  stroke="#C9A96E" stroke-width="1.5" fill="none"
+                  stroke-dasharray="1120" stroke-dashoffset="1120"/>
+                <!-- Interior partition -->
+                <path id="d3-partition"
+                  d="M20,130 L200,130 M200,20 L200,130 M200,190 L300,190"
+                  stroke="#C9A96E" stroke-width="0.8" fill="none"
+                  stroke-dasharray="450" stroke-dashoffset="450"/>
+                <!-- Furniture icons group -->
+                <g id="d3-furniture">
+                  <!-- Desk -->
+                  <rect x="35" y="145" width="70" height="40" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
+                  <rect x="38" y="148" width="64" height="30" fill="none" stroke="#C9A96E" stroke-width="0.4" opacity="0.5"/>
+                  <!-- Chair -->
+                  <circle cx="70" cy="200" r="12" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
+                  <!-- Sofa -->
+                  <rect x="215" y="35" width="70" height="30" rx="4" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
+                  <rect x="218" y="38" width="20" height="24" rx="2" fill="none" stroke="#C9A96E" stroke-width="0.4" opacity="0.5"/>
+                  <rect x="243" y="38" width="20" height="24" rx="2" fill="none" stroke="#C9A96E" stroke-width="0.4" opacity="0.5"/>
+                  <!-- Table -->
+                  <ellipse cx="110" cy="80" rx="30" ry="20" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
+                </g>
+                <text id="d3-label" x="160" y="275" text-anchor="middle" font-family="DM Sans" font-size="8" letter-spacing="3">DESIGN BLUEPRINT</text>
+              </svg>
+            </div>
           </div>
         </div>
         <div class="process-progress-bar">
@@ -1305,7 +1590,7 @@
         </div>
       </div>
 
-      <!-- D4: DEVELOP -->
+      <!-- D4: DEVELOP — Layer Stack -->
       <div class="p-panel">
         <div class="p-panel-bg-num" aria-hidden="true">D4</div>
         <div class="p-inner">
@@ -1322,34 +1607,26 @@
             </ul>
           </div>
           <div class="p-visual">
-            <svg viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg">
-              <!-- Front elevation drawing -->
-              <!-- Base line -->
-              <line x1="30" y1="300" x2="370" y2="300" stroke="#C9A96E" stroke-width="1.2" opacity="0.7"/>
-              <!-- Building -->
-              <rect x="50" y="100" width="300" height="200" fill="rgba(201,169,110,0.05)" stroke="#C9A96E" stroke-width="1.2" opacity="0.8"/>
-              <!-- Windows left -->
-              <rect x="70"  y="130" width="55" height="45" fill="rgba(201,169,110,0.08)" stroke="#C9A96E" stroke-width="1" opacity="0.8"/>
-              <line x1="97"  y1="130" x2="97"  y2="175" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
-              <line x1="70"  y1="152" x2="125" y2="152" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
-              <!-- Windows right -->
-              <rect x="275" y="130" width="55" height="45" fill="rgba(201,169,110,0.08)" stroke="#C9A96E" stroke-width="1" opacity="0.8"/>
-              <line x1="302" y1="130" x2="302" y2="175" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
-              <line x1="275" y1="152" x2="330" y2="152" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
-              <!-- Windows center top -->
-              <rect x="155" y="125" width="90" height="55" fill="rgba(201,169,110,0.06)" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-              <!-- Door -->
-              <rect x="165" y="225" width="70" height="75" fill="rgba(201,169,110,0.08)" stroke="#C9A96E" stroke-width="1" opacity="0.8"/>
-              <path d="M165 225 Q200 225 200 260" fill="none" stroke="#C9A96E" stroke-width="0.6" opacity="0.4"/>
-              <!-- Dimension lines -->
-              <line x1="50"  y1="85"  x2="350" y2="85"  stroke="#C9A96E" stroke-width="0.4" opacity="0.45"/>
-              <line x1="50"  y1="82"  x2="50"  y2="88"  stroke="#C9A96E" stroke-width="0.4" opacity="0.45"/>
-              <line x1="350" y1="82"  x2="350" y2="88"  stroke="#C9A96E" stroke-width="0.4" opacity="0.45"/>
-              <line x1="16"  y1="100" x2="16"  y2="300" stroke="#C9A96E" stroke-width="0.4" opacity="0.45"/>
-              <line x1="13"  y1="100" x2="19"  y2="100" stroke="#C9A96E" stroke-width="0.4" opacity="0.45"/>
-              <line x1="13"  y1="300" x2="19"  y2="300" stroke="#C9A96E" stroke-width="0.4" opacity="0.45"/>
-              <text x="200" y="82" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.5">FRONT ELEVATION</text>
-            </svg>
+            <div class="p-anim-wrap">
+              <div class="d4-wrap">
+                <div class="d4-doc" id="d4-doc1">
+                  <span class="d4-doc-num">01</span>
+                  <span class="d4-doc-label">Construction Documentation</span>
+                </div>
+                <div class="d4-doc" id="d4-doc2">
+                  <span class="d4-doc-num">02</span>
+                  <span class="d4-doc-label">Specification Sheets</span>
+                </div>
+                <div class="d4-doc" id="d4-doc3">
+                  <span class="d4-doc-num">03</span>
+                  <span class="d4-doc-label">Procurement List</span>
+                </div>
+                <div class="d4-doc" id="d4-doc4">
+                  <span class="d4-doc-num">04</span>
+                  <span class="d4-doc-label">Site Review Report</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="process-progress-bar">
@@ -1364,7 +1641,7 @@
         </div>
       </div>
 
-      <!-- D5: DELIVER -->
+      <!-- D5: DELIVER — Curtain Reveal -->
       <div class="p-panel">
         <div class="p-panel-bg-num" aria-hidden="true">D5</div>
         <div class="p-inner">
@@ -1381,29 +1658,28 @@
             </ul>
           </div>
           <div class="p-visual">
-            <svg viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg">
-              <!-- Completion / key reveal visual -->
-              <circle cx="200" cy="175" r="130" fill="none" stroke="rgba(201,169,110,0.08)" stroke-width="1"/>
-              <circle cx="200" cy="175" r="100" fill="none" stroke="rgba(201,169,110,0.12)" stroke-width="1"/>
-              <circle cx="200" cy="175" r="70"  fill="none" stroke="rgba(201,169,110,0.18)" stroke-width="1.2"/>
-              <!-- Asterisk / star -->
-              <line x1="200" y1="120" x2="200" y2="230" stroke="#C9A96E" stroke-width="1.2" opacity="0.6"/>
-              <line x1="145" y1="143" x2="255" y2="207" stroke="#C9A96E" stroke-width="1.2" opacity="0.6"/>
-              <line x1="145" y1="207" x2="255" y2="143" stroke="#C9A96E" stroke-width="1.2" opacity="0.6"/>
-              <!-- Inner check -->
-              <circle cx="200" cy="175" r="28" fill="rgba(201,169,110,0.1)" stroke="#C9A96E" stroke-width="1.5" opacity="0.9"/>
-              <polyline points="185,175 197,188 218,160" fill="none" stroke="#C9A96E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
-              <!-- Radiating dots -->
-              <circle cx="200" cy="45"  r="3.5" fill="#C9A96E" opacity="0.6"/>
-              <circle cx="200" cy="305" r="3.5" fill="#C9A96E" opacity="0.6"/>
-              <circle cx="70"  cy="175" r="3.5" fill="#C9A96E" opacity="0.6"/>
-              <circle cx="330" cy="175" r="3.5" fill="#C9A96E" opacity="0.6"/>
-              <circle cx="108" cy="83"  r="2.5" fill="#C9A96E" opacity="0.4"/>
-              <circle cx="292" cy="83"  r="2.5" fill="#C9A96E" opacity="0.4"/>
-              <circle cx="108" cy="267" r="2.5" fill="#C9A96E" opacity="0.4"/>
-              <circle cx="292" cy="267" r="2.5" fill="#C9A96E" opacity="0.4"/>
-              <text x="200" cy="175" y="338" text-anchor="middle" fill="#C9A96E" font-family="Cormorant Garamond" font-size="16" font-style="italic" font-weight="400" opacity="0.75">The Reveal.</text>
-            </svg>
+            <div class="p-anim-wrap">
+              <div class="d5-wrap">
+                <div class="d5-interior">
+                  <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Window frame with light -->
+                    <rect x="60" y="20" width="80" height="100" stroke="#C9A96E" stroke-width="1"/>
+                    <line x1="100" y1="20" x2="100" y2="120" stroke="#C9A96E" stroke-width="0.5" opacity="0.5"/>
+                    <line x1="60" y1="70" x2="140" y2="70" stroke="#C9A96E" stroke-width="0.5" opacity="0.5"/>
+                    <!-- Plant -->
+                    <line x1="40" y1="180" x2="40" y2="130" stroke="#C9A96E" stroke-width="1.2"/>
+                    <circle cx="35" cy="120" r="12" stroke="#C9A96E" stroke-width="0.8"/>
+                    <circle cx="48" cy="115" r="10" stroke="#C9A96E" stroke-width="0.8"/>
+                    <!-- Floor line -->
+                    <line x1="10" y1="180" x2="190" y2="180" stroke="#C9A96E" stroke-width="0.8"/>
+                    <!-- Sofa -->
+                    <rect x="100" y="150" width="85" height="30" rx="4" stroke="#C9A96E" stroke-width="0.8"/>
+                  </svg>
+                </div>
+                <div class="d5-curtain-left"></div>
+                <div class="d5-curtain-right"></div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="process-progress-bar">
@@ -1422,9 +1698,7 @@
   </div><!-- /process-pin -->
 </section>
 
-<!-- ============================
-     PORTFOLIO
-============================ -->
+<!-- PORTFOLIO -->
 <section id="portfolio">
   <div class="portfolio-hdr">
     <span class="section-num">03</span>
@@ -1432,100 +1706,83 @@
   </div>
   <div class="portfolio-grid">
 
-    <!-- Card 1: Toronto Airport Hotel -->
     <div class="pf-card">
-      <div class="pf-bg"></div>
       <div class="pf-art">
-        <svg viewBox="0 0 300 500" xmlns="http://www.w3.org/2000/svg">
-          <rect x="20" y="20" width="260" height="460" fill="none" stroke="#C9A96E" stroke-width="0.8"/>
-          <rect x="40" y="60" width="110" height="90" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <rect x="165" y="60" width="95" height="60" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <rect x="40" y="180" width="220" height="130" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <rect x="40" y="340" width="100" height="100" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <rect x="160" y="340" width="100" height="100" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
+        <svg viewBox="0 0 300 500" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <rect x="20" y="20" width="260" height="460" stroke="#C9A96E" stroke-width="0.8"/>
+          <rect x="40" y="60" width="110" height="90" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
+          <rect x="165" y="60" width="95" height="60" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
+          <rect x="40" y="180" width="220" height="130" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
+          <rect x="40" y="340" width="100" height="100" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
+          <rect x="160" y="340" width="100" height="100" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
           <text x="150" y="260" text-anchor="middle" fill="#C9A96E" font-family="Cormorant Garamond" font-size="9" letter-spacing="3" opacity="0.5">TORONTO AIRPORT HOTEL</text>
-          <text x="150" y="273" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.35">164 GUEST ROOMS</text>
         </svg>
       </div>
-      <div class="pf-hover-overlay"></div>
       <div class="pf-info">
         <div class="pf-tag">Hospitality · Toronto, ON</div>
         <div class="pf-name">Toronto Airport Hotel</div>
       </div>
     </div>
 
-    <!-- Card 2: Juicy Birds -->
     <div class="pf-card">
-      <div class="pf-bg"></div>
       <div class="pf-art">
-        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
-          <rect x="15" y="15" width="250" height="190" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
-          <circle cx="70"  cy="95" r="30" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
-          <circle cx="140" cy="95" r="30" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
-          <circle cx="210" cy="95" r="30" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
-          <rect x="30" y="150" width="220" height="30" fill="none" stroke="#C9A96E" stroke-width="0.8" opacity="0.5"/>
+        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <rect x="15" y="15" width="250" height="190" stroke="#C9A96E" stroke-width="0.7"/>
+          <circle cx="70"  cy="95" r="30" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
+          <circle cx="140" cy="95" r="30" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
+          <circle cx="210" cy="95" r="30" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
+          <rect x="30" y="150" width="220" height="30" stroke="#C9A96E" stroke-width="0.8" opacity="0.5"/>
           <text x="140" y="170" text-anchor="middle" fill="#C9A96E" font-family="Cormorant Garamond" font-size="8" letter-spacing="2" opacity="0.4">JUICY BIRDS</text>
         </svg>
       </div>
-      <div class="pf-hover-overlay"></div>
       <div class="pf-info">
         <div class="pf-tag">Franchise · Restaurant</div>
         <div class="pf-name">Juicy Birds</div>
       </div>
     </div>
 
-    <!-- Card 3: Atul Bakery -->
     <div class="pf-card">
-      <div class="pf-bg"></div>
       <div class="pf-art">
-        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
-          <rect x="15" y="15" width="250" height="190" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
-          <rect x="30" y="30"  width="220" height="65" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <rect x="30" y="115" width="100" height="65" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
-          <rect x="150" y="115" width="100" height="65" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
+        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <rect x="15" y="15" width="250" height="190" stroke="#C9A96E" stroke-width="0.7"/>
+          <rect x="30" y="30"  width="220" height="65" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
+          <rect x="30" y="115" width="100" height="65" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
+          <rect x="150" y="115" width="100" height="65" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
           <text x="140" y="68" text-anchor="middle" fill="#C9A96E" font-family="Cormorant Garamond" font-size="8" letter-spacing="2" opacity="0.4">ATUL BAKERY</text>
         </svg>
       </div>
-      <div class="pf-hover-overlay"></div>
       <div class="pf-info">
         <div class="pf-tag">Franchise · Bakery</div>
         <div class="pf-name">Atul Bakery</div>
       </div>
     </div>
 
-    <!-- Card 4: Ice Flame -->
     <div class="pf-card">
-      <div class="pf-bg"></div>
       <div class="pf-art">
-        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
-          <rect x="15" y="15" width="250" height="190" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
-          <polygon points="140,25 250,110 140,195 30,110" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <polygon points="140,55 210,110 140,165 70,110" fill="none" stroke="#C9A96E" stroke-width="0.6" opacity="0.4"/>
-          <circle cx="140" cy="110" r="18" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.8"/>
+        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <rect x="15" y="15" width="250" height="190" stroke="#C9A96E" stroke-width="0.7"/>
+          <polygon points="140,25 250,110 140,195 30,110" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
+          <circle cx="140" cy="110" r="18" stroke="#C9A96E" stroke-width="1" opacity="0.8"/>
           <text x="140" y="113" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="1" opacity="0.6">ICE FLAME</text>
         </svg>
       </div>
-      <div class="pf-hover-overlay"></div>
       <div class="pf-info">
         <div class="pf-tag">Franchise · Grill</div>
         <div class="pf-name">Ice Flame Grill &amp; Chill</div>
       </div>
     </div>
 
-    <!-- Card 5: Honest Restaurants -->
     <div class="pf-card">
-      <div class="pf-bg"></div>
       <div class="pf-art">
-        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
-          <rect x="15" y="15" width="250" height="190" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
-          <rect x="30" y="30" width="220" height="160" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
+        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <rect x="15" y="15" width="250" height="190" stroke="#C9A96E" stroke-width="0.7"/>
+          <rect x="30" y="30" width="220" height="160" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
           <line x1="30" y1="80"  x2="250" y2="80"  stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
           <line x1="30" y1="130" x2="250" y2="130" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
           <line x1="140" y1="30" x2="140" y2="190" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
           <text x="140" y="110" text-anchor="middle" fill="#C9A96E" font-family="Cormorant Garamond" font-size="8" letter-spacing="2" opacity="0.4">HONEST RESTAURANTS</text>
         </svg>
       </div>
-      <div class="pf-hover-overlay"></div>
       <div class="pf-info">
         <div class="pf-tag">Franchise · Casual Dining</div>
         <div class="pf-name">Honest Restaurants</div>
@@ -1535,9 +1792,7 @@
   </div>
 </section>
 
-<!-- ============================
-     AWARDS
-============================ -->
+<!-- AWARDS -->
 <section id="awards">
   <div class="awards-hdr">
     <span class="section-num">04</span>
@@ -1577,14 +1832,11 @@
   </div>
 </section>
 
-<!-- ============================
-     CTA
-============================ -->
+<!-- CTA -->
 <section id="cta">
-  <div class="cta-glow"></div>
   <div class="cta-content">
     <span class="cta-eyebrow">Ready to Transform Your Space?</span>
-    <h2 class="cta-title">Let's Build<br>Something <em>Remarkable</em></h2>
+    <h2 class="cta-title">Let's Build Something <em>Remarkable</em></h2>
     <p class="cta-sub">Whether you're launching a new franchise location or reimagining a hospitality experience, our D-Process takes you from vision to reality — seamlessly.</p>
     <div class="cta-btns">
       <button class="btn-gold">Start a Project</button>
@@ -1593,12 +1845,10 @@
   </div>
 </section>
 
-<!-- ============================
-     FOOTER
-============================ -->
+<!-- FOOTER -->
 <footer>
   <div class="footer-logo">Design TWG</div>
-  <div class="footer-copy">© 2024 Design TWG. All Rights Reserved. Toronto, Canada.</div>
+  <div class="footer-copy">© 2024 Design TWG. All Rights Reserved. Mississauga, Canada.</div>
   <nav class="footer-links">
     <a href="#">Instagram</a>
     <a href="#">LinkedIn</a>
@@ -1606,17 +1856,11 @@
   </nav>
 </footer>
 
-<!-- ============================
-     SCRIPTS
-============================ -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<!-- SCRIPTS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
 <script>
-/* ============================================================
-   GLOBALS
-============================================================ */
 gsap.registerPlugin(ScrollTrigger);
 
 /* ============================================================
@@ -1628,7 +1872,6 @@ gsap.registerPlugin(ScrollTrigger);
   const loader = document.getElementById('loader');
   const wm     = loader.querySelector('.loader-wordmark');
 
-  // Fade in wordmark
   gsap.to(wm, { opacity: 1, y: 0, duration: 0.7, delay: 0.15, ease: 'power3.out' });
 
   let val = 0;
@@ -1658,170 +1901,86 @@ gsap.registerPlugin(ScrollTrigger);
 })();
 
 /* ============================================================
-   THREE.JS HERO
+   HERO ROTATION
 ============================================================ */
-function initHeroScene() {
-  const canvas   = document.getElementById('hero-canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColor(0x000000, 0);
+function initHeroRotation() {
+  const words   = gsap.utils.toArray('.hero-slot-word');
+  const visuals = gsap.utils.toArray('.hero-svg-plan');
+  const HOLD = 1.5, IN_DUR = 0.45, OUT_DUR = 0.35;
 
-  const scene  = new THREE.Scene();
-  scene.fog    = new THREE.FogExp2(0x060606, 0.018);
-  const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 300);
-  camera.position.set(0, 1, 32);
+  // Size the slot wrap to the widest word
+  const sizer = document.getElementById('hero-slot-sizer');
+  const wrap  = document.getElementById('hero-slot-wrap');
+  wrap.style.width = sizer.offsetWidth + 'px';
 
-  // ── Grid floor ──
-  const gMat = new THREE.LineBasicMaterial({ color: 0x16120A, transparent: true, opacity: 0.9 });
-  const gSize = 120, gStep = 6;
-  for (let i = -gSize; i <= gSize; i += gStep) {
-    const pg = new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(i, -10, -120), new THREE.Vector3(i, -10, 40)
-    ]);
-    scene.add(new THREE.Line(pg, gMat));
-    const pg2 = new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(-gSize, -10, i), new THREE.Vector3(gSize, -10, i)
-    ]);
-    scene.add(new THREE.Line(pg2, gMat));
-  }
+  gsap.set(words,   { opacity: 0, yPercent: 100 });
+  gsap.set(visuals, { opacity: 0 });
 
-  // ── Floating wireframe planes ──
-  const planes = [];
-  for (let i = 0; i < 14; i++) {
-    const w = Math.random() * 14 + 5;
-    const h = Math.random() * 18 + 7;
-    const geo = new THREE.PlaneGeometry(w, h);
-    const mat = new THREE.MeshBasicMaterial({
-      color: 0xC9A96E, wireframe: true, transparent: true,
-      opacity: Math.random() * 0.08 + 0.03
+  let current = 0;
+
+  function showNext() {
+    const next = (current + 1) % words.length;
+    const tl = gsap.timeline({
+      onComplete: () => { current = next; showNext(); }
     });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(
-      (Math.random() - 0.5) * 70,
-      (Math.random() - 0.5) * 28,
-      -(Math.random() * 90 + 12)
+    tl.to(words[current],   { yPercent: -100, opacity: 0, duration: OUT_DUR, ease: 'power2.in' }, 0);
+    tl.to(visuals[current], { opacity: 0, duration: OUT_DUR * 0.8 }, 0);
+    tl.fromTo(words[next],
+      { yPercent: 100, opacity: 0 },
+      { yPercent: 0, opacity: 1, duration: IN_DUR, ease: 'power3.out' },
+      OUT_DUR * 0.3
     );
-    mesh.rotation.set(
-      (Math.random() - 0.5) * 0.6,
-      (Math.random() - 0.5) * 1.8,
-      (Math.random() - 0.5) * 0.4
-    );
-    mesh.userData = {
-      floatAmp:    Math.random() * 2 + 0.8,
-      floatFreq:   Math.random() * 0.3 + 0.1,
-      floatOffset: Math.random() * Math.PI * 2,
-      rotY:        (Math.random() - 0.5) * 0.002,
-      baseY:       mesh.position.y
-    };
-    scene.add(mesh);
-    planes.push(mesh);
+    tl.to(visuals[next], { opacity: 1, duration: IN_DUR }, OUT_DUR * 0.3);
+    tl.to({}, { duration: HOLD });
   }
 
-  // ── Particles ──
-  const N = 2200;
-  const pos = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) {
-    pos[i*3]   = (Math.random() - 0.5) * 120;
-    pos[i*3+1] = (Math.random() - 0.5) * 60;
-    pos[i*3+2] = -(Math.random() * 110 + 8);
-  }
-  const pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const pMat = new THREE.PointsMaterial({
-    color: 0xC9A96E, size: 0.12, transparent: true, opacity: 0.45, sizeAttenuation: true
-  });
-  scene.add(new THREE.Points(pGeo, pMat));
-
-  // ── Architectural room outline (distant) ──
-  const wMat = new THREE.LineBasicMaterial({ color: 0xC9A96E, transparent: true, opacity: 0.1 });
-  const rPts = [
-    new THREE.Vector3(-22, -10, -80), new THREE.Vector3(22, -10, -80),
-    new THREE.Vector3(22, 14, -80),   new THREE.Vector3(-22, 14, -80),
-    new THREE.Vector3(-22, -10, -80)
-  ];
-  scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(rPts), wMat));
-  // Vertical lines
-  [[-22,-10,-80],[-22,14,-80],[22,-10,-80],[22,14,-80]].forEach(([x,y,z]) => {
-    const pts = [new THREE.Vector3(x, y, z), new THREE.Vector3(x, y, z - 30)];
-    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), wMat));
-  });
-
-  // ── Mouse ──
-  let mX = 0, mY = 0, tX = 0, tY = 0;
-  document.addEventListener('mousemove', (e) => {
-    tX = (e.clientX / window.innerWidth  - 0.5) * 2;
-    tY = -(e.clientY / window.innerHeight - 0.5) * 2;
-  });
-
-  // ── Resize ──
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  // ── Animate ──
-  const clock = new THREE.Clock();
-  const hero  = document.getElementById('hero');
-
-  function tick() {
-    requestAnimationFrame(tick);
-    const t = clock.getElapsedTime();
-
-    mX += (tX - mX) * 0.035;
-    mY += (tY - mY) * 0.035;
-
-    const sp = Math.min(window.scrollY / (hero.offsetHeight || window.innerHeight), 1);
-    camera.position.x  = mX * 3.5;
-    camera.position.y  = 1 + mY * 2.2;
-    camera.position.z  = 32 - sp * 18;
-    camera.lookAt(mX * 0.4, mY * 0.5, -6);
-
-    planes.forEach(p => {
-      p.position.y = p.userData.baseY +
-        Math.sin(t * p.userData.floatFreq + p.userData.floatOffset) * p.userData.floatAmp;
-      p.rotation.y += p.userData.rotY;
-    });
-
-    renderer.render(scene, camera);
-  }
-  tick();
+  gsap.set(words[0],   { yPercent: 0, opacity: 1 });
+  gsap.set(visuals[0], { opacity: 1 });
+  gsap.delayedCall(HOLD, showNext);
 }
 
 /* ============================================================
-   CUSTOM CURSOR
+   D3 BLUEPRINT DRAW LOOP
 ============================================================ */
-function initCursor() {
-  const dot  = document.getElementById('cursor-dot');
-  const ring = document.getElementById('cursor-ring');
-  let cx = 0, cy = 0, rx = 0, ry = 0;
+function loopD3() {
+  const walls     = document.getElementById('d3-walls');
+  const partition = document.getElementById('d3-partition');
+  const furniture = document.getElementById('d3-furniture');
+  const label     = document.getElementById('d3-label');
 
-  document.addEventListener('mousemove', e => {
-    cx = e.clientX; cy = e.clientY;
-    dot.style.left = cx + 'px';
-    dot.style.top  = cy + 'px';
-  });
+  gsap.set(walls,     { strokeDashoffset: 1120, opacity: 1 });
+  gsap.set(partition, { strokeDashoffset: 450,  opacity: 1 });
+  gsap.set(furniture, { opacity: 0 });
+  gsap.set(label,     { opacity: 0 });
 
-  (function loopRing() {
-    rx += (cx - rx) * 0.11;
-    ry += (cy - ry) * 0.11;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    requestAnimationFrame(loopRing);
-  })();
+  const tl = gsap.timeline({ onComplete: loopD3 });
+  tl.to(walls,     { strokeDashoffset: 0, duration: 1.8, ease: 'power2.inOut' })
+    .to(partition, { strokeDashoffset: 0, duration: 1.0, ease: 'power2.out' }, '-=0.6')
+    .to(furniture, { opacity: 1, duration: 0.5 })
+    .to(label,     { opacity: 0.7, duration: 0.4 })
+    .to({}, { duration: 1.4 })
+    .to([walls, partition, furniture, label], { opacity: 0, duration: 0.5, stagger: 0.05 })
+    .to({}, { duration: 0.4 });
+}
 
-  const hov = 'a, button, .fw-panel, .pf-card, .nav-cta, .btn-gold, .btn-outline';
-  document.querySelectorAll(hov).forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      ring.style.width = ring.style.height = '54px';
-      ring.style.opacity = '0.7';
-    });
-    el.addEventListener('mouseleave', () => {
-      ring.style.width = ring.style.height = '36px';
-      ring.style.opacity = '1';
-    });
-  });
+/* ============================================================
+   D4 LAYER STACK LOOP
+============================================================ */
+function loopD4() {
+  const docs = ['#d4-doc1','#d4-doc2','#d4-doc3','#d4-doc4'];
+  const tl = gsap.timeline({ onComplete: loopD4 });
+
+  gsap.set(docs, { y: 200, opacity: 0, rotation: 0, x: 0 });
+
+  tl.to(docs, { y: 0, opacity: 1, stagger: 0.18, duration: 0.55, ease: 'power3.out' })
+    .to('#d4-doc1', { rotation: -4, x: -10, duration: 0.4 }, '+=0.1')
+    .to('#d4-doc2', { rotation: -1.5, x: -4, duration: 0.4 }, '<')
+    .to('#d4-doc3', { rotation:  1.5, x:  4, duration: 0.4 }, '<')
+    .to('#d4-doc4', { rotation:  4,   x: 10, duration: 0.4 }, '<')
+    .to({}, { duration: 1.5 })
+    .to(docs, { rotation: 0, x: 0, duration: 0.3 })
+    .to(docs, { y: -200, opacity: 0, stagger: 0.08, duration: 0.45, ease: 'power2.in' })
+    .to({}, { duration: 0.5 });
 }
 
 /* ============================================================
@@ -1829,23 +1988,23 @@ function initCursor() {
 ============================================================ */
 function initAnimations() {
 
-  /* ── Hero ── */
-  const heroTl = gsap.timeline({ delay: 0.2 });
-  heroTl
-    .to('.hero-eyebrow', { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' })
-    .to('.title-inner',  { y: '0%', duration: 1.3, stagger: 0.18, ease: 'power4.out' }, '-=0.5')
-    .to('.hero-tagline', { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, '-=0.6')
-    .to('.hero-scroll-hint', { opacity: 1, duration: 0.8, ease: 'power3.out' }, '-=0.5');
-
-  /* ── Nav ── */
-  gsap.from('#nav', { y: -32, opacity: 0, duration: 1, delay: 0.4, ease: 'power3.out' });
+  /* Nav */
+  gsap.from('#nav', { y: -32, opacity: 0, duration: 1, delay: 0.3, ease: 'power3.out' });
   ScrollTrigger.create({
     start: 'top -70',
     onEnter:     () => document.getElementById('nav').classList.add('scrolled'),
     onLeaveBack: () => document.getElementById('nav').classList.remove('scrolled')
   });
 
-  /* ── Manifesto word reveal ── */
+  /* Hero entry */
+  const heroTl = gsap.timeline({ delay: 0.2 });
+  heroTl
+    .to('.hero-eyebrow', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
+    .to('.hero-body',    { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.3')
+    .to('.hero-btns',    { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+    .to('.hero-scroll-hint', { opacity: 1, duration: 0.7 }, '-=0.3');
+
+  /* Manifesto word reveal */
   function wrapWords(container) {
     container.innerHTML = container.innerHTML.replace(
       /(?<![<>])(\b\w[\w'&;]*\b)(?![^<]*>)/g,
@@ -1859,11 +2018,11 @@ function initAnimations() {
     trigger: '#manifesto', start: 'top 72%',
     onEnter: () => {
       gsap.to('.wi', { y: '0%', duration: 0.85, stagger: 0.025, ease: 'power3.out' });
-      gsap.to('.manifesto-sub p', { opacity: 1, x: 0, duration: 0.9, delay: 0.4, ease: 'power3.out' });
+      gsap.to('.manifesto-sub p', { opacity: 1, x: 0, duration: 0.9, delay: 0.5, ease: 'power3.out' });
     }
   });
 
-  /* ── Stats counters ── */
+  /* Stats counters */
   ScrollTrigger.create({
     trigger: '#stats', start: 'top 75%',
     onEnter: () => {
@@ -1878,23 +2037,18 @@ function initAnimations() {
     }
   });
 
-  /* ── For Whom ── */
-  ScrollTrigger.create({
-    trigger: '#for-whom', start: 'top 72%',
-    onEnter: () => {
-      gsap.to('#fw-hotels',   { opacity: 1, x: 0, duration: 1,   ease: 'power3.out' });
-      gsap.to('#fw-franchise',{ opacity: 1, x: 0, duration: 1, delay: 0.18, ease: 'power3.out' });
-    }
+  /* For Whom cards */
+  ScrollTrigger.batch('.fw-card', {
+    onEnter: els => gsap.to(els, { opacity: 1, y: 0, stagger: 0.1, duration: 0.85, ease: 'power3.out' }),
+    start: 'top 88%'
   });
-  gsap.set('#fw-hotels',    { x: -50 });
-  gsap.set('#fw-franchise', { x:  50 });
 
-  /* ── D-Process Horizontal Scroll ── */
+  /* D-Process Horizontal Scroll */
   const track = document.getElementById('process-track');
   const pin   = document.getElementById('process-pin');
   const ppLabels = document.querySelectorAll('.pp-label');
 
-  gsap.to(track, {
+  const processScrollTween = gsap.to(track, {
     x: () => -(track.scrollWidth - window.innerWidth),
     ease: 'none',
     scrollTrigger: {
@@ -1914,38 +2068,39 @@ function initAnimations() {
     }
   });
 
-  /* ── Portfolio cards ── */
+  /* Portfolio cards */
   ScrollTrigger.batch('.pf-card', {
     onEnter: els => gsap.to(els, { opacity: 1, y: 0, stagger: 0.1, duration: 0.85, ease: 'power3.out' }),
     start: 'top 88%'
   });
 
-  /* ── Award cards ── */
+  /* Award cards */
   ScrollTrigger.batch('.award-card', {
     onEnter: els => gsap.to(els, { opacity: 1, x: 0, stagger: 0.1, duration: 0.75, ease: 'power3.out' }),
     start: 'top 85%'
   });
 
-  /* ── CTA ── */
+  /* CTA */
+  gsap.set('.cta-sub', { y: 20 });
+  gsap.set('.cta-btns', { y: 20 });
   ScrollTrigger.create({
     trigger: '#cta', start: 'top 72%',
     onEnter: () => {
       gsap.to('.cta-eyebrow', { opacity: 1, y: 0, duration: 0.7 });
-      gsap.to('.cta-title',   { opacity: 1, y: 0, duration: 1,   delay: 0.15, ease: 'power3.out' });
+      gsap.to('.cta-title',   { opacity: 1, y: 0, duration: 1, delay: 0.15, ease: 'power3.out' });
       gsap.to('.cta-sub',     { opacity: 1, y: 0, duration: 0.8, delay: 0.3 });
       gsap.to('.cta-btns',    { opacity: 1, y: 0, duration: 0.7, delay: 0.45 });
     }
   });
-  gsap.set('.cta-sub', { y: 20 });
-  gsap.set('.cta-btns',{ y: 20 });
 }
 
 /* ============================================================
    BOOT
 ============================================================ */
 function initAll() {
-  initHeroScene();
-  initCursor();
+  initHeroRotation();
+  loopD3();
+  loopD4();
   initAnimations();
 }
 </script>
