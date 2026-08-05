@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ledgerly — Expense management, beautifully simple</title>
+<meta name="description" content="Ledgerly is the beautifully simple way to track business expenses, capture receipts, set budgets and export tax-ready reports. Free to start." />
+<meta name="theme-color" content="#FF385C" />
+<meta property="og:title" content="Ledgerly — Expense management, beautifully simple" />
+<meta property="og:description" content="Track expenses, capture receipts, set budgets and export tax-ready reports." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="stylesheet" href="assets/css/landing.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="container nav__in">
+    <a class="logo" href="#top"><span class="logo__mark">L</span>Ledgerly</a>
+    <nav class="nav__links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav__right">
+      <button class="iconbtn" id="themeBtn" aria-label="Toggle theme">🌙</button>
+      <a class="btn btn--ghost" href="app/#login">Log in</a>
+      <a class="btn btn--primary" href="app/#signup">Get started free</a>
+    </div>
+    <button class="iconbtn nav__toggle" id="navToggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<div id="top"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__glow"></div>
+  <div class="container hero__in">
+    <span class="badge">✨ Now with automated recurring expenses</span>
+    <h1>Expense management, <span class="grad">beautifully simple</span>.</h1>
+    <p class="sub">Track every dollar, snap receipts, set budgets and know exactly where your business stands — all in one gorgeous workspace you'll actually enjoy using.</p>
+    <div class="hero__cta">
+      <a class="btn btn--primary btn--lg" href="app/#signup">Start for free →</a>
+      <a class="btn btn--ghost btn--lg" href="app/" id="demoBtn">Try the live demo</a>
+    </div>
+    <div class="hero__meta">
+      <span>✓ No credit card required</span>
+      <span>✓ Free forever plan</span>
+      <span>✓ Your data stays private</span>
+    </div>
+
+    <!-- PRODUCT MOCKUP -->
+    <div class="mockup" aria-hidden="true">
+      <div class="mockup__bar">
+        <span class="mockup__dot" style="background:#FF5F57"></span>
+        <span class="mockup__dot" style="background:#FEBC2E"></span>
+        <span class="mockup__dot" style="background:#28C840"></span>
+        <span style="margin-left:12px;font-size:12px;color:var(--ink-3);font-weight:600">app.ledgerly · Dashboard</span>
+      </div>
+      <div class="mockup__body">
+        <div class="mockup__side">
+          <div class="logo" style="font-size:15px;padding:4px 8px 14px"><span class="logo__mark" style="width:24px;height:24px;font-size:13px">L</span>Ledgerly</div>
+          <div class="mockup__navitem on">🏠 Dashboard</div>
+          <div class="mockup__navitem">🧾 Transactions</div>
+          <div class="mockup__navitem">📊 Reports</div>
+          <div class="mockup__navitem">🎯 Budgets</div>
+          <div class="mockup__navitem">🔁 Recurring</div>
+          <div class="mockup__navitem">🏦 Accounts</div>
+        </div>
+        <div class="mockup__main">
+          <div class="mk-stats">
+            <div class="mk-stat"><div class="lbl">Expenses</div><div class="val">$18,240</div></div>
+            <div class="mk-stat"><div class="lbl">Income</div><div class="val" style="color:var(--income)">$42,900</div></div>
+            <div class="mk-stat"><div class="lbl">Net profit</div><div class="val">$24,660</div></div>
+            <div class="mk-stat"><div class="lbl">Deductible</div><div class="val">$12,110</div></div>
+          </div>
+          <div class="mk-row">
+            <div class="mk-card">
+              <div class="mk-title">Income vs. expenses</div>
+              <div class="mk-bars">
+                <div class="mk-bar" style="height:55%"></div>
+                <div class="mk-bar" style="height:72%"></div>
+                <div class="mk-bar" style="height:48%"></div>
+                <div class="mk-bar" style="height:90%"></div>
+                <div class="mk-bar" style="height:66%"></div>
+                <div class="mk-bar" style="height:80%"></div>
+              </div>
+            </div>
+            <div class="mk-card">
+              <div class="mk-title">By category</div>
+              <div class="mk-donut"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust">
+  <div class="container">
+    <p>Trusted by freelancers, founders & finance teams</p>
+    <div class="trust__row">
+      <span>◆ Northwind</span><span>✦ Brightly</span><span>❖ Cedar&nbsp;Co</span><span>▲ Apex</span><span>● Loop</span><span>✳ Vellum</span>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Everything you need</div>
+      <h2>One app for your entire money story</h2>
+      <p>From the first receipt to the year-end tax report, Ledgerly handles it all — without the spreadsheet gymnastics.</p>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feature__ic" style="background:#FFE8EC;color:#FF385C">🧾</div><h3>Effortless expense tracking</h3><p>Log expenses and income in seconds with smart categories, vendors, payment methods and tags.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#EDE9FE;color:#7C3AED">📸</div><h3>Receipt capture</h3><p>Snap a photo and attach it to any transaction. Receipts are stored privately, right on your device.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#DBEAFE;color:#0EA5E9">📊</div><h3>Real-time dashboards</h3><p>Beautiful charts show spending trends, category breakdowns and income vs. expenses at a glance.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#DCFCE7;color:#16A34A">🎯</div><h3>Budgets & alerts</h3><p>Set monthly limits per category and watch progress bars keep you honest before you overspend.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#FEF3C7;color:#D97706">🔁</div><h3>Recurring automation</h3><p>Rent, subscriptions and payroll post themselves automatically — set it once and forget it.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#CFFAFE;color:#0891B2">🧮</div><h3>Tax-ready reports</h3><p>Flag deductibles, filter by any date range and export clean CSVs or print-perfect PDFs.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#F3E8FF;color:#8B5CF6">🌐</div><h3>Multi-currency</h3><p>Record expenses in 15+ currencies and see everything normalized to your base currency.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#FEE2E2;color:#EF4444">🏢</div><h3>Multiple workspaces</h3><p>Run several businesses side by side, each with its own accounts, categories and reports.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#E0E7FF;color:#6366F1">📱</div><h3>Works offline (PWA)</h3><p>Install Ledgerly like a native app. It works fully offline and syncs the moment you're back.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS / SPLITS -->
+<section id="how" class="bg-soft">
+  <div class="container">
+    <div class="split">
+      <div class="split__media">
+        <div class="mk-card">
+          <div class="mk-title">Add transaction</div>
+          <div style="display:flex;gap:8px;margin-bottom:12px"><span class="btn btn--primary" style="flex:1;padding:8px">Expense</span><span class="btn btn--ghost" style="flex:1;padding:8px">Income</span></div>
+          <div style="font-size:34px;font-weight:800;letter-spacing:-.02em">$248.00</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px">
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--accent);border-radius:12px;background:var(--accent-soft)">✈️<div style="font-size:10px;font-weight:600">Travel</div></div>
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px">🍽️<div style="font-size:10px;font-weight:600">Meals</div></div>
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px">💻<div style="font-size:10px;font-weight:600">Software</div></div>
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px">📣<div style="font-size:10px;font-weight:600">Ads</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">Fast by design</div>
+        <h3>Log an expense in under 10 seconds</h3>
+        <p>A thoughtfully designed form gets out of your way. Pick a category, snap a receipt, done. Vendors autocomplete, currencies convert, and deductibles are flagged automatically.</p>
+        <ul>
+          <li><span class="ck">✓</span> Big, tappable category picker with 30+ icons</li>
+          <li><span class="ck">✓</span> Attach receipts with automatic image compression</li>
+          <li><span class="ck">✓</span> Tags, notes, accounts and payment methods</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="split split--rev" style="margin-top:88px">
+      <div class="split__media">
+        <div class="mk-card">
+          <div class="mk-title">Spending by category · This month</div>
+          <div class="mk-donut" style="margin:10px auto 16px"></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="width:10px;height:10px;border-radius:3px;background:#FF385C"></span>Software<span style="margin-left:auto;font-weight:700">$4,120</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="width:10px;height:10px;border-radius:3px;background:#7C3AED"></span>Travel<span style="margin-left:auto;font-weight:700">$3,240</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="width:10px;height:10px;border-radius:3px;background:#0EA5E9"></span>Marketing<span style="margin-left:auto;font-weight:700">$2,680</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">Clarity, instantly</div>
+        <h3>See exactly where your money goes</h3>
+        <p>Interactive dashboards turn raw transactions into decisions. Spot your biggest cost centers, compare months, and track profit in real time — no spreadsheet formulas required.</p>
+        <ul>
+          <li><span class="ck">✓</span> Spending trend, category donut & monthly comparisons</li>
+          <li><span class="ck">✓</span> Period-over-period deltas so you catch changes early</li>
+          <li><span class="ck">✓</span> Drill into any category with one click</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Simple pricing</div>
+      <h2>Start free. Upgrade when you grow.</h2>
+      <p>No hidden fees. Cancel anytime. Every plan includes the full, gorgeous experience.</p>
+    </div>
+    <div class="toggle-wrap">
+      <span id="lblMonthly" style="color:var(--ink)">Monthly</span>
+      <label class="switch"><input type="checkbox" id="billToggle" /><span class="tr"></span><span class="kn"></span></label>
+      <span id="lblAnnual" style="color:var(--ink-3)">Annual</span>
+      <span class="save-badge">Save 20%</span>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3>Starter</h3>
+        <div class="plan__desc">For freelancers just getting organized.</div>
+        <div class="plan__price">$0</div>
+        <div class="plan__per">Free forever</div>
+        <a class="btn btn--ghost plan__cta" href="app/#signup">Get started</a>
+        <ul>
+          <li><span class="ck">✓</span> 1 workspace</li>
+          <li><span class="ck">✓</span> Unlimited transactions</li>
+          <li><span class="ck">✓</span> Receipts & categories</li>
+          <li><span class="ck">✓</span> Dashboard & basic reports</li>
+          <li><span class="ck">✓</span> CSV export</li>
+          <li class="off"><span class="ck">✓</span> Recurring automation</li>
+          <li class="off"><span class="ck">✓</span> Multi-workspace</li>
+        </ul>
+      </div>
+      <div class="plan plan--pop">
+        <div class="plan__tag">Most popular</div>
+        <h3>Pro</h3>
+        <div class="plan__desc">For growing businesses that want it all.</div>
+        <div class="plan__price"><span data-monthly>$9</span><span data-annual style="display:none">$7</span><small>/mo</small></div>
+        <div class="plan__per"><span data-monthly>Billed monthly</span><span data-annual style="display:none">$84 billed annually</span></div>
+        <button class="btn btn--primary plan__cta" data-checkout data-plan="Pro">Upgrade to Pro</button>
+        <ul>
+          <li><span class="ck">✓</span> Everything in Starter</li>
+          <li><span class="ck">✓</span> <strong>Recurring</strong> automation</li>
+          <li><span class="ck">✓</span> Budgets & alerts</li>
+          <li><span class="ck">✓</span> Tax & deductible reports</li>
+          <li><span class="ck">✓</span> Multi-currency</li>
+          <li><span class="ck">✓</span> Up to 3 workspaces</li>
+          <li><span class="ck">✓</span> Priority email support</li>
+        </ul>
+      </div>
+      <div class="plan">
+        <h3>Business</h3>
+        <div class="plan__desc">For teams managing serious money.</div>
+        <div class="plan__price"><span data-monthly>$29</span><span data-annual style="display:none">$23</span><small>/mo</small></div>
+        <div class="plan__per"><span data-monthly>Billed monthly</span><span data-annual style="display:none">$276 billed annually</span></div>
+        <button class="btn btn--ghost plan__cta" data-checkout data-plan="Business">Choose Business</button>
+        <ul>
+          <li><span class="ck">✓</span> Everything in Pro</li>
+          <li><span class="ck">✓</span> Unlimited workspaces</li>
+          <li><span class="ck">✓</span> Team members & roles</li>
+          <li><span class="ck">✓</span> Advanced vendor analytics</li>
+          <li><span class="ck">✓</span> Scheduled report exports</li>
+          <li><span class="ck">✓</span> Dedicated support</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Loved by owners</div>
+      <h2>Built for people who hate bookkeeping</h2>
+    </div>
+    <div class="quotes">
+      <div class="quote"><div class="quote__stars">★★★★★</div><p>"I finally stopped dreading tax season. Ledgerly's deductible report saved me an entire weekend."</p><div class="quote__who"><div class="quote__ava">MR</div><div><div class="quote__name">Maya Rodriguez</div><div class="quote__role">Design freelancer</div></div></div></div>
+      <div class="quote"><div class="quote__stars">★★★★★</div><p>"The dashboards are genuinely beautiful. It's the first finance app my whole team actually wants to open."</p><div class="quote__who"><div class="quote__ava">JC</div><div><div class="quote__name">James Chen</div><div class="quote__role">Founder, Loop Studio</div></div></div></div>
+      <div class="quote"><div class="quote__stars">★★★★★</div><p>"Recurring expenses and multi-currency in one place. Runs both my businesses without breaking a sweat."</p><div class="quote__who"><div class="quote__ava">AK</div><div><div class="quote__name">Amara Okafor</div><div class="quote__role">Consultant</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head"><div class="eyebrow">Questions?</div><h2>Frequently asked</h2></div>
+    <div class="faq">
+      <div class="faq__item"><button class="faq__q">Is my financial data private and secure?<span class="pm">+</span></button><div class="faq__a"><p>Absolutely. Ledgerly stores everything locally in your browser using IndexedDB — your transactions and receipts never leave your device unless you choose to export a backup. There's no central server holding your books.</p></div></div>
+      <div class="faq__item"><button class="faq__q">Do I need to install anything?<span class="pm">+</span></button><div class="faq__a"><p>No. Ledgerly runs in any modern browser. If you'd like an app-like experience, you can install it to your home screen as a Progressive Web App — it then works fully offline.</p></div></div>
+      <div class="faq__item"><button class="faq__q">Can I import my existing expenses?<span class="pm">+</span></button><div class="faq__a"><p>Yes. Head to Settings → Data & backup and import a CSV of your transactions, or restore a full JSON backup. We'll map common columns like date, amount, vendor and category automatically.</p></div></div>
+      <div class="faq__item"><button class="faq__q">What happens to my data if I switch devices?<span class="pm">+</span></button><div class="faq__a"><p>Export a backup file from Settings on your old device and import it on the new one. It's a portable JSON file that contains all your workspaces, transactions and settings.</p></div></div>
+      <div class="faq__item"><button class="faq__q">Can I use it for multiple businesses?<span class="pm">+</span></button><div class="faq__a"><p>Yes — create as many workspaces as your plan allows, each fully isolated with its own accounts, categories, budgets and reports. Switch between them instantly from the sidebar.</p></div></div>
+      <div class="faq__item"><button class="faq__q">Is there really a free plan?<span class="pm">+</span></button><div class="faq__a"><p>Yes, the Starter plan is free forever and includes unlimited transactions, receipts and the full dashboard. Upgrade only when you want automation, budgets and multiple workspaces.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section>
+  <div class="container">
+    <div class="cta-band">
+      <h2>Take control of your expenses today</h2>
+      <p>Join thousands of businesses running leaner with Ledgerly. Free to start — no card required.</p>
+      <a class="btn btn--white btn--lg" href="app/#signup" style="position:relative">Create your free account →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot__grid">
+      <div class="foot__brand">
+        <a class="logo" href="#top"><span class="logo__mark">L</span>Ledgerly</a>
+        <p>Expense management, beautifully simple. Track, budget and report — all in one private, gorgeous workspace.</p>
+      </div>
+      <div class="foot__col"><h4>Product</h4><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="app/">Launch app</a><a href="#how">How it works</a></div>
+      <div class="foot__col"><h4>Company</h4><a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#faq">FAQ</a></div>
+      <div class="foot__col"><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a></div>
+    </div>
+    <div class="foot__bottom">
+      <span>© <span id="year"></span> Ledgerly. All rights reserved.</span>
+      <span>Made with ♥ for small businesses.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // theme
+  function setTheme(t){ document.documentElement.setAttribute('data-theme', t); localStorage.setItem('ledgerly.theme', t); document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙'; document.querySelector('meta[name=theme-color]').setAttribute('content', t==='dark'?'#0E0F12':'#FF385C'); }
+  var saved = localStorage.getItem('ledgerly.theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  setTheme(saved);
+  document.getElementById('themeBtn').onclick = function(){ setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); };
+
+  // year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // mobile nav
+  document.getElementById('navToggle').onclick = function(){
+    var links = document.querySelector('.nav__links');
+    if (getComputedStyle(links).display === 'none') { links.style.display='flex'; links.style.position='absolute'; links.style.top='70px'; links.style.left='0'; links.style.right='0'; links.style.flexDirection='column'; links.style.background='var(--bg)'; links.style.padding='16px 24px'; links.style.borderBottom='1px solid var(--line)'; links.style.gap='4px'; }
+    else { links.style.display='none'; }
+  };
+  document.querySelectorAll('.nav__links a').forEach(function(a){ a.addEventListener('click', function(){ if(window.innerWidth<=900){ document.querySelector('.nav__links').style.display='none'; } }); });
+
+  // billing toggle
+  var toggle = document.getElementById('billToggle');
+  toggle.onchange = function(){
+    var annual = toggle.checked;
+    document.querySelectorAll('[data-monthly]').forEach(function(e){ e.style.display = annual ? 'none' : ''; });
+    document.querySelectorAll('[data-annual]').forEach(function(e){ e.style.display = annual ? '' : 'none'; });
+    document.getElementById('lblMonthly').style.color = annual ? 'var(--ink-3)' : 'var(--ink)';
+    document.getElementById('lblAnnual').style.color = annual ? 'var(--ink)' : 'var(--ink-3)';
+  };
+
+  // FAQ
+  document.querySelectorAll('.faq__q').forEach(function(q){
+    q.onclick = function(){ q.parentElement.classList.toggle('open'); };
+  });
+
+  // Checkout (simulated — ready to swap in Stripe)
+  var prices = { Pro: {m:9, a:84}, Business: {m:29, a:276} };
+  function openCheckout(plan){
+    var annual = toggle.checked;
+    var price = annual ? '$' + prices[plan].a + '/yr' : '$' + prices[plan].m + '/mo';
+    var overlay = document.createElement('div');
+    overlay.className = 'co-overlay';
+    overlay.innerHTML =
+      '<div class="co">'+
+        '<div class="co__head"><h3>Upgrade to '+plan+'</h3><button class="co__x">&times;</button></div>'+
+        '<div class="co__body">'+
+          '<div class="co__summary"><div><div style="font-weight:700">'+plan+' plan</div><div style="font-size:12.5px;color:var(--ink-3)">'+(annual?'Annual billing':'Monthly billing')+'</div></div><div style="font-size:22px;font-weight:800">'+price+'</div></div>'+
+          '<div class="co__field"><label>Email</label><input type="email" placeholder="you@company.com" /></div>'+
+          '<div class="co__field"><label>Card number</label><input inputmode="numeric" placeholder="4242 4242 4242 4242" /></div>'+
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+            '<div class="co__field"><label>Expiry</label><input placeholder="MM / YY" /></div>'+
+            '<div class="co__field"><label>CVC</label><input placeholder="123" /></div>'+
+          '</div>'+
+          '<button class="btn btn--primary btn--lg" style="width:100%;margin-top:6px" id="coPay">Pay '+price+'</button>'+
+          '<div class="co__note">🔒 This is a demo checkout. No card is charged. Connect Stripe to accept real payments.</div>'+
+        '</div>'+
+      '</div>';
+    document.body.appendChild(overlay);
+    document.body.style.overflow='hidden';
+    requestAnimationFrame(function(){ overlay.classList.add('on'); });
+    function close(){ overlay.classList.remove('on'); document.body.style.overflow=''; setTimeout(function(){ overlay.remove(); }, 220); }
+    overlay.querySelector('.co__x').onclick = close;
+    overlay.addEventListener('mousedown', function(e){ if(e.target===overlay) close(); });
+    overlay.querySelector('#coPay').onclick = function(){
+      var btn = overlay.querySelector('#coPay'); btn.textContent='Processing…'; btn.disabled=true;
+      setTimeout(function(){
+        overlay.querySelector('.co__body').innerHTML =
+          '<div style="text-align:center;padding:20px 0">'+
+            '<div style="width:64px;height:64px;border-radius:50%;background:#DCFCE7;color:#16A34A;font-size:32px;display:grid;place-items:center;margin:0 auto 16px">✓</div>'+
+            '<h3 style="margin:0 0 6px;font-size:20px">You\'re all set!</h3>'+
+            '<p style="color:var(--ink-3);margin:0 0 20px">Welcome to Ledgerly '+plan+'. Let\'s get you into your workspace.</p>'+
+            '<a class="btn btn--primary btn--lg" style="width:100%" href="app/#signup">Open Ledgerly →</a>'+
+          '</div>';
+      }, 1100);
+    };
+  }
+  document.querySelectorAll('[data-checkout]').forEach(function(b){
+    b.onclick = function(){ openCheckout(b.getAttribute('data-plan')); };
+  });
+
+  // register SW
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function(){}); }
+})();
+</script>
+</body>
+</html>
