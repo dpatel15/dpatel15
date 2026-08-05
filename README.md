@@ -5,10 +5,10 @@ as a fast, private, installable Progressive Web App with **zero runtime
 dependencies** (no frameworks, no CDN calls — works fully offline).
 
 **Live:** once GitHub Pages deploys, this lives at
-`https://dpatel15.github.io/expenses/`
+`https://dpatel15.github.io/`
 
-- Marketing / pricing site → `expenses/index.html`
-- The app → `expenses/app/`
+- Marketing / pricing site → `index.html` (site root)
+- The app → `app/`
 
 ---
 
@@ -51,7 +51,7 @@ Plain HTML/CSS/vanilla JS. Data persists in **IndexedDB** (durable, handles
 receipt images). No build step.
 
 ```
-expenses/
+.
 ├─ index.html                 Marketing + pricing site
 ├─ manifest.webmanifest       PWA manifest
 ├─ sw.js                      Service worker (offline app shell)
@@ -85,5 +85,5 @@ Stripe Checkout. Wire those two and add a sync API to run it as hosted SaaS.
 Serve the folder over HTTP (service worker + IndexedDB need `http(s)`):
 
 ```bash
-npx serve .        # then open /expenses/
+npx serve .        # then open http://localhost:3000/
 ```

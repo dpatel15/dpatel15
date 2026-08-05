@@ -1,2412 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Design TWG — Commercial Interior Design Studio</title>
-  <meta name="description" content="Design TWG is Toronto's premier award-winning commercial interior design studio. 3× NEWH Award Winner. Specialists in hotel, restaurant, spa, dental, and franchise interiors. The D-Process: from Discovery to Delivery.">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
-
-  <style>
-    /* ============================
-       DESIGN SYSTEM
-    ============================ */
-    :root {
-      --white:      #FFFFFF;
-      --off-white:  #F7F5F2;
-      --black:      #111111;
-      --body:       #444444;
-      --muted:      #888888;
-      --border:     #E8E4DF;
-      --gold:       #C9A96E;
-      --gold-dark:  #8B6C42;
-      --gold-light: #F0E6D3;
-      --gold-bg:    #FAF6F0;
-
-      --ff-display: 'Cormorant Garamond', serif;
-      --ff-body:    'DM Sans', sans-serif;
-      --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { font-size: 16px; scroll-behavior: auto; }
-
-    body {
-      background: var(--white);
-      color: var(--black);
-      font-family: var(--ff-body);
-      overflow-x: hidden;
-    }
-
-    /* ============================
-       LOADER
-    ============================ */
-    #loader {
-      position: fixed; inset: 0; z-index: 9000;
-      background: var(--white);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 2.4rem;
-    }
-
-    .loader-wordmark {
-      font-family: var(--ff-display);
-      font-size: 1.6rem;
-      font-weight: 500;
-      letter-spacing: 0.5em;
-      text-transform: uppercase;
-      color: var(--black);
-      opacity: 0;
-      transform: translateY(12px);
-      transition: opacity 0.6s, transform 0.6s;
-    }
-
-    .loader-track {
-      width: 220px; height: 1px;
-      background: var(--border);
-      position: relative; overflow: hidden;
-    }
-
-    .loader-bar {
-      position: absolute; top: 0; left: 0; height: 100%;
-      background: var(--gold);
-      width: 0%;
-      transition: width 0.08s linear;
-    }
-
-    .loader-label {
-      font-size: 0.65rem;
-      letter-spacing: 0.3em;
-      color: var(--muted);
-      font-weight: 300;
-    }
-
-    /* ============================
-       NAVIGATION
-    ============================ */
-    #nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 500;
-      padding: 1.8rem 5rem;
-      display: flex; align-items: center; justify-content: space-between;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      transition: box-shadow 0.4s;
-    }
-
-    #nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.07); }
-
-    .nav-logo {
-      font-family: var(--ff-display);
-      font-size: 1.4rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--black);
-    }
-
-    .nav-links { display: flex; gap: 3rem; list-style: none; }
-
-    .nav-links a {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--body);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover { color: var(--gold); }
-
-    .nav-cta {
-      font-family: var(--ff-body);
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gold);
-      border: 1px solid var(--gold);
-      background: transparent;
-      padding: 0.7rem 1.8rem;
-      cursor: pointer;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    .nav-cta:hover { background: var(--gold); color: var(--white); }
-
-    /* ============================
-       HERO
-    ============================ */
-    #hero {
-      width: 100%; min-height: 100vh;
-      display: grid;
-      grid-template-columns: 58fr 42fr;
-      align-items: center;
-      padding: 10rem 5rem 6rem 5rem;
-      gap: 4rem;
-      position: relative;
-    }
-
-    .hero-left { position: relative; z-index: 2; }
-
-    .hero-eyebrow {
-      display: block;
-      font-size: 0.65rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 2rem;
-      opacity: 0;
-    }
-
-    .hero-headline {
-      font-family: var(--ff-display);
-      font-size: clamp(3.8rem, 7vw, 7rem);
-      font-weight: 400;
-      line-height: 1.12;
-      color: var(--black);
-    }
-
-    .hero-slot-wrap {
-      display: inline-block;
-      overflow: hidden;
-      height: 1.18em;
-      vertical-align: bottom;
-      position: relative;
-      white-space: nowrap;
-    }
-
-    .hero-slot-word {
-      display: block;
-      font-style: italic;
-      color: var(--gold);
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%;
-    }
-
-    .hero-slot-sizer {
-      visibility: hidden;
-      font-style: italic;
-      color: var(--gold);
-      display: block;
-    }
-
-    .hero-static-end {
-      display: block;
-      font-family: var(--ff-display);
-      font-size: clamp(3.8rem, 7vw, 7rem);
-      font-weight: 400;
-      line-height: 1.12;
-      color: var(--black);
-    }
-
-    .hero-body {
-      margin-top: 2.5rem;
-      font-size: 1rem;
-      font-weight: 300;
-      color: var(--body);
-      line-height: 1.75;
-      max-width: 440px;
-      opacity: 0;
-      transform: translateY(16px);
-    }
-
-    .hero-btns {
-      margin-top: 2.8rem;
-      display: flex; gap: 1.2rem;
-      opacity: 0;
-      transform: translateY(16px);
-    }
-
-    .btn-primary {
-      font-family: var(--ff-body);
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      background: var(--gold);
-      color: var(--white);
-      border: 1px solid var(--gold);
-      padding: 1rem 2.6rem;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background 0.3s, border-color 0.3s;
-    }
-
-    .btn-primary:hover { background: var(--gold-dark); border-color: var(--gold-dark); }
-
-    .btn-secondary {
-      font-family: var(--ff-body);
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      background: transparent;
-      color: var(--black);
-      border: 1px solid var(--border);
-      padding: 1rem 2.6rem;
-      cursor: pointer;
-      font-weight: 300;
-      transition: border-color 0.3s, color 0.3s;
-    }
-
-    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
-
-    /* Hero SVG visual right */
-    .hero-right {
-      position: relative;
-      height: 520px;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .hero-svg-plan {
-      position: absolute; inset: 0;
-      opacity: 0;
-      transition: none;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .hero-svg-plan svg {
-      width: 100%; height: 100%;
-      max-width: 460px; max-height: 480px;
-    }
-
-    .hero-scroll-hint {
-      position: absolute;
-      bottom: 3rem; left: 5rem;
-      display: flex; align-items: center; gap: 1rem;
-      z-index: 2; opacity: 0;
-    }
-
-    .hero-scroll-hint span {
-      font-size: 0.6rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .scroll-line {
-      width: 40px; height: 1px;
-      background: var(--gold);
-      animation: scrollPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.4; transform: scaleX(0.7); }
-      50%       { opacity: 1; transform: scaleX(1); }
-    }
-
-    /* ============================
-       MARQUEE
-    ============================ */
-    .marquee-bar {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 1.1rem 0;
-      overflow: hidden;
-      background: var(--gold-bg);
-    }
-
-    .marquee-track {
-      display: flex; gap: 0;
-      animation: ticker 28s linear infinite;
-      white-space: nowrap;
-    }
-
-    .marquee-item {
-      display: inline-flex; align-items: center; gap: 2rem;
-      padding: 0 2rem; flex-shrink: 0;
-    }
-
-    .marquee-item span {
-      font-size: 0.65rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--black);
-      font-weight: 400;
-    }
-
-    .marquee-sep {
-      display: inline-block;
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: var(--gold);
-      flex-shrink: 0;
-    }
-
-    @keyframes ticker {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* ============================
-       SHARED SECTION STYLES
-    ============================ */
-    .section-label {
-      display: inline-block;
-      font-size: 0.6rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1rem;
-    }
-
-    .section-num {
-      font-family: var(--ff-display);
-      font-size: 0.9rem;
-      color: var(--gold-dark);
-      letter-spacing: 0.05em;
-      margin-right: 1.4rem;
-    }
-
-    .section-heading {
-      font-family: var(--ff-display);
-      font-size: clamp(2.4rem, 4vw, 3.8rem);
-      font-weight: 500;
-      line-height: 1.05;
-      color: var(--black);
-    }
-
-    /* ============================
-       MANIFESTO
-    ============================ */
-    #manifesto {
-      padding: 10rem 10rem;
-      max-width: 1500px;
-      margin: 0 auto;
-      border-top: 1px solid var(--border);
-    }
-
-    .manifesto-pull {
-      font-family: var(--ff-display);
-      font-size: clamp(1.9rem, 3.5vw, 3.2rem);
-      font-weight: 400;
-      line-height: 1.55;
-      color: var(--black);
-    }
-
-    .manifesto-pull .w { display: inline-block; overflow: hidden; vertical-align: bottom; }
-    .manifesto-pull .wi { display: inline-block; transform: translateY(110%); }
-    .manifesto-pull em { font-style: italic; color: var(--gold); }
-
-    .manifesto-sub {
-      margin-top: 3.5rem;
-      display: flex; align-items: center; gap: 1.5rem;
-    }
-
-    .manifesto-sub::before {
-      content: '';
-      display: inline-block;
-      width: 40px; height: 1px;
-      background: var(--gold);
-      flex-shrink: 0;
-    }
-
-    .manifesto-sub p {
-      font-size: 0.9rem;
-      font-weight: 300;
-      color: var(--body);
-      letter-spacing: 0.03em;
-      line-height: 1.75;
-      max-width: 420px;
-      opacity: 0;
-      transform: translateX(20px);
-    }
-
-    /* ============================
-       STATS
-    ============================ */
-    #stats {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 5rem 10rem;
-      background: var(--off-white);
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
-    }
-
-    .stat-card {
-      text-align: center;
-      opacity: 0;
-      transform: translateY(30px);
-    }
-
-    .stat-val {
-      font-family: var(--ff-display);
-      font-size: clamp(3rem, 5.5vw, 6rem);
-      font-weight: 300;
-      color: var(--gold);
-      line-height: 1;
-    }
-
-    .stat-val sup {
-      font-size: 40%;
-      vertical-align: super;
-      color: var(--gold-dark);
-    }
-
-    .stat-lbl {
-      margin-top: 0.8rem;
-      font-size: 0.65rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    /* ============================
-       FOR WHOM — 6-card grid
-    ============================ */
-    #for-whom {
-      padding: 8rem 10rem;
-      background: var(--white);
-    }
-
-    .fw-header {
-      display: flex; align-items: baseline;
-      margin-bottom: 4rem;
-    }
-
-    .fw-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-
-    .fw-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--gold);
-      padding: 2.5rem;
-      transition: box-shadow 0.35s, transform 0.35s;
-      opacity: 0;
-      transform: translateY(24px);
-      cursor: default;
-    }
-
-    .fw-card:hover {
-      box-shadow: 0 8px 32px rgba(201,169,110,0.12);
-      transform: translateY(-4px);
-    }
-
-    .fw-card-icon {
-      width: 28px; height: 28px;
-      margin-bottom: 1.4rem;
-    }
-
-    .fw-card-icon svg { width: 100%; height: 100%; }
-
-    .fw-card-title {
-      font-family: var(--ff-display);
-      font-size: 1.6rem;
-      font-weight: 500;
-      color: var(--black);
-      margin-bottom: 0.8rem;
-      line-height: 1.1;
-    }
-
-    .fw-card-desc {
-      font-size: 0.85rem;
-      font-weight: 300;
-      color: var(--body);
-      line-height: 1.75;
-    }
-
-    /* ============================
-       PROCESS SECTION
-    ============================ */
-    #process { position: relative; background: var(--white); }
-
-    .process-intro {
-      padding: 8rem 10rem 3rem;
-    }
-
-    .process-intro-hdr {
-      display: flex; align-items: baseline;
-      margin-bottom: 1.5rem;
-    }
-
-    .process-intro-sub {
-      font-size: 0.9rem;
-      font-weight: 300;
-      color: var(--body);
-      max-width: 440px;
-      line-height: 1.8;
-      margin-left: 3.2rem;
-    }
-
-    #process-pin {
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-
-    #process-track {
-      display: flex;
-      width: 500vw;
-      height: 100vh;
-      will-change: transform;
-    }
-
-    .p-panel {
-      width: 100vw;
-      height: 100vh;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      padding: 0 10rem;
-      position: relative;
-      border-right: 1px solid var(--border);
-      background: var(--white);
-    }
-
-    .p-panel-bg-num {
-      position: absolute;
-      font-family: var(--ff-display);
-      font-size: clamp(18rem, 28vw, 28rem);
-      font-weight: 700;
-      line-height: 0.8;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(201,169,110,0.05);
-      right: 6rem; top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none; user-select: none;
-    }
-
-    .p-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8rem;
-      align-items: center;
-      width: 100%;
-      position: relative; z-index: 1;
-    }
-
-    .p-content .phase-tag {
-      display: block;
-      font-size: 0.6rem;
-      letter-spacing: 0.42em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.8rem;
-    }
-
-    .p-num {
-      display: block;
-      font-family: var(--ff-display);
-      font-size: clamp(4rem, 7vw, 7rem);
-      font-weight: 700;
-      color: var(--gold);
-      line-height: 0.85;
-      margin-bottom: 0.5rem;
-      opacity: 0.15;
-    }
-
-    .p-title {
-      font-family: var(--ff-display);
-      font-size: clamp(3rem, 5vw, 5.5rem);
-      font-weight: 600;
-      color: var(--black);
-      line-height: 0.9;
-      margin-bottom: 2rem;
-    }
-
-    .p-desc {
-      font-size: 0.9rem;
-      font-weight: 300;
-      color: var(--body);
-      line-height: 1.85;
-      max-width: 380px;
-      margin-bottom: 2.5rem;
-    }
-
-    .p-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
-
-    .p-list li {
-      font-size: 0.78rem;
-      letter-spacing: 0.04em;
-      color: var(--muted);
-      display: flex; align-items: center; gap: 0.9rem;
-    }
-
-    .p-list li::before {
-      content: '';
-      width: 22px; height: 1px;
-      background: var(--gold);
-      flex-shrink: 0;
-    }
-
-    .p-visual {
-      display: flex; align-items: center; justify-content: center;
-      height: 380px; position: relative;
-    }
-
-    /* D-phase animation containers */
-    .p-anim-wrap {
-      width: 100%; height: 100%;
-      display: flex; align-items: center; justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* ── D1: PULSE SCAN ── */
-    .d1-wrap { position: relative; width: 280px; height: 280px; }
-
-    .d1-ring {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%) scale(0.2);
-      border-radius: 50%;
-      border: 1px solid var(--gold);
-      opacity: 0;
-    }
-
-    .d1-r1 { width: 280px; height: 280px; animation: d1-pulse 3s ease-out 0s infinite; }
-    .d1-r2 { width: 280px; height: 280px; animation: d1-pulse 3s ease-out 1s infinite; }
-    .d1-r3 { width: 280px; height: 280px; animation: d1-pulse 3s ease-out 2s infinite; }
-
-    @keyframes d1-pulse {
-      0%   { transform: translate(-50%, -50%) scale(0.15); opacity: 0.85; }
-      80%  { transform: translate(-50%, -50%) scale(1);    opacity: 0; }
-      100% { transform: translate(-50%, -50%) scale(1);    opacity: 0; }
-    }
-
-    .d1-dot {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--gold);
-      z-index: 2;
-    }
-
-    .d1-spoke {
-      position: absolute; top: 50%; left: 50%;
-      width: 1px; height: 120px;
-      background: linear-gradient(to bottom, var(--gold), transparent);
-      transform-origin: top center;
-      opacity: 0.4;
-    }
-
-    .d1-s1 { transform: rotate(0deg);   }
-    .d1-s2 { transform: rotate(90deg);  }
-    .d1-s3 { transform: rotate(180deg); }
-    .d1-s4 { transform: rotate(270deg); }
-
-    .d1-sat {
-      position: absolute;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--gold);
-      opacity: 0;
-      animation: d1-sat-appear 3s ease-out 1.5s infinite;
-    }
-
-    @keyframes d1-sat-appear {
-      0%, 30% { opacity: 0; }
-      50%, 80% { opacity: 0.7; }
-      100% { opacity: 0; }
-    }
-
-    .d1-sat-n { top: calc(50% - 120px); left: calc(50% - 3px); animation-delay: 1.5s; }
-    .d1-sat-e { top: calc(50% - 3px); left: calc(50% + 117px); animation-delay: 1.7s; }
-    .d1-sat-s { top: calc(50% + 114px); left: calc(50% - 3px); animation-delay: 1.9s; }
-    .d1-sat-w { top: calc(50% - 3px); left: calc(50% - 123px); animation-delay: 2.1s; }
-
-    /* ── D2: MATERIAL GRID FILL ── */
-    .d2-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      width: 280px;
-    }
-
-    .d2-swatch {
-      height: 80px;
-      border-radius: 8px;
-      opacity: 0;
-      transform: scale(0.85);
-      animation: d2-fill 5.4s ease-in-out infinite;
-    }
-
-    @keyframes d2-fill {
-      0%, 8%   { opacity: 0; transform: scale(0.85); }
-      22%, 72% { opacity: 1; transform: scale(1); }
-      86%, 100%{ opacity: 0; transform: scale(0.85); }
-    }
-
-    .d2-sw1 { background: var(--gold);       animation-delay: 0s;    }
-    .d2-sw2 { background: #D4B896;            animation-delay: 0.3s;  }
-    .d2-sw3 { background: var(--gold-light);  animation-delay: 0.6s;  }
-    .d2-sw4 { background: #C8BEB4;            animation-delay: 0.9s;  }
-    .d2-sw5 { background: var(--gold-bg);     animation-delay: 1.2s;  }
-    .d2-sw6 { background: var(--gold-dark);   animation-delay: 1.5s;  }
-
-    /* ── D3: BLUEPRINT DRAW (GSAP) ── */
-    #d3-svg { width: 320px; height: 280px; }
-
-    #d3-walls, #d3-partition, #d3-furniture {
-      fill: none;
-      stroke: var(--gold);
-      stroke-width: 1.2;
-    }
-
-    #d3-furniture { opacity: 0; }
-    #d3-label { opacity: 0; font-family: var(--ff-body); font-size: 8px; letter-spacing: 3px; fill: var(--gold); }
-
-    /* ── D4: LAYER STACK (GSAP) ── */
-    .d4-wrap {
-      position: relative;
-      width: 280px; height: 280px;
-      display: flex; align-items: flex-end; justify-content: center;
-      overflow: visible;
-    }
-
-    .d4-doc {
-      position: absolute;
-      width: 240px; height: 56px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--gold);
-      display: flex; align-items: center;
-      padding: 0 1.2rem;
-      gap: 0.8rem;
-      opacity: 0;
-    }
-
-    .d4-doc-num {
-      font-family: var(--ff-display);
-      font-size: 0.7rem;
-      color: var(--gold);
-      letter-spacing: 0.1em;
-      flex-shrink: 0;
-    }
-
-    .d4-doc-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    #d4-doc1 { bottom: 170px; }
-    #d4-doc2 { bottom: 110px; }
-    #d4-doc3 { bottom: 50px;  }
-    #d4-doc4 { bottom: -10px; }
-
-    /* ── D5: CURTAIN REVEAL (CSS) ── */
-    .d5-wrap {
-      position: relative;
-      width: 280px; height: 280px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-
-    .d5-interior {
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at center, var(--gold-light) 0%, var(--gold-bg) 60%, var(--off-white) 100%);
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .d5-interior svg { width: 70%; height: 70%; }
-
-    .d5-curtain-left, .d5-curtain-right {
-      position: absolute; top: 0; bottom: 0;
-      width: 50%;
-      background: var(--gold-dark);
-      z-index: 2;
-    }
-
-    .d5-curtain-left  { left: 0;  animation: d5-left  5s ease-in-out infinite; }
-    .d5-curtain-right { right: 0; animation: d5-right 5s ease-in-out infinite; }
-
-    @keyframes d5-left {
-      0%, 5%   { transform: translateX(0); }
-      35%, 70% { transform: translateX(-100%); }
-      95%, 100%{ transform: translateX(0); }
-    }
-
-    @keyframes d5-right {
-      0%, 5%   { transform: translateX(0); }
-      35%, 70% { transform: translateX(100%); }
-      95%, 100%{ transform: translateX(0); }
-    }
-
-    /* Progress bar */
-    .process-progress-bar {
-      position: absolute;
-      bottom: 3.5rem; left: 10rem;
-      display: flex; align-items: center; gap: 1.5rem;
-      z-index: 10;
-    }
-
-    .pp-dots { display: flex; gap: 0.7rem; }
-
-    .pp-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--border);
-      transition: all 0.4s var(--ease-out);
-    }
-
-    .pp-dot.on { background: var(--gold); width: 24px; border-radius: 3px; }
-
-    .pp-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    /* ============================
-       PORTFOLIO
-    ============================ */
-    #portfolio { padding: 8rem 10rem; background: var(--off-white); }
-
-    .portfolio-hdr {
-      display: flex; align-items: baseline;
-      margin-bottom: 4rem;
-    }
-
-    .portfolio-grid {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 1.5rem;
-    }
-
-    .pf-card {
-      position: relative;
-      overflow: hidden;
-      background: var(--white);
-      border: 1px solid var(--border);
-      opacity: 0;
-      transform: translateY(40px);
-      cursor: default;
-      transition: box-shadow 0.4s, transform 0.4s;
-    }
-
-    .pf-card:hover {
-      box-shadow: 0 8px 32px rgba(201,169,110,0.12);
-      transform: translateY(-4px) !important;
-    }
-
-    .pf-card:first-child { grid-row: span 2; min-height: 600px; }
-    .pf-card:not(:first-child) { aspect-ratio: 4/3; }
-
-    .pf-art {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0.2;
-    }
-
-    .pf-art svg { width: 70%; height: 70%; }
-
-    .pf-info {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 2.5rem;
-      background: linear-gradient(to top, rgba(255,255,255,0.98) 40%, transparent);
-      transform: translateY(8px);
-      opacity: 0;
-      transition: all 0.45s var(--ease-out);
-    }
-
-    .pf-card:hover .pf-info { opacity: 1; transform: translateY(0); }
-
-    .pf-tag {
-      font-size: 0.58rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.5rem;
-    }
-
-    .pf-name {
-      font-family: var(--ff-display);
-      font-size: clamp(1.2rem, 1.8vw, 1.8rem);
-      font-weight: 500;
-      color: var(--black);
-    }
-
-    /* ============================
-       AWARDS
-    ============================ */
-    #awards {
-      padding: 8rem 10rem;
-      border-top: 1px solid var(--border);
-      background: var(--white);
-    }
-
-    .awards-hdr {
-      display: flex; align-items: baseline;
-      margin-bottom: 5rem;
-    }
-
-    .awards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3rem 4rem;
-    }
-
-    .award-card {
-      border-left: 3px solid var(--gold);
-      padding-left: 2rem;
-      opacity: 0;
-      transform: translateX(-24px);
-    }
-
-    .award-yr {
-      font-size: 0.6rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.6rem;
-    }
-
-    .award-title {
-      font-family: var(--ff-display);
-      font-size: 1.35rem;
-      font-weight: 500;
-      color: var(--black);
-      margin-bottom: 0.4rem;
-    }
-
-    .award-org {
-      font-size: 0.78rem;
-      font-weight: 300;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    /* ============================
-       CTA
-    ============================ */
-    #cta {
-      padding: 11rem 10rem;
-      text-align: center;
-      background: var(--gold);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-content { position: relative; z-index: 1; }
-
-    .cta-eyebrow {
-      display: block;
-      font-size: 0.62rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 2rem;
-      opacity: 0;
-    }
-
-    .cta-title {
-      font-family: var(--ff-display);
-      font-size: clamp(3.5rem, 7vw, 8rem);
-      font-weight: 500;
-      color: var(--white);
-      line-height: 1.05;
-      margin-bottom: 2.5rem;
-      opacity: 0;
-      transform: translateY(40px);
-    }
-
-    .cta-title em { font-style: italic; opacity: 0.8; }
-
-    .cta-sub {
-      font-size: 0.9rem;
-      font-weight: 300;
-      color: rgba(255,255,255,0.75);
-      line-height: 1.8;
-      max-width: 520px;
-      margin: 0 auto 4rem;
-      opacity: 0;
-    }
-
-    .cta-btns {
-      display: flex; gap: 1.2rem;
-      justify-content: center;
-      opacity: 0;
-    }
-
-    .btn-gold {
-      font-family: var(--ff-body);
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      background: var(--white);
-      color: var(--gold-dark);
-      border: 1px solid var(--white);
-      padding: 1rem 3rem;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    .btn-gold:hover { background: var(--gold-light); border-color: var(--gold-light); }
-
-    .btn-outline {
-      font-family: var(--ff-body);
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      background: transparent;
-      color: var(--white);
-      border: 1px solid rgba(255,255,255,0.5);
-      padding: 1rem 3rem;
-      cursor: pointer;
-      font-weight: 300;
-      transition: border-color 0.3s;
-    }
-
-    .btn-outline:hover { border-color: var(--white); }
-
-    /* ============================
-       FOOTER
-    ============================ */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 3rem 10rem;
-      display: flex; align-items: center; justify-content: space-between;
-      background: var(--off-white);
-    }
-
-    .footer-logo {
-      font-family: var(--ff-display);
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      color: var(--black);
-    }
-
-    .footer-copy { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em; }
-
-    .footer-links { display: flex; gap: 2rem; }
-
-    .footer-links a {
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    .footer-links a:hover { color: var(--gold); }
-
-    /* ============================
-       REDUCED MOTION
-    ============================ */
-    @media (prefers-reduced-motion: reduce) {
-      .d1-ring, .d1-sat, .d2-swatch,
-      .d5-curtain-left, .d5-curtain-right,
-      .marquee-track, .scroll-line { animation: none; }
-    }
-
-    /* ============================
-       HAMBURGER + MOBILE NAV
-    ============================ */
-    .nav-hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      gap: 5px;
-      width: 36px; height: 36px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px;
-      z-index: 601;
-    }
-
-    .nav-hamburger span {
-      display: block;
-      width: 22px; height: 1.5px;
-      background: var(--black);
-      transition: transform 0.3s, opacity 0.3s;
-      transform-origin: center;
-    }
-
-    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
-    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-    .mobile-nav {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 600;
-      background: var(--white);
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 6rem 2rem 3rem;
-      gap: 0;
-    }
-
-    .mobile-nav.open { display: flex; }
-
-    .mobile-nav-links {
-      list-style: none;
-      width: 100%;
-      margin-bottom: 3rem;
-    }
-
-    .mobile-nav-links li {
-      border-bottom: 1px solid var(--border);
-    }
-
-    .mobile-nav-links a {
-      display: block;
-      font-family: var(--ff-display);
-      font-size: 2.2rem;
-      font-weight: 400;
-      color: var(--black);
-      text-decoration: none;
-      padding: 1rem 0;
-      transition: color 0.2s;
-    }
-
-    .mobile-nav-links a:hover { color: var(--gold); }
-
-    /* ============================
-       TABLET — ≤1024px
-    ============================ */
-    @media (max-width: 1024px) {
-      #nav { padding: 1.4rem 2.5rem; }
-
-      #hero {
-        grid-template-columns: 1fr;
-        padding: 9rem 2.5rem 5rem;
-        gap: 3rem;
-      }
-
-      .hero-right { height: 340px; }
-
-      #manifesto { padding: 7rem 2.5rem; }
-
-      #stats { padding: 4rem 2.5rem; }
-
-      #for-whom { padding: 6rem 2.5rem; }
-      .fw-grid { grid-template-columns: repeat(2, 1fr); }
-
-      .process-intro { padding: 6rem 2.5rem 2rem; }
-      .p-panel { padding: 0 2.5rem; }
-      .p-inner { gap: 4rem; }
-
-      #portfolio { padding: 6rem 2.5rem; }
-      .portfolio-grid { grid-template-columns: 1fr 1fr; }
-      .pf-card:first-child { grid-row: span 1; min-height: 320px; }
-      .pf-card:first-child { grid-column: span 2; }
-
-      #awards { padding: 6rem 2.5rem; }
-      .awards-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 2.5rem; }
-
-      #cta { padding: 8rem 2.5rem; }
-
-      footer { padding: 2.5rem 2.5rem; }
-    }
-
-    /* ============================
-       MOBILE — ≤768px
-    ============================ */
-    @media (max-width: 768px) {
-      #nav { padding: 1.2rem 1.5rem; }
-
-      .nav-links { display: none; }
-      .nav-cta   { display: none; }
-      .nav-hamburger { display: flex; }
-
-      /* Hero */
-      #hero {
-        grid-template-columns: 1fr;
-        padding: 7rem 1.5rem 3rem;
-        gap: 0;
-        min-height: auto;
-      }
-
-      .hero-right { display: none; }
-
-      .hero-headline {
-        font-size: clamp(2.8rem, 10vw, 4.2rem);
-      }
-
-      .hero-slot-wrap { height: 1.15em; }
-
-      .hero-body { font-size: 0.9rem; max-width: 100%; }
-
-      .hero-btns {
-        flex-direction: column;
-        gap: 0.8rem;
-      }
-
-      .btn-primary, .btn-secondary {
-        width: 100%;
-        text-align: center;
-        padding: 1rem 1.5rem;
-      }
-
-      .hero-scroll-hint { left: 1.5rem; }
-
-      /* Manifesto */
-      #manifesto { padding: 4rem 1.5rem; }
-
-      .manifesto-pull {
-        font-size: clamp(1.4rem, 5.5vw, 2rem);
-      }
-
-      .manifesto-sub { flex-direction: column; gap: 1rem; }
-      .manifesto-sub::before { width: 28px; }
-
-      /* Stats */
-      #stats { padding: 3rem 1.5rem; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
-
-      /* For Whom */
-      #for-whom { padding: 4rem 1.5rem; }
-      .fw-grid  { grid-template-columns: 1fr; gap: 1rem; }
-      .fw-card  { padding: 1.8rem; }
-
-      /* Process — vertical stack on mobile */
-      .process-intro { padding: 4rem 1.5rem 2rem; }
-      .process-intro-sub { margin-left: 0; margin-top: 1rem; font-size: 0.85rem; }
-      .process-intro-hdr { flex-wrap: wrap; gap: 0.3rem; }
-
-      #process-pin {
-        height: auto !important;
-        overflow: visible !important;
-      }
-
-      #process-track {
-        flex-direction: column !important;
-        width: 100% !important;
-        height: auto !important;
-        transform: none !important;
-      }
-
-      .p-panel {
-        width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-        padding: 3rem 1.5rem 5rem !important;
-        border-right: none !important;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .p-inner {
-        grid-template-columns: 1fr !important;
-        gap: 2.5rem !important;
-      }
-
-      .p-panel-bg-num { font-size: 12rem; right: 0; }
-
-      .p-title { font-size: clamp(2.2rem, 9vw, 3.5rem); }
-
-      .p-visual { height: 220px; }
-
-      .d1-wrap { width: 200px; height: 200px; }
-      .d1-r1, .d1-r2, .d1-r3 { width: 200px; height: 200px; }
-      .d1-sat-n { top: calc(50% - 86px); }
-      .d1-sat-e { left: calc(50% + 83px); }
-      .d1-sat-s { top: calc(50% + 80px); }
-      .d1-sat-w { left: calc(50% - 89px); }
-
-      .d2-grid { width: 220px; }
-
-      .d4-doc { width: 100%; max-width: 260px; }
-
-      .d5-wrap { width: 220px; height: 220px; }
-
-      .process-progress-bar {
-        left: 1.5rem;
-        bottom: 1.5rem;
-      }
-
-      /* Portfolio */
-      #portfolio { padding: 4rem 1.5rem; }
-      .portfolio-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      .pf-card:first-child { grid-column: span 1; grid-row: span 1; min-height: 320px; }
-      .pf-card:not(:first-child) { aspect-ratio: 16/9; }
-      .pf-info { opacity: 1 !important; transform: translateY(0) !important; }
-
-      /* Awards */
-      #awards { padding: 4rem 1.5rem; }
-      .awards-grid { grid-template-columns: 1fr; gap: 2rem; }
-
-      /* CTA */
-      #cta { padding: 5rem 1.5rem; }
-      .cta-title { font-size: clamp(2.5rem, 10vw, 4rem); }
-      .cta-btns { flex-direction: column; align-items: center; gap: 0.8rem; }
-      .btn-gold, .btn-outline {
-        width: 100%;
-        max-width: 300px;
-        text-align: center;
-      }
-
-      /* Footer */
-      footer {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.2rem;
-        padding: 2rem 1.5rem;
-      }
-    }
-
-    /* ============================
-       SMALL MOBILE — ≤480px
-    ============================ */
-    @media (max-width: 480px) {
-      .hero-headline { font-size: clamp(2.4rem, 11vw, 3.2rem); }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .stat-val   { font-size: clamp(2.4rem, 10vw, 3.5rem); }
-      .section-heading { font-size: clamp(1.8rem, 7vw, 2.6rem); }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ledgerly — Expense management, beautifully simple</title>
+<meta name="description" content="Ledgerly is the beautifully simple way to track business expenses, capture receipts, set budgets and export tax-ready reports. Free to start." />
+<meta name="theme-color" content="#FF385C" />
+<meta property="og:title" content="Ledgerly — Expense management, beautifully simple" />
+<meta property="og:description" content="Track expenses, capture receipts, set budgets and export tax-ready reports." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="stylesheet" href="assets/css/landing.css" />
 </head>
 <body>
 
-<!-- LOADER -->
-<div id="loader">
-  <div class="loader-wordmark">Design TWG</div>
-  <div class="loader-track"><div class="loader-bar" id="lbar"></div></div>
-  <div class="loader-label" id="lpct">0%</div>
-</div>
-
 <!-- NAV -->
-<nav id="nav">
-  <div class="nav-logo">Design TWG</div>
-  <ul class="nav-links">
-    <li><a href="#for-whom">Services</a></li>
-    <li><a href="#process">Process</a></li>
-    <li><a href="#portfolio">Work</a></li>
-    <li><a href="#awards">Awards</a></li>
-  </ul>
-  <button class="nav-cta">Start a Project</button>
-  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-</nav>
+<header class="nav">
+  <div class="container nav__in">
+    <a class="logo" href="#top"><span class="logo__mark">L</span>Ledgerly</a>
+    <nav class="nav__links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav__right">
+      <button class="iconbtn" id="themeBtn" aria-label="Toggle theme">🌙</button>
+      <a class="btn btn--ghost" href="app/#login">Log in</a>
+      <a class="btn btn--primary" href="app/#signup">Get started free</a>
+    </div>
+    <button class="iconbtn nav__toggle" id="navToggle" aria-label="Menu">☰</button>
+  </div>
+</header>
 
-<!-- MOBILE NAV OVERLAY -->
-<div class="mobile-nav" id="mobile-nav" aria-hidden="true">
-  <ul class="mobile-nav-links">
-    <li><a href="#for-whom" class="mobile-nav-link">Services</a></li>
-    <li><a href="#process"  class="mobile-nav-link">Process</a></li>
-    <li><a href="#portfolio" class="mobile-nav-link">Work</a></li>
-    <li><a href="#awards"   class="mobile-nav-link">Awards</a></li>
-  </ul>
-  <button class="btn-primary" style="width:100%;max-width:260px;">Start a Project</button>
-</div>
+<div id="top"></div>
 
 <!-- HERO -->
-<section id="hero">
-  <div class="hero-left">
-    <span class="hero-eyebrow">Commercial Interior Design · Mississauga, Canada</span>
-    <h1 class="hero-headline" aria-live="polite">
-      We design<br>
-      <span class="hero-slot-wrap" id="hero-slot-wrap">
-        <span class="hero-slot-sizer" id="hero-slot-sizer">Franchise Businesses</span>
-        <span class="hero-slot-word" id="hw-0">Hotels</span>
-        <span class="hero-slot-word" id="hw-1">Restaurants</span>
-        <span class="hero-slot-word" id="hw-2">Franchise Businesses</span>
-        <span class="hero-slot-word" id="hw-3">Spas &amp; Wellness</span>
-        <span class="hero-slot-word" id="hw-4">Dental Clinics</span>
-        <span class="hero-slot-word" id="hw-5">Office Spaces</span>
-      </span>
-      <span class="hero-static-end">that leave a lasting impression.</span>
-    </h1>
-    <p class="hero-body">A 360° commercial interior design studio crafting spaces that drive business — from boutique hotels to national franchise chains.</p>
-    <div class="hero-btns">
-      <button class="btn-primary">Start a Project</button>
-      <button class="btn-secondary">View Our Work</button>
+<section class="hero">
+  <div class="hero__glow"></div>
+  <div class="container hero__in">
+    <span class="badge">✨ Now with automated recurring expenses</span>
+    <h1>Expense management, <span class="grad">beautifully simple</span>.</h1>
+    <p class="sub">Track every dollar, snap receipts, set budgets and know exactly where your business stands — all in one gorgeous workspace you'll actually enjoy using.</p>
+    <div class="hero__cta">
+      <a class="btn btn--primary btn--lg" href="app/#signup">Start for free →</a>
+      <a class="btn btn--ghost btn--lg" href="app/" id="demoBtn">Try the live demo</a>
     </div>
-  </div>
+    <div class="hero__meta">
+      <span>✓ No credit card required</span>
+      <span>✓ Free forever plan</span>
+      <span>✓ Your data stays private</span>
+    </div>
 
-  <div class="hero-right" aria-hidden="true">
-    <!-- Hotel floor plan -->
-    <div class="hero-svg-plan" id="hv-0">
-      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
-        <rect x="50" y="50" width="150" height="120" stroke="#C9A96E" stroke-width="1"/>
-        <rect x="220" y="50" width="150" height="70" stroke="#C9A96E" stroke-width="1"/>
-        <rect x="220" y="140" width="150" height="60" stroke="#C9A96E" stroke-width="0.6"/>
-        <rect x="50" y="190" width="320" height="150" stroke="#C9A96E" stroke-width="1"/>
-        <rect x="70" y="210" width="110" height="80" stroke="#C9A96E" stroke-width="0.6"/>
-        <rect x="230" y="210" width="110" height="80" stroke="#C9A96E" stroke-width="0.6"/>
-        <rect x="140" y="308" width="140" height="12" stroke="#C9A96E" stroke-width="0.6"/>
-        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
-        <line x1="30"  y1="14" x2="30"  y2="22" stroke="#C9A96E" stroke-width="0.4"/>
-        <line x1="390" y1="14" x2="390" y2="22" stroke="#C9A96E" stroke-width="0.4"/>
-        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">HOTEL FLOOR PLAN</text>
-        <text x="125" y="117" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">SUITE</text>
-        <text x="295" y="82" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">LOBBY</text>
-        <text x="210" y="272" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">DINING</text>
-      </svg>
+    <!-- PRODUCT MOCKUP -->
+    <div class="mockup" aria-hidden="true">
+      <div class="mockup__bar">
+        <span class="mockup__dot" style="background:#FF5F57"></span>
+        <span class="mockup__dot" style="background:#FEBC2E"></span>
+        <span class="mockup__dot" style="background:#28C840"></span>
+        <span style="margin-left:12px;font-size:12px;color:var(--ink-3);font-weight:600">app.ledgerly · Dashboard</span>
+      </div>
+      <div class="mockup__body">
+        <div class="mockup__side">
+          <div class="logo" style="font-size:15px;padding:4px 8px 14px"><span class="logo__mark" style="width:24px;height:24px;font-size:13px">L</span>Ledgerly</div>
+          <div class="mockup__navitem on">🏠 Dashboard</div>
+          <div class="mockup__navitem">🧾 Transactions</div>
+          <div class="mockup__navitem">📊 Reports</div>
+          <div class="mockup__navitem">🎯 Budgets</div>
+          <div class="mockup__navitem">🔁 Recurring</div>
+          <div class="mockup__navitem">🏦 Accounts</div>
+        </div>
+        <div class="mockup__main">
+          <div class="mk-stats">
+            <div class="mk-stat"><div class="lbl">Expenses</div><div class="val">$18,240</div></div>
+            <div class="mk-stat"><div class="lbl">Income</div><div class="val" style="color:var(--income)">$42,900</div></div>
+            <div class="mk-stat"><div class="lbl">Net profit</div><div class="val">$24,660</div></div>
+            <div class="mk-stat"><div class="lbl">Deductible</div><div class="val">$12,110</div></div>
+          </div>
+          <div class="mk-row">
+            <div class="mk-card">
+              <div class="mk-title">Income vs. expenses</div>
+              <div class="mk-bars">
+                <div class="mk-bar" style="height:55%"></div>
+                <div class="mk-bar" style="height:72%"></div>
+                <div class="mk-bar" style="height:48%"></div>
+                <div class="mk-bar" style="height:90%"></div>
+                <div class="mk-bar" style="height:66%"></div>
+                <div class="mk-bar" style="height:80%"></div>
+              </div>
+            </div>
+            <div class="mk-card">
+              <div class="mk-title">By category</div>
+              <div class="mk-donut"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- Restaurant floor plan -->
-    <div class="hero-svg-plan" id="hv-1">
-      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
-        <rect x="50" y="50" width="320" height="90" stroke="#C9A96E" stroke-width="1"/>
-        <text x="210" y="100" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3" opacity="0.6">KITCHEN</text>
-        <circle cx="100" cy="220" r="34" stroke="#C9A96E" stroke-width="1"/>
-        <circle cx="210" cy="220" r="34" stroke="#C9A96E" stroke-width="1"/>
-        <circle cx="320" cy="220" r="34" stroke="#C9A96E" stroke-width="1"/>
-        <circle cx="155" cy="318" r="34" stroke="#C9A96E" stroke-width="1"/>
-        <circle cx="265" cy="318" r="34" stroke="#C9A96E" stroke-width="1"/>
-        <rect x="165" y="355" width="90" height="10" stroke="#C9A96E" stroke-width="0.8"/>
-        <text x="210" y="362" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">ENTRANCE</text>
-        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
-        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">RESTAURANT PLAN</text>
-      </svg>
-    </div>
-    <!-- Franchise plan -->
-    <div class="hero-svg-plan" id="hv-2">
-      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
-        <rect x="50" y="50" width="320" height="60" stroke="#C9A96E" stroke-width="1"/>
-        <text x="210" y="85" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3" opacity="0.6">COUNTER / SERVICE</text>
-        <rect x="50" y="130" width="100" height="200" stroke="#C9A96E" stroke-width="0.8"/>
-        <rect x="170" y="130" width="200" height="90" stroke="#C9A96E" stroke-width="0.8"/>
-        <rect x="170" y="240" width="200" height="90" stroke="#C9A96E" stroke-width="0.8"/>
-        <text x="100" y="235" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">WAITING</text>
-        <text x="270" y="189" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">SEATING A</text>
-        <text x="270" y="289" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">SEATING B</text>
-        <rect x="175" y="345" width="70" height="20" stroke="#C9A96E" stroke-width="0.8"/>
-        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
-        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">FRANCHISE PLAN</text>
-      </svg>
-    </div>
-    <!-- Spa plan -->
-    <div class="hero-svg-plan" id="hv-3">
-      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
-        <rect x="50" y="50" width="140" height="100" stroke="#C9A96E" stroke-width="1"/>
-        <text x="120" y="105" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">RECEPTION</text>
-        <rect x="210" y="50" width="160" height="160" stroke="#C9A96E" stroke-width="1"/>
-        <rect x="228" y="68" width="124" height="124" stroke="#C9A96E" stroke-width="0.5" stroke-dasharray="4 3"/>
-        <text x="290" y="135" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">TREATMENT</text>
-        <rect x="50" y="170" width="140" height="180" stroke="#C9A96E" stroke-width="1"/>
-        <circle cx="120" cy="260" r="45" stroke="#C9A96E" stroke-width="0.6" opacity="0.5"/>
-        <text x="120" y="264" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">RELAXATION</text>
-        <rect x="210" y="230" width="160" height="120" stroke="#C9A96E" stroke-width="1"/>
-        <text x="290" y="295" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">CHANGING</text>
-        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
-        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">SPA FLOOR PLAN</text>
-      </svg>
-    </div>
-    <!-- Dental plan -->
-    <div class="hero-svg-plan" id="hv-4">
-      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
-        <rect x="50" y="50" width="200" height="80" stroke="#C9A96E" stroke-width="1"/>
-        <text x="150" y="94" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">WAITING AREA</text>
-        <rect x="270" y="50" width="100" height="80" stroke="#C9A96E" stroke-width="1"/>
-        <text x="320" y="94" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">ADMIN</text>
-        <rect x="50" y="150" width="140" height="100" stroke="#C9A96E" stroke-width="1"/>
-        <ellipse cx="120" cy="200" rx="50" ry="28" stroke="#C9A96E" stroke-width="0.6" opacity="0.6"/>
-        <text x="120" y="204" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="6" letter-spacing="1" opacity="0.5">CHAIR 1</text>
-        <rect x="210" y="150" width="160" height="100" stroke="#C9A96E" stroke-width="1"/>
-        <ellipse cx="290" cy="200" rx="50" ry="28" stroke="#C9A96E" stroke-width="0.6" opacity="0.6"/>
-        <text x="290" y="204" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="6" letter-spacing="1" opacity="0.5">CHAIR 2</text>
-        <rect x="50" y="270" width="320" height="80" stroke="#C9A96E" stroke-width="0.8"/>
-        <text x="210" y="315" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">STERILIZATION / LAB</text>
-        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
-        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">DENTAL CLINIC PLAN</text>
-      </svg>
-    </div>
-    <!-- Office plan -->
-    <div class="hero-svg-plan" id="hv-5">
-      <svg viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <rect x="30" y="30" width="360" height="340" stroke="#C9A96E" stroke-width="0.8"/>
-        <rect x="50" y="50" width="100" height="120" stroke="#C9A96E" stroke-width="1"/>
-        <text x="100" y="115" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">RECEPTION</text>
-        <rect x="170" y="50" width="200" height="120" stroke="#C9A96E" stroke-width="1"/>
-        <text x="270" y="115" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">MEETING ROOM</text>
-        <rect x="50" y="190" width="320" height="150" stroke="#C9A96E" stroke-width="1"/>
-        <line x1="157" y1="190" x2="157" y2="340" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
-        <line x1="264" y1="190" x2="264" y2="340" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
-        <line x1="50"  y1="265" x2="370" y2="265" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
-        <text x="104" y="232" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="6" letter-spacing="1" opacity="0.5">WS A</text>
-        <text x="211" y="232" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="6" letter-spacing="1" opacity="0.5">WS B</text>
-        <text x="318" y="232" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="6" letter-spacing="1" opacity="0.5">WS C</text>
-        <text x="210" y="308" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="2" opacity="0.6">OPEN PLAN</text>
-        <line x1="30" y1="18" x2="390" y2="18" stroke="#C9A96E" stroke-width="0.4"/>
-        <text x="210" y="14" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="3">OFFICE FLOOR PLAN</text>
-      </svg>
-    </div>
-  </div>
-
-  <div class="hero-scroll-hint">
-    <span>Scroll to Explore</span>
-    <div class="scroll-line"></div>
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="marquee-bar" aria-hidden="true">
-  <div class="marquee-track">
-    <div class="marquee-item"><span>Interior Design</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Brand Strategy</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Visual Identity</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Hotel Interiors</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Franchise Design</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Space Planning</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>3× NEWH Award Winner</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>360° Solutions</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Lighting Design</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Interior Design</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Brand Strategy</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Visual Identity</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Hotel Interiors</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Franchise Design</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Space Planning</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>3× NEWH Award Winner</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>360° Solutions</span><span class="marquee-sep"></span></div>
-    <div class="marquee-item"><span>Lighting Design</span><span class="marquee-sep"></span></div>
+<!-- TRUST -->
+<div class="trust">
+  <div class="container">
+    <p>Trusted by freelancers, founders & finance teams</p>
+    <div class="trust__row">
+      <span>◆ Northwind</span><span>✦ Brightly</span><span>❖ Cedar&nbsp;Co</span><span>▲ Apex</span><span>● Loop</span><span>✳ Vellum</span>
+    </div>
   </div>
 </div>
 
-<!-- MANIFESTO -->
-<section id="manifesto">
-  <p class="manifesto-pull" id="manifesto-pull">
-    We don't just design <em>spaces</em> — we craft <em>experiences</em>
-    that drive business. Every hotel lobby, every franchise location,
-    every square foot is a <em>strategic decision</em> that earns its place.
-  </p>
-  <div class="manifesto-sub">
-    <p>Design TWG is a 360° space design studio — integrating interior design, branding, and execution for hospitality and franchise brands across Canada and beyond.</p>
-  </div>
-</section>
-
-<!-- STATS -->
-<section id="stats">
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-val"><span class="cnt" data-t="25">0</span><sup>+</sup></div>
-      <div class="stat-lbl">Years of Excellence</div>
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Everything you need</div>
+      <h2>One app for your entire money story</h2>
+      <p>From the first receipt to the year-end tax report, Ledgerly handles it all — without the spreadsheet gymnastics.</p>
     </div>
-    <div class="stat-card">
-      <div class="stat-val"><span class="cnt" data-t="200">0</span><sup>+</sup></div>
-      <div class="stat-lbl">Projects Delivered</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val"><span class="cnt" data-t="3">0</span><sup>×</sup></div>
-      <div class="stat-lbl">NEWH Award Winner</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val"><span class="cnt" data-t="164">0</span></div>
-      <div class="stat-lbl">Hotel Rooms Transformed</div>
+    <div class="features">
+      <div class="feature"><div class="feature__ic" style="background:#FFE8EC;color:#FF385C">🧾</div><h3>Effortless expense tracking</h3><p>Log expenses and income in seconds with smart categories, vendors, payment methods and tags.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#EDE9FE;color:#7C3AED">📸</div><h3>Receipt capture</h3><p>Snap a photo and attach it to any transaction. Receipts are stored privately, right on your device.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#DBEAFE;color:#0EA5E9">📊</div><h3>Real-time dashboards</h3><p>Beautiful charts show spending trends, category breakdowns and income vs. expenses at a glance.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#DCFCE7;color:#16A34A">🎯</div><h3>Budgets & alerts</h3><p>Set monthly limits per category and watch progress bars keep you honest before you overspend.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#FEF3C7;color:#D97706">🔁</div><h3>Recurring automation</h3><p>Rent, subscriptions and payroll post themselves automatically — set it once and forget it.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#CFFAFE;color:#0891B2">🧮</div><h3>Tax-ready reports</h3><p>Flag deductibles, filter by any date range and export clean CSVs or print-perfect PDFs.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#F3E8FF;color:#8B5CF6">🌐</div><h3>Multi-currency</h3><p>Record expenses in 15+ currencies and see everything normalized to your base currency.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#FEE2E2;color:#EF4444">🏢</div><h3>Multiple workspaces</h3><p>Run several businesses side by side, each with its own accounts, categories and reports.</p></div>
+      <div class="feature"><div class="feature__ic" style="background:#E0E7FF;color:#6366F1">📱</div><h3>Works offline (PWA)</h3><p>Install Ledgerly like a native app. It works fully offline and syncs the moment you're back.</p></div>
     </div>
   </div>
 </section>
 
-<!-- FOR WHOM -->
-<section id="for-whom">
-  <div class="fw-header">
-    <span class="section-num">01</span>
-    <h2 class="section-heading">Who We Design For</h2>
-  </div>
-  <div class="fw-grid">
-
-    <div class="fw-card">
-      <div class="fw-card-icon">
-        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="8" width="24" height="18" stroke="#C9A96E" stroke-width="1.2"/>
-          <rect x="6" y="12" width="6" height="6" stroke="#C9A96E" stroke-width="0.8"/>
-          <rect x="16" y="12" width="6" height="6" stroke="#C9A96E" stroke-width="0.8"/>
-          <line x1="2" y1="8" x2="14" y2="2" stroke="#C9A96E" stroke-width="1"/>
-          <line x1="26" y1="8" x2="14" y2="2" stroke="#C9A96E" stroke-width="1"/>
-        </svg>
+<!-- HOW IT WORKS / SPLITS -->
+<section id="how" class="bg-soft">
+  <div class="container">
+    <div class="split">
+      <div class="split__media">
+        <div class="mk-card">
+          <div class="mk-title">Add transaction</div>
+          <div style="display:flex;gap:8px;margin-bottom:12px"><span class="btn btn--primary" style="flex:1;padding:8px">Expense</span><span class="btn btn--ghost" style="flex:1;padding:8px">Income</span></div>
+          <div style="font-size:34px;font-weight:800;letter-spacing:-.02em">$248.00</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px">
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--accent);border-radius:12px;background:var(--accent-soft)">✈️<div style="font-size:10px;font-weight:600">Travel</div></div>
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px">🍽️<div style="font-size:10px;font-weight:600">Meals</div></div>
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px">💻<div style="font-size:10px;font-weight:600">Software</div></div>
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px">📣<div style="font-size:10px;font-weight:600">Ads</div></div>
+          </div>
+        </div>
       </div>
-      <div class="fw-card-title">Hotels &amp; Hospitality</div>
-      <div class="fw-card-desc">From boutique retreats to 164-room airport hotels, we transform hospitality spaces into experiences guests remember — and brands that properties are proud of.</div>
+      <div>
+        <div class="eyebrow">Fast by design</div>
+        <h3>Log an expense in under 10 seconds</h3>
+        <p>A thoughtfully designed form gets out of your way. Pick a category, snap a receipt, done. Vendors autocomplete, currencies convert, and deductibles are flagged automatically.</p>
+        <ul>
+          <li><span class="ck">✓</span> Big, tappable category picker with 30+ icons</li>
+          <li><span class="ck">✓</span> Attach receipts with automatic image compression</li>
+          <li><span class="ck">✓</span> Tags, notes, accounts and payment methods</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="fw-card">
-      <div class="fw-card-icon">
-        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="6" width="24" height="20" stroke="#C9A96E" stroke-width="1.2"/>
-          <circle cx="8"  cy="18" r="4" stroke="#C9A96E" stroke-width="0.8"/>
-          <circle cx="20" cy="18" r="4" stroke="#C9A96E" stroke-width="0.8"/>
-          <rect x="4" y="7" width="20" height="6" stroke="#C9A96E" stroke-width="0.6"/>
-        </svg>
+    <div class="split split--rev" style="margin-top:88px">
+      <div class="split__media">
+        <div class="mk-card">
+          <div class="mk-title">Spending by category · This month</div>
+          <div class="mk-donut" style="margin:10px auto 16px"></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="width:10px;height:10px;border-radius:3px;background:#FF385C"></span>Software<span style="margin-left:auto;font-weight:700">$4,120</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="width:10px;height:10px;border-radius:3px;background:#7C3AED"></span>Travel<span style="margin-left:auto;font-weight:700">$3,240</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="width:10px;height:10px;border-radius:3px;background:#0EA5E9"></span>Marketing<span style="margin-left:auto;font-weight:700">$2,680</span></div>
+          </div>
+        </div>
       </div>
-      <div class="fw-card-title">Restaurants</div>
-      <div class="fw-card-desc">Dining environments crafted to elevate the culinary experience — from layout and lighting to material palettes that match your brand's flavour.</div>
-    </div>
-
-    <div class="fw-card">
-      <div class="fw-card-icon">
-        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="4" width="24" height="20" stroke="#C9A96E" stroke-width="1.2"/>
-          <line x1="2" y1="10" x2="26" y2="10" stroke="#C9A96E" stroke-width="0.8"/>
-          <rect x="5" y="14" width="6" height="6" stroke="#C9A96E" stroke-width="0.7"/>
-          <rect x="17" y="14" width="6" height="6" stroke="#C9A96E" stroke-width="0.7"/>
-          <rect x="11" y="14" width="6" height="10" stroke="#C9A96E" stroke-width="0.7"/>
-        </svg>
+      <div>
+        <div class="eyebrow">Clarity, instantly</div>
+        <h3>See exactly where your money goes</h3>
+        <p>Interactive dashboards turn raw transactions into decisions. Spot your biggest cost centers, compare months, and track profit in real time — no spreadsheet formulas required.</p>
+        <ul>
+          <li><span class="ck">✓</span> Spending trend, category donut & monthly comparisons</li>
+          <li><span class="ck">✓</span> Period-over-period deltas so you catch changes early</li>
+          <li><span class="ck">✓</span> Drill into any category with one click</li>
+        </ul>
       </div>
-      <div class="fw-card-title">Franchise Businesses</div>
-      <div class="fw-card-desc">Juicy Birds. Atul Bakery. Ice Flame. Honest Restaurants. We build seamless visual language across every location — consistent identity, flawless execution.</div>
     </div>
-
-    <div class="fw-card">
-      <div class="fw-card-icon">
-        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="14" cy="14" r="11" stroke="#C9A96E" stroke-width="1.2"/>
-          <circle cx="14" cy="14" r="6" stroke="#C9A96E" stroke-width="0.7"/>
-          <line x1="14" y1="3" x2="14" y2="8" stroke="#C9A96E" stroke-width="0.7"/>
-          <line x1="14" y1="20" x2="14" y2="25" stroke="#C9A96E" stroke-width="0.7"/>
-          <line x1="3" y1="14" x2="8" y2="14" stroke="#C9A96E" stroke-width="0.7"/>
-          <line x1="20" y1="14" x2="25" y2="14" stroke="#C9A96E" stroke-width="0.7"/>
-        </svg>
-      </div>
-      <div class="fw-card-title">Spas &amp; Wellness</div>
-      <div class="fw-card-desc">Tranquil, restorative environments designed to signal luxury — where every material choice and spatial flow communicates calm and care.</div>
-    </div>
-
-    <div class="fw-card">
-      <div class="fw-card-icon">
-        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="6" width="24" height="20" stroke="#C9A96E" stroke-width="1.2"/>
-          <rect x="6" y="10" width="16" height="8" stroke="#C9A96E" stroke-width="0.7"/>
-          <rect x="10" y="20" width="8" height="4" stroke="#C9A96E" stroke-width="0.6"/>
-          <circle cx="14" cy="14" r="2" stroke="#C9A96E" stroke-width="0.7"/>
-          <line x1="8" y1="4" x2="8" y2="6" stroke="#C9A96E" stroke-width="1"/>
-          <line x1="20" y1="4" x2="20" y2="6" stroke="#C9A96E" stroke-width="1"/>
-        </svg>
-      </div>
-      <div class="fw-card-title">Dental Clinics</div>
-      <div class="fw-card-desc">Clinical environments that reduce patient anxiety and project professionalism — clean, considered design that works as hard as your team.</div>
-    </div>
-
-    <div class="fw-card">
-      <div class="fw-card-icon">
-        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="4" width="24" height="20" stroke="#C9A96E" stroke-width="1.2"/>
-          <rect x="5" y="8"  width="8" height="6" stroke="#C9A96E" stroke-width="0.7"/>
-          <rect x="15" y="8" width="8" height="6" stroke="#C9A96E" stroke-width="0.7"/>
-          <rect x="5" y="16" width="8" height="6" stroke="#C9A96E" stroke-width="0.7"/>
-          <rect x="15" y="16" width="8" height="6" stroke="#C9A96E" stroke-width="0.7"/>
-        </svg>
-      </div>
-      <div class="fw-card-title">Office Spaces</div>
-      <div class="fw-card-desc">Workplaces designed for focus, collaboration, and culture — translating your brand's values into a physical environment that attracts and retains talent.</div>
-    </div>
-
   </div>
 </section>
 
-<!-- D-PROCESS -->
-<section id="process">
-  <div class="process-intro">
-    <div class="process-intro-hdr">
-      <span class="section-num">02</span>
-      <h2 class="section-heading">The D&#8209;Process</h2>
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Simple pricing</div>
+      <h2>Start free. Upgrade when you grow.</h2>
+      <p>No hidden fees. Cancel anytime. Every plan includes the full, gorgeous experience.</p>
     </div>
-    <p class="process-intro-sub">Five phases. One seamless journey. From the first conversation to the final reveal — this is how we turn your vision into a space that works for the real world.</p>
-  </div>
-
-  <div id="process-pin">
-    <div id="process-track">
-
-      <!-- D1: DISCOVER — Pulse Scan -->
-      <div class="p-panel">
-        <div class="p-panel-bg-num" aria-hidden="true">D1</div>
-        <div class="p-inner">
-          <div class="p-content">
-            <span class="phase-tag">Phase One</span>
-            <span class="p-num">D1</span>
-            <h3 class="p-title">Discover</h3>
-            <p class="p-desc">We dive deep into your brand, your customers, and your business goals. This isn't just a brief — it's a strategic alignment that shapes every decision ahead.</p>
-            <ul class="p-list">
-              <li>Brand &amp; Business Deep Dive</li>
-              <li>Site Analysis &amp; Assessment</li>
-              <li>Target Audience Mapping</li>
-              <li>Vision &amp; Mood Board Alignment</li>
-            </ul>
-          </div>
-          <div class="p-visual">
-            <div class="p-anim-wrap">
-              <div class="d1-wrap">
-                <div class="d1-ring d1-r1"></div>
-                <div class="d1-ring d1-r2"></div>
-                <div class="d1-ring d1-r3"></div>
-                <div class="d1-spoke d1-s1"></div>
-                <div class="d1-spoke d1-s2"></div>
-                <div class="d1-spoke d1-s3"></div>
-                <div class="d1-spoke d1-s4"></div>
-                <div class="d1-sat d1-sat-n"></div>
-                <div class="d1-sat d1-sat-e"></div>
-                <div class="d1-sat d1-sat-s"></div>
-                <div class="d1-sat d1-sat-w"></div>
-                <div class="d1-dot"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="process-progress-bar">
-          <div class="pp-dots">
-            <div class="pp-dot on" data-i="0"></div>
-            <div class="pp-dot" data-i="1"></div>
-            <div class="pp-dot" data-i="2"></div>
-            <div class="pp-dot" data-i="3"></div>
-            <div class="pp-dot" data-i="4"></div>
-          </div>
-          <span class="pp-label">1 of 5</span>
-        </div>
+    <div class="toggle-wrap">
+      <span id="lblMonthly" style="color:var(--ink)">Monthly</span>
+      <label class="switch"><input type="checkbox" id="billToggle" /><span class="tr"></span><span class="kn"></span></label>
+      <span id="lblAnnual" style="color:var(--ink-3)">Annual</span>
+      <span class="save-badge">Save 20%</span>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3>Starter</h3>
+        <div class="plan__desc">For freelancers just getting organized.</div>
+        <div class="plan__price">$0</div>
+        <div class="plan__per">Free forever</div>
+        <a class="btn btn--ghost plan__cta" href="app/#signup">Get started</a>
+        <ul>
+          <li><span class="ck">✓</span> 1 workspace</li>
+          <li><span class="ck">✓</span> Unlimited transactions</li>
+          <li><span class="ck">✓</span> Receipts & categories</li>
+          <li><span class="ck">✓</span> Dashboard & basic reports</li>
+          <li><span class="ck">✓</span> CSV export</li>
+          <li class="off"><span class="ck">✓</span> Recurring automation</li>
+          <li class="off"><span class="ck">✓</span> Multi-workspace</li>
+        </ul>
       </div>
-
-      <!-- D2: DEFINE — Material Grid Fill -->
-      <div class="p-panel">
-        <div class="p-panel-bg-num" aria-hidden="true">D2</div>
-        <div class="p-inner">
-          <div class="p-content">
-            <span class="phase-tag">Phase Two</span>
-            <span class="p-num">D2</span>
-            <h3 class="p-title">Define</h3>
-            <p class="p-desc">Armed with insights, we define the design direction — concept themes, space planning, material palettes, and brand integration that sets the strategic foundation.</p>
-            <ul class="p-list">
-              <li>Concept Theme Development</li>
-              <li>Space Planning &amp; Flow</li>
-              <li>Material &amp; Colour Palette</li>
-              <li>Brand Integration Strategy</li>
-            </ul>
-          </div>
-          <div class="p-visual">
-            <div class="p-anim-wrap">
-              <div class="d2-grid">
-                <div class="d2-swatch d2-sw1"></div>
-                <div class="d2-swatch d2-sw2"></div>
-                <div class="d2-swatch d2-sw3"></div>
-                <div class="d2-swatch d2-sw4"></div>
-                <div class="d2-swatch d2-sw5"></div>
-                <div class="d2-swatch d2-sw6"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="process-progress-bar">
-          <div class="pp-dots">
-            <div class="pp-dot" data-i="0"></div>
-            <div class="pp-dot on" data-i="1"></div>
-            <div class="pp-dot" data-i="2"></div>
-            <div class="pp-dot" data-i="3"></div>
-            <div class="pp-dot" data-i="4"></div>
-          </div>
-          <span class="pp-label">2 of 5</span>
-        </div>
+      <div class="plan plan--pop">
+        <div class="plan__tag">Most popular</div>
+        <h3>Pro</h3>
+        <div class="plan__desc">For growing businesses that want it all.</div>
+        <div class="plan__price"><span data-monthly>$9</span><span data-annual style="display:none">$7</span><small>/mo</small></div>
+        <div class="plan__per"><span data-monthly>Billed monthly</span><span data-annual style="display:none">$84 billed annually</span></div>
+        <button class="btn btn--primary plan__cta" data-checkout data-plan="Pro">Upgrade to Pro</button>
+        <ul>
+          <li><span class="ck">✓</span> Everything in Starter</li>
+          <li><span class="ck">✓</span> <strong>Recurring</strong> automation</li>
+          <li><span class="ck">✓</span> Budgets & alerts</li>
+          <li><span class="ck">✓</span> Tax & deductible reports</li>
+          <li><span class="ck">✓</span> Multi-currency</li>
+          <li><span class="ck">✓</span> Up to 3 workspaces</li>
+          <li><span class="ck">✓</span> Priority email support</li>
+        </ul>
       </div>
-
-      <!-- D3: DESIGN — Blueprint Draw -->
-      <div class="p-panel">
-        <div class="p-panel-bg-num" aria-hidden="true">D3</div>
-        <div class="p-inner">
-          <div class="p-content">
-            <span class="phase-tag">Phase Three</span>
-            <span class="p-num">D3</span>
-            <h3 class="p-title">Design</h3>
-            <p class="p-desc">Vision becomes visual. Detailed drawings, photorealistic 3D renders, FF&amp;E specifications, and lighting design — every element crafted to deliver a cohesive, striking space.</p>
-            <ul class="p-list">
-              <li>3D Visualization &amp; Renders</li>
-              <li>FF&amp;E Selection &amp; Sourcing</li>
-              <li>Lighting Design</li>
-              <li>Visual Branding Integration</li>
-            </ul>
-          </div>
-          <div class="p-visual">
-            <div class="p-anim-wrap">
-              <svg id="d3-svg" viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg">
-                <!-- Outer walls path -->
-                <path id="d3-walls"
-                  d="M20,20 L300,20 L300,260 L20,260 Z"
-                  stroke="#C9A96E" stroke-width="1.5" fill="none"
-                  stroke-dasharray="1120" stroke-dashoffset="1120"/>
-                <!-- Interior partition -->
-                <path id="d3-partition"
-                  d="M20,130 L200,130 M200,20 L200,130 M200,190 L300,190"
-                  stroke="#C9A96E" stroke-width="0.8" fill="none"
-                  stroke-dasharray="450" stroke-dashoffset="450"/>
-                <!-- Furniture icons group -->
-                <g id="d3-furniture">
-                  <!-- Desk -->
-                  <rect x="35" y="145" width="70" height="40" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
-                  <rect x="38" y="148" width="64" height="30" fill="none" stroke="#C9A96E" stroke-width="0.4" opacity="0.5"/>
-                  <!-- Chair -->
-                  <circle cx="70" cy="200" r="12" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
-                  <!-- Sofa -->
-                  <rect x="215" y="35" width="70" height="30" rx="4" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
-                  <rect x="218" y="38" width="20" height="24" rx="2" fill="none" stroke="#C9A96E" stroke-width="0.4" opacity="0.5"/>
-                  <rect x="243" y="38" width="20" height="24" rx="2" fill="none" stroke="#C9A96E" stroke-width="0.4" opacity="0.5"/>
-                  <!-- Table -->
-                  <ellipse cx="110" cy="80" rx="30" ry="20" fill="none" stroke="#C9A96E" stroke-width="0.7"/>
-                </g>
-                <text id="d3-label" x="160" y="275" text-anchor="middle" font-family="DM Sans" font-size="8" letter-spacing="3">DESIGN BLUEPRINT</text>
-              </svg>
-            </div>
-          </div>
-        </div>
-        <div class="process-progress-bar">
-          <div class="pp-dots">
-            <div class="pp-dot" data-i="0"></div>
-            <div class="pp-dot" data-i="1"></div>
-            <div class="pp-dot on" data-i="2"></div>
-            <div class="pp-dot" data-i="3"></div>
-            <div class="pp-dot" data-i="4"></div>
-          </div>
-          <span class="pp-label">3 of 5</span>
-        </div>
-      </div>
-
-      <!-- D4: DEVELOP — Layer Stack -->
-      <div class="p-panel">
-        <div class="p-panel-bg-num" aria-hidden="true">D4</div>
-        <div class="p-inner">
-          <div class="p-content">
-            <span class="phase-tag">Phase Four</span>
-            <span class="p-num">D4</span>
-            <h3 class="p-title">Develop</h3>
-            <p class="p-desc">We translate design intent into construction-ready documentation — coordinating with contractors, managing procurement, and ensuring every specification is executed precisely.</p>
-            <ul class="p-list">
-              <li>Construction Documentation</li>
-              <li>Contractor Coordination</li>
-              <li>Procurement Management</li>
-              <li>Site Reviews &amp; Quality Control</li>
-            </ul>
-          </div>
-          <div class="p-visual">
-            <div class="p-anim-wrap">
-              <div class="d4-wrap">
-                <div class="d4-doc" id="d4-doc1">
-                  <span class="d4-doc-num">01</span>
-                  <span class="d4-doc-label">Construction Documentation</span>
-                </div>
-                <div class="d4-doc" id="d4-doc2">
-                  <span class="d4-doc-num">02</span>
-                  <span class="d4-doc-label">Specification Sheets</span>
-                </div>
-                <div class="d4-doc" id="d4-doc3">
-                  <span class="d4-doc-num">03</span>
-                  <span class="d4-doc-label">Procurement List</span>
-                </div>
-                <div class="d4-doc" id="d4-doc4">
-                  <span class="d4-doc-num">04</span>
-                  <span class="d4-doc-label">Site Review Report</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="process-progress-bar">
-          <div class="pp-dots">
-            <div class="pp-dot" data-i="0"></div>
-            <div class="pp-dot" data-i="1"></div>
-            <div class="pp-dot" data-i="2"></div>
-            <div class="pp-dot on" data-i="3"></div>
-            <div class="pp-dot" data-i="4"></div>
-          </div>
-          <span class="pp-label">4 of 5</span>
-        </div>
-      </div>
-
-      <!-- D5: DELIVER — Curtain Reveal -->
-      <div class="p-panel">
-        <div class="p-panel-bg-num" aria-hidden="true">D5</div>
-        <div class="p-inner">
-          <div class="p-content">
-            <span class="phase-tag">Phase Five</span>
-            <span class="p-num">D5</span>
-            <h3 class="p-title">Deliver</h3>
-            <p class="p-desc">The moment vision meets reality. We oversee installation, manage the final styling, and conduct a comprehensive reveal — ensuring every detail is flawless before handover.</p>
-            <ul class="p-list">
-              <li>Installation Supervision</li>
-              <li>Final Styling &amp; Art Direction</li>
-              <li>Photography &amp; Handover Package</li>
-              <li>Post-Occupancy Review</li>
-            </ul>
-          </div>
-          <div class="p-visual">
-            <div class="p-anim-wrap">
-              <div class="d5-wrap">
-                <div class="d5-interior">
-                  <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Window frame with light -->
-                    <rect x="60" y="20" width="80" height="100" stroke="#C9A96E" stroke-width="1"/>
-                    <line x1="100" y1="20" x2="100" y2="120" stroke="#C9A96E" stroke-width="0.5" opacity="0.5"/>
-                    <line x1="60" y1="70" x2="140" y2="70" stroke="#C9A96E" stroke-width="0.5" opacity="0.5"/>
-                    <!-- Plant -->
-                    <line x1="40" y1="180" x2="40" y2="130" stroke="#C9A96E" stroke-width="1.2"/>
-                    <circle cx="35" cy="120" r="12" stroke="#C9A96E" stroke-width="0.8"/>
-                    <circle cx="48" cy="115" r="10" stroke="#C9A96E" stroke-width="0.8"/>
-                    <!-- Floor line -->
-                    <line x1="10" y1="180" x2="190" y2="180" stroke="#C9A96E" stroke-width="0.8"/>
-                    <!-- Sofa -->
-                    <rect x="100" y="150" width="85" height="30" rx="4" stroke="#C9A96E" stroke-width="0.8"/>
-                  </svg>
-                </div>
-                <div class="d5-curtain-left"></div>
-                <div class="d5-curtain-right"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="process-progress-bar">
-          <div class="pp-dots">
-            <div class="pp-dot" data-i="0"></div>
-            <div class="pp-dot" data-i="1"></div>
-            <div class="pp-dot" data-i="2"></div>
-            <div class="pp-dot" data-i="3"></div>
-            <div class="pp-dot on" data-i="4"></div>
-          </div>
-          <span class="pp-label">5 of 5</span>
-        </div>
-      </div>
-
-    </div><!-- /process-track -->
-  </div><!-- /process-pin -->
-</section>
-
-<!-- PORTFOLIO -->
-<section id="portfolio">
-  <div class="portfolio-hdr">
-    <span class="section-num">03</span>
-    <h2 class="section-heading">Selected Work</h2>
-  </div>
-  <div class="portfolio-grid">
-
-    <div class="pf-card">
-      <div class="pf-art">
-        <svg viewBox="0 0 300 500" xmlns="http://www.w3.org/2000/svg" fill="none">
-          <rect x="20" y="20" width="260" height="460" stroke="#C9A96E" stroke-width="0.8"/>
-          <rect x="40" y="60" width="110" height="90" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <rect x="165" y="60" width="95" height="60" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <rect x="40" y="180" width="220" height="130" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <rect x="40" y="340" width="100" height="100" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <rect x="160" y="340" width="100" height="100" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <text x="150" y="260" text-anchor="middle" fill="#C9A96E" font-family="Cormorant Garamond" font-size="9" letter-spacing="3" opacity="0.5">TORONTO AIRPORT HOTEL</text>
-        </svg>
-      </div>
-      <div class="pf-info">
-        <div class="pf-tag">Hospitality · Toronto, ON</div>
-        <div class="pf-name">Toronto Airport Hotel</div>
+      <div class="plan">
+        <h3>Business</h3>
+        <div class="plan__desc">For teams managing serious money.</div>
+        <div class="plan__price"><span data-monthly>$29</span><span data-annual style="display:none">$23</span><small>/mo</small></div>
+        <div class="plan__per"><span data-monthly>Billed monthly</span><span data-annual style="display:none">$276 billed annually</span></div>
+        <button class="btn btn--ghost plan__cta" data-checkout data-plan="Business">Choose Business</button>
+        <ul>
+          <li><span class="ck">✓</span> Everything in Pro</li>
+          <li><span class="ck">✓</span> Unlimited workspaces</li>
+          <li><span class="ck">✓</span> Team members & roles</li>
+          <li><span class="ck">✓</span> Advanced vendor analytics</li>
+          <li><span class="ck">✓</span> Scheduled report exports</li>
+          <li><span class="ck">✓</span> Dedicated support</li>
+        </ul>
       </div>
     </div>
-
-    <div class="pf-card">
-      <div class="pf-art">
-        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" fill="none">
-          <rect x="15" y="15" width="250" height="190" stroke="#C9A96E" stroke-width="0.7"/>
-          <circle cx="70"  cy="95" r="30" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
-          <circle cx="140" cy="95" r="30" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
-          <circle cx="210" cy="95" r="30" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
-          <rect x="30" y="150" width="220" height="30" stroke="#C9A96E" stroke-width="0.8" opacity="0.5"/>
-          <text x="140" y="170" text-anchor="middle" fill="#C9A96E" font-family="Cormorant Garamond" font-size="8" letter-spacing="2" opacity="0.4">JUICY BIRDS</text>
-        </svg>
-      </div>
-      <div class="pf-info">
-        <div class="pf-tag">Franchise · Restaurant</div>
-        <div class="pf-name">Juicy Birds</div>
-      </div>
-    </div>
-
-    <div class="pf-card">
-      <div class="pf-art">
-        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" fill="none">
-          <rect x="15" y="15" width="250" height="190" stroke="#C9A96E" stroke-width="0.7"/>
-          <rect x="30" y="30"  width="220" height="65" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <rect x="30" y="115" width="100" height="65" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
-          <rect x="150" y="115" width="100" height="65" stroke="#C9A96E" stroke-width="1" opacity="0.6"/>
-          <text x="140" y="68" text-anchor="middle" fill="#C9A96E" font-family="Cormorant Garamond" font-size="8" letter-spacing="2" opacity="0.4">ATUL BAKERY</text>
-        </svg>
-      </div>
-      <div class="pf-info">
-        <div class="pf-tag">Franchise · Bakery</div>
-        <div class="pf-name">Atul Bakery</div>
-      </div>
-    </div>
-
-    <div class="pf-card">
-      <div class="pf-art">
-        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" fill="none">
-          <rect x="15" y="15" width="250" height="190" stroke="#C9A96E" stroke-width="0.7"/>
-          <polygon points="140,25 250,110 140,195 30,110" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <circle cx="140" cy="110" r="18" stroke="#C9A96E" stroke-width="1" opacity="0.8"/>
-          <text x="140" y="113" text-anchor="middle" fill="#C9A96E" font-family="DM Sans" font-size="7" letter-spacing="1" opacity="0.6">ICE FLAME</text>
-        </svg>
-      </div>
-      <div class="pf-info">
-        <div class="pf-tag">Franchise · Grill</div>
-        <div class="pf-name">Ice Flame Grill &amp; Chill</div>
-      </div>
-    </div>
-
-    <div class="pf-card">
-      <div class="pf-art">
-        <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" fill="none">
-          <rect x="15" y="15" width="250" height="190" stroke="#C9A96E" stroke-width="0.7"/>
-          <rect x="30" y="30" width="220" height="160" stroke="#C9A96E" stroke-width="1" opacity="0.7"/>
-          <line x1="30" y1="80"  x2="250" y2="80"  stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
-          <line x1="30" y1="130" x2="250" y2="130" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
-          <line x1="140" y1="30" x2="140" y2="190" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
-          <text x="140" y="110" text-anchor="middle" fill="#C9A96E" font-family="Cormorant Garamond" font-size="8" letter-spacing="2" opacity="0.4">HONEST RESTAURANTS</text>
-        </svg>
-      </div>
-      <div class="pf-info">
-        <div class="pf-tag">Franchise · Casual Dining</div>
-        <div class="pf-name">Honest Restaurants</div>
-      </div>
-    </div>
-
   </div>
 </section>
 
-<!-- AWARDS -->
-<section id="awards">
-  <div class="awards-hdr">
-    <span class="section-num">04</span>
-    <h2 class="section-heading">Recognition</h2>
+<!-- TESTIMONIALS -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Loved by owners</div>
+      <h2>Built for people who hate bookkeeping</h2>
+    </div>
+    <div class="quotes">
+      <div class="quote"><div class="quote__stars">★★★★★</div><p>"I finally stopped dreading tax season. Ledgerly's deductible report saved me an entire weekend."</p><div class="quote__who"><div class="quote__ava">MR</div><div><div class="quote__name">Maya Rodriguez</div><div class="quote__role">Design freelancer</div></div></div></div>
+      <div class="quote"><div class="quote__stars">★★★★★</div><p>"The dashboards are genuinely beautiful. It's the first finance app my whole team actually wants to open."</p><div class="quote__who"><div class="quote__ava">JC</div><div><div class="quote__name">James Chen</div><div class="quote__role">Founder, Loop Studio</div></div></div></div>
+      <div class="quote"><div class="quote__stars">★★★★★</div><p>"Recurring expenses and multi-currency in one place. Runs both my businesses without breaking a sweat."</p><div class="quote__who"><div class="quote__ava">AK</div><div><div class="quote__name">Amara Okafor</div><div class="quote__role">Consultant</div></div></div></div>
+    </div>
   </div>
-  <div class="awards-grid">
-    <div class="award-card">
-      <div class="award-yr">2020</div>
-      <div class="award-title">NEWH Top Interior Design Firm</div>
-      <div class="award-org">Network of Executive Women in Hospitality</div>
-    </div>
-    <div class="award-card">
-      <div class="award-yr">2020</div>
-      <div class="award-title">IES Illumination Award</div>
-      <div class="award-org">Illuminating Engineering Society — Toronto Section</div>
-    </div>
-    <div class="award-card">
-      <div class="award-yr">2018</div>
-      <div class="award-title">NEWH Top Interior Design Firm</div>
-      <div class="award-org">Network of Executive Women in Hospitality</div>
-    </div>
-    <div class="award-card">
-      <div class="award-yr">2017</div>
-      <div class="award-title">NEWH Top Interior Design Firm</div>
-      <div class="award-org">Network of Executive Women in Hospitality</div>
-    </div>
-    <div class="award-card">
-      <div class="award-yr">Ongoing</div>
-      <div class="award-title">Canada's Best Businesses</div>
-      <div class="award-org">Excellence &amp; Trust Recognition</div>
-    </div>
-    <div class="award-card">
-      <div class="award-yr">Since 1999</div>
-      <div class="award-title">25+ Years of Excellence</div>
-      <div class="award-org">Trusted across Canada by Hotels &amp; Franchises</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head"><div class="eyebrow">Questions?</div><h2>Frequently asked</h2></div>
+    <div class="faq">
+      <div class="faq__item"><button class="faq__q">Is my financial data private and secure?<span class="pm">+</span></button><div class="faq__a"><p>Absolutely. Ledgerly stores everything locally in your browser using IndexedDB — your transactions and receipts never leave your device unless you choose to export a backup. There's no central server holding your books.</p></div></div>
+      <div class="faq__item"><button class="faq__q">Do I need to install anything?<span class="pm">+</span></button><div class="faq__a"><p>No. Ledgerly runs in any modern browser. If you'd like an app-like experience, you can install it to your home screen as a Progressive Web App — it then works fully offline.</p></div></div>
+      <div class="faq__item"><button class="faq__q">Can I import my existing expenses?<span class="pm">+</span></button><div class="faq__a"><p>Yes. Head to Settings → Data & backup and import a CSV of your transactions, or restore a full JSON backup. We'll map common columns like date, amount, vendor and category automatically.</p></div></div>
+      <div class="faq__item"><button class="faq__q">What happens to my data if I switch devices?<span class="pm">+</span></button><div class="faq__a"><p>Export a backup file from Settings on your old device and import it on the new one. It's a portable JSON file that contains all your workspaces, transactions and settings.</p></div></div>
+      <div class="faq__item"><button class="faq__q">Can I use it for multiple businesses?<span class="pm">+</span></button><div class="faq__a"><p>Yes — create as many workspaces as your plan allows, each fully isolated with its own accounts, categories, budgets and reports. Switch between them instantly from the sidebar.</p></div></div>
+      <div class="faq__item"><button class="faq__q">Is there really a free plan?<span class="pm">+</span></button><div class="faq__a"><p>Yes, the Starter plan is free forever and includes unlimited transactions, receipts and the full dashboard. Upgrade only when you want automation, budgets and multiple workspaces.</p></div></div>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<section id="cta">
-  <div class="cta-content">
-    <span class="cta-eyebrow">Ready to Transform Your Space?</span>
-    <h2 class="cta-title">Let's Build Something <em>Remarkable</em></h2>
-    <p class="cta-sub">Whether you're launching a new franchise location or reimagining a hospitality experience, our D-Process takes you from vision to reality — seamlessly.</p>
-    <div class="cta-btns">
-      <button class="btn-gold">Start a Project</button>
-      <button class="btn-outline">View Our Work</button>
+<section>
+  <div class="container">
+    <div class="cta-band">
+      <h2>Take control of your expenses today</h2>
+      <p>Join thousands of businesses running leaner with Ledgerly. Free to start — no card required.</p>
+      <a class="btn btn--white btn--lg" href="app/#signup" style="position:relative">Create your free account →</a>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Design TWG</div>
-  <div class="footer-copy">© 2024 Design TWG. All Rights Reserved. Mississauga, Canada.</div>
-  <nav class="footer-links">
-    <a href="#">Instagram</a>
-    <a href="#">LinkedIn</a>
-    <a href="https://designtwg.com" target="_blank" rel="noopener">designtwg.com</a>
-  </nav>
+  <div class="container">
+    <div class="foot__grid">
+      <div class="foot__brand">
+        <a class="logo" href="#top"><span class="logo__mark">L</span>Ledgerly</a>
+        <p>Expense management, beautifully simple. Track, budget and report — all in one private, gorgeous workspace.</p>
+      </div>
+      <div class="foot__col"><h4>Product</h4><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="app/">Launch app</a><a href="#how">How it works</a></div>
+      <div class="foot__col"><h4>Company</h4><a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#faq">FAQ</a></div>
+      <div class="foot__col"><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a></div>
+    </div>
+    <div class="foot__bottom">
+      <span>© <span id="year"></span> Ledgerly. All rights reserved.</span>
+      <span>Made with ♥ for small businesses.</span>
+    </div>
+  </div>
 </footer>
 
-<!-- SCRIPTS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
 <script>
-gsap.registerPlugin(ScrollTrigger);
+(function () {
+  // theme
+  function setTheme(t){ document.documentElement.setAttribute('data-theme', t); localStorage.setItem('ledgerly.theme', t); document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙'; document.querySelector('meta[name=theme-color]').setAttribute('content', t==='dark'?'#0E0F12':'#FF385C'); }
+  var saved = localStorage.getItem('ledgerly.theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  setTheme(saved);
+  document.getElementById('themeBtn').onclick = function(){ setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); };
 
-/* ============================================================
-   LOADER
-============================================================ */
-(function initLoader() {
-  const bar    = document.getElementById('lbar');
-  const pct    = document.getElementById('lpct');
-  const loader = document.getElementById('loader');
-  const wm     = loader.querySelector('.loader-wordmark');
+  // year
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-  gsap.to(wm, { opacity: 1, y: 0, duration: 0.7, delay: 0.15, ease: 'power3.out' });
+  // mobile nav
+  document.getElementById('navToggle').onclick = function(){
+    var links = document.querySelector('.nav__links');
+    if (getComputedStyle(links).display === 'none') { links.style.display='flex'; links.style.position='absolute'; links.style.top='70px'; links.style.left='0'; links.style.right='0'; links.style.flexDirection='column'; links.style.background='var(--bg)'; links.style.padding='16px 24px'; links.style.borderBottom='1px solid var(--line)'; links.style.gap='4px'; }
+    else { links.style.display='none'; }
+  };
+  document.querySelectorAll('.nav__links a').forEach(function(a){ a.addEventListener('click', function(){ if(window.innerWidth<=900){ document.querySelector('.nav__links').style.display='none'; } }); });
 
-  let val = 0;
-  const tick = setInterval(() => {
-    val += Math.random() * 18 + 4;
-    if (val >= 100) {
-      val = 100;
-      clearInterval(tick);
-      bar.style.width = '100%';
-      pct.textContent = '100%';
-      setTimeout(() => {
-        gsap.to(loader, {
-          yPercent: -100,
-          duration: 1.1,
-          ease: 'power4.inOut',
-          onComplete: () => {
-            loader.remove();
-            initAll();
-          }
-        });
-      }, 350);
-    } else {
-      bar.style.width = val + '%';
-      pct.textContent = Math.floor(val) + '%';
-    }
-  }, 80);
+  // billing toggle
+  var toggle = document.getElementById('billToggle');
+  toggle.onchange = function(){
+    var annual = toggle.checked;
+    document.querySelectorAll('[data-monthly]').forEach(function(e){ e.style.display = annual ? 'none' : ''; });
+    document.querySelectorAll('[data-annual]').forEach(function(e){ e.style.display = annual ? '' : 'none'; });
+    document.getElementById('lblMonthly').style.color = annual ? 'var(--ink-3)' : 'var(--ink)';
+    document.getElementById('lblAnnual').style.color = annual ? 'var(--ink)' : 'var(--ink-3)';
+  };
+
+  // FAQ
+  document.querySelectorAll('.faq__q').forEach(function(q){
+    q.onclick = function(){ q.parentElement.classList.toggle('open'); };
+  });
+
+  // Checkout (simulated — ready to swap in Stripe)
+  var prices = { Pro: {m:9, a:84}, Business: {m:29, a:276} };
+  function openCheckout(plan){
+    var annual = toggle.checked;
+    var price = annual ? '$' + prices[plan].a + '/yr' : '$' + prices[plan].m + '/mo';
+    var overlay = document.createElement('div');
+    overlay.className = 'co-overlay';
+    overlay.innerHTML =
+      '<div class="co">'+
+        '<div class="co__head"><h3>Upgrade to '+plan+'</h3><button class="co__x">&times;</button></div>'+
+        '<div class="co__body">'+
+          '<div class="co__summary"><div><div style="font-weight:700">'+plan+' plan</div><div style="font-size:12.5px;color:var(--ink-3)">'+(annual?'Annual billing':'Monthly billing')+'</div></div><div style="font-size:22px;font-weight:800">'+price+'</div></div>'+
+          '<div class="co__field"><label>Email</label><input type="email" placeholder="you@company.com" /></div>'+
+          '<div class="co__field"><label>Card number</label><input inputmode="numeric" placeholder="4242 4242 4242 4242" /></div>'+
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+            '<div class="co__field"><label>Expiry</label><input placeholder="MM / YY" /></div>'+
+            '<div class="co__field"><label>CVC</label><input placeholder="123" /></div>'+
+          '</div>'+
+          '<button class="btn btn--primary btn--lg" style="width:100%;margin-top:6px" id="coPay">Pay '+price+'</button>'+
+          '<div class="co__note">🔒 This is a demo checkout. No card is charged. Connect Stripe to accept real payments.</div>'+
+        '</div>'+
+      '</div>';
+    document.body.appendChild(overlay);
+    document.body.style.overflow='hidden';
+    requestAnimationFrame(function(){ overlay.classList.add('on'); });
+    function close(){ overlay.classList.remove('on'); document.body.style.overflow=''; setTimeout(function(){ overlay.remove(); }, 220); }
+    overlay.querySelector('.co__x').onclick = close;
+    overlay.addEventListener('mousedown', function(e){ if(e.target===overlay) close(); });
+    overlay.querySelector('#coPay').onclick = function(){
+      var btn = overlay.querySelector('#coPay'); btn.textContent='Processing…'; btn.disabled=true;
+      setTimeout(function(){
+        overlay.querySelector('.co__body').innerHTML =
+          '<div style="text-align:center;padding:20px 0">'+
+            '<div style="width:64px;height:64px;border-radius:50%;background:#DCFCE7;color:#16A34A;font-size:32px;display:grid;place-items:center;margin:0 auto 16px">✓</div>'+
+            '<h3 style="margin:0 0 6px;font-size:20px">You\'re all set!</h3>'+
+            '<p style="color:var(--ink-3);margin:0 0 20px">Welcome to Ledgerly '+plan+'. Let\'s get you into your workspace.</p>'+
+            '<a class="btn btn--primary btn--lg" style="width:100%" href="app/#signup">Open Ledgerly →</a>'+
+          '</div>';
+      }, 1100);
+    };
+  }
+  document.querySelectorAll('[data-checkout]').forEach(function(b){
+    b.onclick = function(){ openCheckout(b.getAttribute('data-plan')); };
+  });
+
+  // register SW
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function(){}); }
 })();
-
-/* ============================================================
-   HERO ROTATION
-============================================================ */
-function initHeroRotation() {
-  const words   = gsap.utils.toArray('.hero-slot-word');
-  const visuals = gsap.utils.toArray('.hero-svg-plan');
-  const HOLD = 1.5, IN_DUR = 0.45, OUT_DUR = 0.35;
-
-  // Size the slot wrap to the widest word
-  const sizer = document.getElementById('hero-slot-sizer');
-  const wrap  = document.getElementById('hero-slot-wrap');
-  wrap.style.width = sizer.offsetWidth + 'px';
-
-  gsap.set(words,   { opacity: 0, yPercent: 100 });
-  gsap.set(visuals, { opacity: 0 });
-
-  let current = 0;
-
-  function showNext() {
-    const next = (current + 1) % words.length;
-    const tl = gsap.timeline({
-      onComplete: () => { current = next; showNext(); }
-    });
-    tl.to(words[current],   { yPercent: -100, opacity: 0, duration: OUT_DUR, ease: 'power2.in' }, 0);
-    tl.to(visuals[current], { opacity: 0, duration: OUT_DUR * 0.8 }, 0);
-    tl.fromTo(words[next],
-      { yPercent: 100, opacity: 0 },
-      { yPercent: 0, opacity: 1, duration: IN_DUR, ease: 'power3.out' },
-      OUT_DUR * 0.3
-    );
-    tl.to(visuals[next], { opacity: 1, duration: IN_DUR }, OUT_DUR * 0.3);
-    tl.to({}, { duration: HOLD });
-  }
-
-  gsap.set(words[0],   { yPercent: 0, opacity: 1 });
-  gsap.set(visuals[0], { opacity: 1 });
-  gsap.delayedCall(HOLD, showNext);
-}
-
-/* ============================================================
-   D3 BLUEPRINT DRAW LOOP
-============================================================ */
-function loopD3() {
-  const walls     = document.getElementById('d3-walls');
-  const partition = document.getElementById('d3-partition');
-  const furniture = document.getElementById('d3-furniture');
-  const label     = document.getElementById('d3-label');
-
-  gsap.set(walls,     { strokeDashoffset: 1120, opacity: 1 });
-  gsap.set(partition, { strokeDashoffset: 450,  opacity: 1 });
-  gsap.set(furniture, { opacity: 0 });
-  gsap.set(label,     { opacity: 0 });
-
-  const tl = gsap.timeline({ onComplete: loopD3 });
-  tl.to(walls,     { strokeDashoffset: 0, duration: 1.8, ease: 'power2.inOut' })
-    .to(partition, { strokeDashoffset: 0, duration: 1.0, ease: 'power2.out' }, '-=0.6')
-    .to(furniture, { opacity: 1, duration: 0.5 })
-    .to(label,     { opacity: 0.7, duration: 0.4 })
-    .to({}, { duration: 1.4 })
-    .to([walls, partition, furniture, label], { opacity: 0, duration: 0.5, stagger: 0.05 })
-    .to({}, { duration: 0.4 });
-}
-
-/* ============================================================
-   D4 LAYER STACK LOOP
-============================================================ */
-function loopD4() {
-  const docs = ['#d4-doc1','#d4-doc2','#d4-doc3','#d4-doc4'];
-  const tl = gsap.timeline({ onComplete: loopD4 });
-
-  gsap.set(docs, { y: 200, opacity: 0, rotation: 0, x: 0 });
-
-  tl.to(docs, { y: 0, opacity: 1, stagger: 0.18, duration: 0.55, ease: 'power3.out' })
-    .to('#d4-doc1', { rotation: -4, x: -10, duration: 0.4 }, '+=0.1')
-    .to('#d4-doc2', { rotation: -1.5, x: -4, duration: 0.4 }, '<')
-    .to('#d4-doc3', { rotation:  1.5, x:  4, duration: 0.4 }, '<')
-    .to('#d4-doc4', { rotation:  4,   x: 10, duration: 0.4 }, '<')
-    .to({}, { duration: 1.5 })
-    .to(docs, { rotation: 0, x: 0, duration: 0.3 })
-    .to(docs, { y: -200, opacity: 0, stagger: 0.08, duration: 0.45, ease: 'power2.in' })
-    .to({}, { duration: 0.5 });
-}
-
-/* ============================================================
-   GSAP ANIMATIONS
-============================================================ */
-function initAnimations() {
-
-  /* Nav */
-  gsap.from('#nav', { y: -32, opacity: 0, duration: 1, delay: 0.3, ease: 'power3.out' });
-  ScrollTrigger.create({
-    start: 'top -70',
-    onEnter:     () => document.getElementById('nav').classList.add('scrolled'),
-    onLeaveBack: () => document.getElementById('nav').classList.remove('scrolled')
-  });
-
-  /* Hero entry */
-  const heroTl = gsap.timeline({ delay: 0.2 });
-  heroTl
-    .to('.hero-eyebrow', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
-    .to('.hero-body',    { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.3')
-    .to('.hero-btns',    { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
-    .to('.hero-scroll-hint', { opacity: 1, duration: 0.7 }, '-=0.3');
-
-  /* Manifesto word reveal */
-  function wrapWords(container) {
-    container.innerHTML = container.innerHTML.replace(
-      /(?<![<>])(\b\w[\w'&;]*\b)(?![^<]*>)/g,
-      '<span class="w"><span class="wi">$1</span></span>'
-    );
-  }
-  const mp = document.getElementById('manifesto-pull');
-  wrapWords(mp);
-
-  ScrollTrigger.create({
-    trigger: '#manifesto', start: 'top 72%',
-    onEnter: () => {
-      gsap.to('.wi', { y: '0%', duration: 0.85, stagger: 0.025, ease: 'power3.out' });
-      gsap.to('.manifesto-sub p', { opacity: 1, x: 0, duration: 0.9, delay: 0.5, ease: 'power3.out' });
-    }
-  });
-
-  /* Stats counters */
-  ScrollTrigger.create({
-    trigger: '#stats', start: 'top 75%',
-    onEnter: () => {
-      gsap.to('.stat-card', { opacity: 1, y: 0, stagger: 0.14, duration: 0.85, ease: 'power3.out' });
-      document.querySelectorAll('.cnt').forEach(el => {
-        const t = parseInt(el.dataset.t, 10);
-        gsap.to({ v: 0 }, {
-          v: t, duration: 2.2, ease: 'power2.out',
-          onUpdate() { el.textContent = Math.floor(this.targets()[0].v); }
-        });
-      });
-    }
-  });
-
-  /* For Whom cards */
-  ScrollTrigger.batch('.fw-card', {
-    onEnter: els => gsap.to(els, { opacity: 1, y: 0, stagger: 0.1, duration: 0.85, ease: 'power3.out' }),
-    start: 'top 88%'
-  });
-
-  /* D-Process Horizontal Scroll — desktop only */
-  const track = document.getElementById('process-track');
-  const pin   = document.getElementById('process-pin');
-  const ppLabels = document.querySelectorAll('.pp-label');
-
-  if (window.innerWidth >= 768) {
-    gsap.to(track, {
-      x: () => -(track.scrollWidth - window.innerWidth),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: pin,
-        start: 'top top',
-        end: () => '+=' + (track.scrollWidth - window.innerWidth),
-        pin: true,
-        scrub: 1.2,
-        invalidateOnRefresh: true,
-        onUpdate(self) {
-          const idx = Math.round(self.progress * 4);
-          document.querySelectorAll('.pp-dot').forEach(d => {
-            d.classList.toggle('on', parseInt(d.dataset.i) === idx);
-          });
-          ppLabels.forEach(l => { l.textContent = (idx + 1) + ' of 5'; });
-        }
-      }
-    });
-  }
-
-  /* Portfolio cards */
-  ScrollTrigger.batch('.pf-card', {
-    onEnter: els => gsap.to(els, { opacity: 1, y: 0, stagger: 0.1, duration: 0.85, ease: 'power3.out' }),
-    start: 'top 88%'
-  });
-
-  /* Award cards */
-  ScrollTrigger.batch('.award-card', {
-    onEnter: els => gsap.to(els, { opacity: 1, x: 0, stagger: 0.1, duration: 0.75, ease: 'power3.out' }),
-    start: 'top 85%'
-  });
-
-  /* CTA */
-  gsap.set('.cta-sub', { y: 20 });
-  gsap.set('.cta-btns', { y: 20 });
-  ScrollTrigger.create({
-    trigger: '#cta', start: 'top 72%',
-    onEnter: () => {
-      gsap.to('.cta-eyebrow', { opacity: 1, y: 0, duration: 0.7 });
-      gsap.to('.cta-title',   { opacity: 1, y: 0, duration: 1, delay: 0.15, ease: 'power3.out' });
-      gsap.to('.cta-sub',     { opacity: 1, y: 0, duration: 0.8, delay: 0.3 });
-      gsap.to('.cta-btns',    { opacity: 1, y: 0, duration: 0.7, delay: 0.45 });
-    }
-  });
-}
-
-/* ============================================================
-   HAMBURGER MENU
-============================================================ */
-function initHamburger() {
-  const btn     = document.getElementById('nav-hamburger');
-  const mobileNav = document.getElementById('mobile-nav');
-  const links   = document.querySelectorAll('.mobile-nav-link');
-
-  function toggle(open) {
-    btn.classList.toggle('open', open);
-    btn.setAttribute('aria-expanded', open);
-    mobileNav.classList.toggle('open', open);
-    mobileNav.setAttribute('aria-hidden', !open);
-    document.body.style.overflow = open ? 'hidden' : '';
-  }
-
-  btn.addEventListener('click', () => toggle(!btn.classList.contains('open')));
-
-  links.forEach(link => {
-    link.addEventListener('click', () => toggle(false));
-  });
-}
-
-/* ============================================================
-   BOOT
-============================================================ */
-function initAll() {
-  initHamburger();
-  initHeroRotation();
-  loopD3();
-  loopD4();
-  initAnimations();
-}
 </script>
 </body>
 </html>
