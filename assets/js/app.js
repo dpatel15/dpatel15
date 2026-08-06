@@ -30,9 +30,14 @@
     { route: 'recurring', icon: '🔁', label: 'Recurring' },
     { route: 'accounts', icon: '🏦', label: 'Accounts' },
     { route: 'categories', icon: '🏷️', label: 'Categories' },
+    { route: 'team', icon: '👥', label: 'Team' },
     { section: 'System' },
+    { route: 'billing', icon: '💳', label: 'Billing' },
     { route: 'settings', icon: '⚙️', label: 'Settings' },
   ];
+
+  // Views that require a plan feature; otherwise a paywall is shown.
+  const FEATURE_GATE = { budgets: 'budgets', recurring: 'recurring', team: 'team' };
 
   const TITLES = {
     dashboard: ['Dashboard', 'Your money at a glance'],
@@ -42,6 +47,8 @@
     recurring: ['Recurring', 'Automated transactions'],
     accounts: ['Accounts', 'Balances across your wallets'],
     categories: ['Categories', 'Organize where money goes'],
+    team: ['Team', 'Members and their roles'],
+    billing: ['Billing & plans', 'Manage your subscription'],
     settings: ['Settings', 'Account, workspace & data'],
   };
 
@@ -73,14 +80,21 @@
 
       const content = L.$('#content');
       content.innerHTML = '<div style="display:grid;place-items:center;padding:80px"><div class="spinner"></div></div>';
+      const ent = await S.entitlements();
       const ctx = {
-        range: this.range, rangeName: this.rangeName, params,
+        range: this.range, rangeName: this.rangeName, params, ent,
         setRange: (name) => { this.rangeName = name; this.range = L.rangePreset(name); this.render(); },
         refresh: () => this.render(),
         rerenderShell: () => this.buildShell(),
         navigate: (to) => this.navigate(to),
       };
       try {
+        const gate = FEATURE_GATE[view];
+        if (gate && !ent.can(gate)) {
+          const node = await V.paywall(ctx, gate);
+          content.innerHTML = ''; content.appendChild(node); window.scrollTo(0, 0);
+          return;
+        }
         const node = await V[view](ctx);
         content.innerHTML = '';
         content.appendChild(node);
@@ -106,8 +120,9 @@
 
       // workspace switcher
       const wsSwitch = el('div', { class: 'ws-switch' });
+      const planName = (S._ent && S._ent.plan) ? S._ent.plan.name : 'Starter';
       wsSwitch.innerHTML = `<div class="ws-switch__ava">${L.escape(L.initials(S.workspace.name))}</div>
-        <div style="flex:1;min-width:0"><div class="ws-switch__name">${L.escape(S.workspace.name)}</div><div class="ws-switch__meta">${S.workspace.currency} · ${L.titleCase(S.workspace.plan || 'free')} plan</div></div>
+        <div style="flex:1;min-width:0"><div class="ws-switch__name">${L.escape(S.workspace.name)}</div><div class="ws-switch__meta">${S.workspace.currency} · ${L.escape(planName)} plan</div></div>
         <span class="muted">⌄</span>`;
       wsSwitch.onclick = (e) => this.workspaceMenu(wsSwitch);
       sidebar.appendChild(wsSwitch);
@@ -151,6 +166,15 @@
       quickAdd.onclick = () => M.transaction(null, () => this.render());
       topbar.appendChild(themeBtn); topbar.appendChild(quickAdd);
       main.appendChild(topbar);
+      // Impersonation banner
+      if (S.isImpersonating()) {
+        const imp = el('div', { style: 'background:#7C3AED;color:#fff;padding:9px 26px;display:flex;align-items:center;gap:12px;font-size:13.5px;font-weight:600' });
+        imp.innerHTML = `<span>👁️ Viewing as <strong>${L.escape(S.user.email)}</strong> (admin impersonation)</span>`;
+        const back = el('button', { class: 'btn btn--sm', text: 'Return to admin', style: 'margin-left:auto;background:#fff;color:#7C3AED' });
+        back.onclick = async () => { await S.stopImpersonation(); location.href = '../admin/'; };
+        imp.appendChild(back);
+        main.appendChild(imp);
+      }
       main.appendChild(el('div', { class: 'content', id: 'content' }));
 
       const appEl = el('div', { class: 'app' });
@@ -186,16 +210,28 @@
       const menu = el('div', { class: 'menu' });
       const settings = el('div', { class: 'menu__item', html: '⚙️ Settings' });
       settings.onclick = () => { closeMenus(); this.navigate('settings'); };
-      const plans = el('div', { class: 'menu__item', html: '⭐ Plans & billing' });
-      plans.onclick = () => { location.href = '../index.html#pricing'; };
+      const plans = el('div', { class: 'menu__item', html: '💳 Billing & plans' });
+      plans.onclick = () => { closeMenus(); this.navigate('billing'); };
+      menu.appendChild(settings); menu.appendChild(plans);
+      if (S.isSuper()) {
+        const admin = el('div', { class: 'menu__item', html: '🛡️ Admin console', style: 'color:#7C3AED' });
+        admin.onclick = () => { location.href = '../admin/'; };
+        menu.appendChild(admin);
+      }
       const sep = el('div', { class: 'menu__sep' });
       const logout = el('div', { class: 'menu__item', html: '🚪 Log out', style: 'color:var(--danger)' });
       logout.onclick = async () => { await S.logout(); location.reload(); };
-      menu.appendChild(settings); menu.appendChild(plans); menu.appendChild(sep); menu.appendChild(logout);
+      menu.appendChild(sep); menu.appendChild(logout);
       positionMenu(menu, anchor, true);
     },
 
-    newWorkspace() {
+    async newWorkspace() {
+      if (!(await S.canAddWorkspace())) {
+        const ent = S._ent;
+        const ok = await L.Modals.confirm({ title: 'Workspace limit reached', message: `Your ${ent.plan.name} plan includes ${ent.limits.workspaces === Infinity ? 'unlimited' : ent.limits.workspaces} workspace${ent.limits.workspaces === 1 ? '' : 's'}. Upgrade to add more.`, confirmText: 'View plans' });
+        if (ok) this.navigate('billing');
+        return;
+      }
       const body = el('div', {});
       const nameF = el('input', { class: 'input', placeholder: 'e.g. Side Project LLC' });
       const curSel = el('select', { class: 'select' });
@@ -221,7 +257,9 @@
     },
 
     async start() {
-      // run recurring posts
+      // apply admin plan overrides, load entitlements, then run due recurring posts
+      if (L.Billing.loadOverrides) await L.Billing.loadOverrides();
+      await S.entitlements();
       const posted = await S.runRecurring();
       this.buildShell();
       window.addEventListener('hashchange', () => this.render());

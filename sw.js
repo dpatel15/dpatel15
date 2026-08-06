@@ -1,6 +1,6 @@
 /* Ledgerly service worker — offline-first caching of the app shell.
    User data lives in IndexedDB (not here); this only caches static assets. */
-const VERSION = 'ledgerly-v1';
+const VERSION = 'ledgerly-v2';
 const ASSETS = [
   './app/',
   './app/index.html',
@@ -8,6 +8,7 @@ const ASSETS = [
   './assets/js/util.js',
   './assets/js/db.js',
   './assets/js/store.js',
+  './assets/js/billing.js',
   './assets/js/charts.js',
   './assets/js/modals.js',
   './assets/js/views.js',
