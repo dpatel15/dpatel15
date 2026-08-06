@@ -327,7 +327,11 @@
         L.download(`ledgerly-categories-${ctx.range.from}_${ctx.range.to}.csv`, L.toCSV(rows, ['Category', 'Count', 'Total', 'Share']), 'text/csv');
       };
       printBtn.onclick = () => window.print();
-      taxBtn.onclick = () => Views._taxReport(ctx, snap);
+      taxBtn.onclick = () => {
+        if (ctx.ent && !ctx.ent.can('taxReports')) { L.toast('Tax reports are a Pro feature', 'error'); return ctx.navigate('billing'); }
+        Views._taxReport(ctx, snap);
+      };
+      if (ctx.ent && !ctx.ent.can('taxReports')) taxBtn.innerHTML = '🔒 Tax report';
       return wrap;
     },
 
@@ -560,6 +564,325 @@
       return wrap;
     },
 
+    /* ================= PAYWALL ================= */
+    async paywall(ctx, feature) {
+      const B = L.Billing;
+      const label = B.FEATURE_LABELS[feature] || 'This feature';
+      const wrap = el('div', { class: 'page-enter' });
+      const box = el('div', { class: 'card card--pad', style: 'max-width:620px;margin:24px auto;text-align:center' });
+      box.innerHTML = `
+        <div style="font-size:52px">🔒</div>
+        <h2 style="font-size:24px;letter-spacing:-.02em;margin:12px 0 6px">${L.escape(label)} is a paid feature</h2>
+        <p class="muted" style="max-width:420px;margin:0 auto">Upgrade to unlock ${L.escape(label.toLowerCase())} and everything else in Pro. Your data stays exactly where it is.</p>`;
+      const cta = el('button', { class: 'btn btn--primary btn--lg', text: 'View plans & upgrade', style: 'margin-top:22px' });
+      cta.onclick = () => ctx.navigate('billing');
+      box.appendChild(cta);
+      wrap.appendChild(box);
+      return wrap;
+    },
+
+    /* ================= BILLING ================= */
+    async billing(ctx) {
+      const B = L.Billing;
+      const ent = await S.entitlements();
+      const sub = ent.sub;
+      const [invoices, methods, wss] = await Promise.all([B.invoices(S.user.id), B.paymentMethods(S.user.id), S.allWorkspaces()]);
+      const seatsUsed = (await S.members()).length;
+      const wrap = el('div', { class: 'page-enter stack' });
+
+      // Status banner
+      const now = Date.now();
+      let banner = null;
+      if (sub.status === 'trialing' && now < sub.trialEnd) {
+        const days = Math.ceil((sub.trialEnd - now) / 86400000);
+        banner = bannerEl('🎁', `You're on the Pro free trial`, `${days} day${days === 1 ? '' : 's'} left. Add a plan any time to keep Pro features after your trial.`, '#EDE9FE', '#7C3AED');
+      } else if (sub.status === 'trialing') {
+        banner = bannerEl('⏰', 'Your trial has ended', 'You\'re now on the free Starter plan. Upgrade to restore Pro features.', '#FEF3C7', '#D97706');
+      } else if (sub.cancelAtPeriodEnd || sub.status === 'canceled') {
+        banner = bannerEl('⚠️', 'Subscription canceled', `You keep access until ${new Date(sub.currentPeriodEnd).toLocaleDateString()}.`, '#FEE2E2', '#DC2626');
+      }
+      if (banner) wrap.appendChild(banner);
+
+      // Current plan + usage
+      const planCard = el('div', { class: 'card card--pad' });
+      const wsLimit = ent.limits.workspaces === Infinity ? '∞' : ent.limits.workspaces;
+      const seatLimit = ent.limits.seats === Infinity ? '∞' : ent.limits.seats;
+      planCard.innerHTML = `
+        <div class="card__head"><div><div class="card__title">Current plan</div><div class="card__sub">${B.statusLabel(sub)}</div></div>
+          <span class="chip" style="background:${ent.plan.color}22;color:${ent.plan.color};font-size:14px;font-weight:800">${ent.plan.name}${sub.comp ? ' · comp' : ''}</span></div>
+        <div class="grid-2" style="margin-top:6px">
+          <div>${meter('Workspaces', wss.length, ent.limits.workspaces, wsLimit)}</div>
+          <div>${meter('Team seats', seatsUsed, ent.limits.seats, seatLimit)}</div>
+        </div>`;
+      wrap.appendChild(planCard);
+
+      // Plan selector
+      let cycle = sub.billingCycle === 'annual' ? 'annual' : 'monthly';
+      const plansCard = el('div', { class: 'card card--pad' });
+      const head = el('div', { class: 'card__head' });
+      head.appendChild(el('div', {}, [el('div', { class: 'card__title', text: 'Change plan' }), el('div', { class: 'card__sub', text: 'Upgrade or downgrade any time' })]));
+      const cyc = el('div', { class: 'segment' });
+      const cm = el('button', { text: 'Monthly', class: cycle === 'monthly' ? 'is-active' : '' });
+      const ca = el('button', { text: 'Annual · save 20%', class: cycle === 'annual' ? 'is-active' : '' });
+      cyc.appendChild(cm); cyc.appendChild(ca);
+      head.appendChild(cyc); plansCard.appendChild(head);
+      const planGrid = el('div', { style: 'display:grid;grid-template-columns:repeat(3,1fr);gap:14px' });
+      plansCard.appendChild(planGrid);
+      function renderPlans() {
+        planGrid.innerHTML = '';
+        B.PLAN_ORDER.forEach((pid) => {
+          const p = B.PLANS[pid];
+          const highlight = ent.planId === pid;                       // effective plan (incl. trial)
+          const isCurrent = sub.status === 'active' && sub.planId === pid; // an actually-subscribed plan
+          const price = B.planPrice(pid, cycle);
+          const tile = el('div', { class: 'card', style: `padding:18px;border-color:${highlight ? p.color : 'var(--line)'};${highlight ? 'box-shadow:0 0 0 2px ' + p.color + '33;' : ''}` });
+          const feats = pid === 'starter'
+            ? ['Unlimited transactions', 'Receipts & categories', 'Dashboard & CSV export']
+            : (pid === 'pro'
+              ? ['Everything in Starter', 'Recurring & budgets', 'Tax reports & multi-currency', 'Up to 3 workspaces']
+              : ['Everything in Pro', 'Unlimited workspaces', 'Team members & roles', 'Vendor analytics']);
+          tile.innerHTML = `
+            <div style="font-weight:800;font-size:17px;color:${p.color}">${p.name}</div>
+            <div class="muted" style="font-size:12.5px;min-height:34px">${p.tagline}</div>
+            <div style="font-size:30px;font-weight:850;letter-spacing:-.02em;margin:6px 0">${price === 0 ? 'Free' : L.money(price, 'USD') + '<span style="font-size:13px;color:var(--ink-3);font-weight:600">/' + (cycle === 'annual' ? 'yr' : 'mo') + '</span>'}</div>
+            <ul style="list-style:none;padding:0;margin:12px 0 0;display:flex;flex-direction:column;gap:7px">${feats.map((f) => `<li style="font-size:13px;display:flex;gap:7px"><span style="color:var(--income)">✓</span>${f}</li>`).join('')}</ul>`;
+          const btn = el('button', { class: 'btn btn--block', style: 'margin-top:16px' });
+          const trialingThis = sub.status === 'trialing' && Date.now() < sub.trialEnd && pid === ent.planId;
+          if (isCurrent) { btn.classList.add('btn--subtle'); btn.textContent = 'Current plan'; btn.disabled = true; }
+          else {
+            const upgrading = B.PLAN_ORDER.indexOf(pid) > B.PLAN_ORDER.indexOf(ent.planId);
+            btn.classList.add(upgrading || trialingThis ? 'btn--primary' : 'btn--ghost');
+            btn.textContent = pid === 'starter' ? 'Downgrade to Starter' : (trialingThis ? 'Subscribe to ' + p.name : (upgrading ? 'Upgrade to ' + p.name : 'Switch to ' + p.name));
+            btn.onclick = () => {
+              if (pid === 'starter') {
+                M.confirm({ title: 'Downgrade to Starter?', message: 'You\'ll lose Pro features at the end of your billing period. Continue?', confirmText: 'Downgrade' })
+                  .then(async (ok) => { if (!ok) return; await B.downgradeToStarter(S.user.id); L.toast('Switched to Starter'); ctx.rerenderShell && ctx.rerenderShell(); ctx.refresh(); });
+              } else {
+                Views._checkout(ctx, pid, cycle);
+              }
+            };
+          }
+          tile.appendChild(btn);
+          planGrid.appendChild(tile);
+        });
+      }
+      cm.onclick = () => { cycle = 'monthly'; cm.classList.add('is-active'); ca.classList.remove('is-active'); renderPlans(); };
+      ca.onclick = () => { cycle = 'annual'; ca.classList.add('is-active'); cm.classList.remove('is-active'); renderPlans(); };
+      renderPlans();
+      wrap.appendChild(plansCard);
+
+      // Manage subscription actions
+      if (ent.planId !== 'starter' && (sub.status === 'active' || sub.status === 'trialing')) {
+        const manage = el('div', { class: 'card card--pad' });
+        manage.appendChild(el('div', { class: 'card__title', text: 'Manage subscription', style: 'margin-bottom:12px' }));
+        const row = el('div', { class: 'row wrap', style: 'gap:10px' });
+        if (sub.cancelAtPeriodEnd) {
+          const resume = el('button', { class: 'btn btn--primary btn--sm', text: 'Resume subscription' });
+          resume.onclick = async () => { await B.resume(S.user.id); L.toast('Subscription resumed'); ctx.refresh(); };
+          row.appendChild(resume);
+        } else if (sub.status === 'active') {
+          const cancel = el('button', { class: 'btn btn--danger btn--sm', text: 'Cancel subscription' });
+          cancel.onclick = async () => { const ok = await M.confirm({ title: 'Cancel subscription?', message: 'You\'ll keep access until the end of the current period.', confirmText: 'Cancel plan', danger: true }); if (!ok) return; await B.cancel(S.user.id); L.toast('Subscription canceled'); ctx.rerenderShell && ctx.rerenderShell(); ctx.refresh(); };
+          row.appendChild(cancel);
+        }
+        manage.appendChild(row);
+        wrap.appendChild(manage);
+      }
+
+      // Payment methods
+      const pmCard = el('div', { class: 'card card--pad' });
+      const pmAdd = el('button', { class: 'btn btn--ghost btn--sm', text: '＋ Add card' });
+      pmAdd.onclick = () => Views._addCard(ctx);
+      const pmHead = el('div', { class: 'card__head' });
+      pmHead.appendChild(el('div', {}, [el('div', { class: 'card__title', text: 'Payment methods' })]));
+      pmHead.appendChild(pmAdd); pmCard.appendChild(pmHead);
+      if (!methods.length) pmCard.appendChild(el('div', { class: 'muted', text: 'No card on file.', style: 'font-size:14px' }));
+      methods.forEach((m) => {
+        const r = el('div', { class: 'row', style: 'justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)' });
+        r.innerHTML = `<div class="row" style="gap:10px"><span style="font-size:22px">💳</span><div><div style="font-weight:650">${m.brand} •••• ${m.last4}</div><div class="hint" style="margin:0">${m.exp ? 'Expires ' + m.exp : ''}${m.isDefault ? ' · Default' : ''}</div></div></div>`;
+        const rm = el('button', { class: 'btn btn--danger btn--sm', text: 'Remove' });
+        rm.onclick = async () => { await B.removePaymentMethod(m.id); L.toast('Card removed'); ctx.refresh(); };
+        r.appendChild(rm); pmCard.appendChild(r);
+      });
+      wrap.appendChild(pmCard);
+
+      // Billing history
+      const histCard = el('div', { class: 'card card--pad' });
+      histCard.appendChild(el('div', { class: 'card__title', text: 'Billing history', style: 'margin-bottom:6px' }));
+      if (!invoices.length) {
+        histCard.appendChild(el('div', { class: 'muted', text: 'No invoices yet.', style: 'font-size:14px' }));
+      } else {
+        const t = el('div', { class: 'tbl-wrap' });
+        t.innerHTML = `<table class="tbl"><thead><tr><th>Invoice</th><th>Date</th><th>Description</th><th class="num">Amount</th><th>Status</th><th></th></tr></thead><tbody></tbody></table>`;
+        const tb = t.querySelector('tbody');
+        invoices.forEach((inv) => {
+          const tr = el('tr', {});
+          const statusColor = inv.status === 'paid' ? 'var(--income)' : inv.status === 'refunded' ? 'var(--ink-3)' : 'var(--danger)';
+          tr.innerHTML = `<td style="font-weight:650">${inv.number}</td><td>${new Date(inv.createdAt).toLocaleDateString()}</td><td>${L.escape(inv.description)}</td><td class="num">${L.money(inv.amount, 'USD')}</td><td><span class="chip chip--sm" style="color:${statusColor}">${L.titleCase(inv.status)}</span></td>`;
+          const td = el('td', {});
+          const dl = el('button', { class: 'btn btn--ghost btn--sm', text: 'Receipt' });
+          dl.onclick = () => Views._invoiceReceipt(inv);
+          td.appendChild(dl); tr.appendChild(td); tb.appendChild(tr);
+        });
+        histCard.appendChild(t);
+      }
+      wrap.appendChild(histCard);
+      return wrap;
+    },
+
+    async _checkout(ctx, planId, cycle) {
+      const B = L.Billing;
+      const price = B.planPrice(planId, cycle);
+      const body = el('div', {});
+      body.innerHTML = `
+        <div class="card" style="background:var(--surface-2);padding:14px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div><div style="font-weight:750">${B.PLANS[planId].name} plan</div><div class="hint" style="margin:0">${cycle === 'annual' ? 'Annual billing' : 'Monthly billing'}</div></div>
+          <div style="font-size:22px;font-weight:850">${L.money(price, 'USD')}<span style="font-size:12px;color:var(--ink-3)">/${cycle === 'annual' ? 'yr' : 'mo'}</span></div>
+        </div>`;
+      const nameF = el('input', { class: 'input', placeholder: 'Name on card' });
+      const numF = el('input', { class: 'input', placeholder: '4242 4242 4242 4242', inputmode: 'numeric' });
+      const expF = el('input', { class: 'input', placeholder: 'MM / YY' });
+      const cvcF = el('input', { class: 'input', placeholder: 'CVC', inputmode: 'numeric' });
+      body.appendChild(fieldReturn('Name on card', nameF));
+      body.appendChild(fieldReturn('Card number', numF));
+      const row = el('div', { class: 'grid-2' });
+      row.appendChild(fieldReturn('Expiry', expF)); row.appendChild(fieldReturn('CVC', cvcF));
+      body.appendChild(row);
+      const err = el('div', { class: 'field-err', style: 'display:none' });
+      body.appendChild(err);
+      body.appendChild(el('div', { class: 'hint', html: '🔒 Demo checkout — use <strong>4242 4242 4242 4242</strong>. No real charge is made. Ready to connect Stripe.', style: 'text-align:center;margin-top:12px' }));
+
+      const foot = el('div', { class: 'modal__foot' });
+      const cancel = el('button', { class: 'btn btn--ghost', text: 'Cancel' });
+      const pay = el('button', { class: 'btn btn--primary', text: `Pay ${L.money(price, 'USD')}` });
+      foot.appendChild(cancel); foot.appendChild(pay);
+      const { close } = simpleModal(`Upgrade to ${B.PLANS[planId].name}`, body, foot);
+      numF.value = '4242 4242 4242 4242'; expF.value = '12 / 30'; cvcF.value = '123';
+      cancel.onclick = () => close();
+      pay.onclick = async () => {
+        err.style.display = 'none'; pay.disabled = true; pay.textContent = 'Processing…';
+        try {
+          const res = await B.subscribe(S.user.id, { planId, cycle, card: { number: numF.value, exp: expF.value, cvc: cvcF.value } });
+          close();
+          Views._paymentSuccess(ctx, planId, res.invoice);
+        } catch (e) {
+          err.textContent = e.message; err.style.display = 'block';
+          pay.disabled = false; pay.textContent = `Pay ${L.money(price, 'USD')}`;
+        }
+      };
+    },
+
+    _paymentSuccess(ctx, planId, invoice) {
+      const B = L.Billing;
+      const body = el('div', { style: 'text-align:center;padding:8px 0' });
+      body.innerHTML = `
+        <div style="width:64px;height:64px;border-radius:50%;background:var(--income-soft);color:var(--income);font-size:32px;display:grid;place-items:center;margin:6px auto 16px">✓</div>
+        <h3 style="margin:0 0 6px;font-size:20px">You're on ${B.PLANS[planId].name}! 🎉</h3>
+        <p class="muted" style="margin:0 0 8px">All ${B.PLANS[planId].name} features are unlocked.${invoice ? ' Invoice ' + invoice.number + ' has been added to your billing history.' : ''}</p>`;
+      const done = el('button', { class: 'btn btn--primary btn--block', text: 'Done', style: 'margin-top:16px' });
+      const { close } = simpleModal('Payment successful', body);
+      done.onclick = () => { close(); ctx.rerenderShell && ctx.rerenderShell(); ctx.refresh(); };
+      body.appendChild(done);
+    },
+
+    async _addCard(ctx) {
+      const B = L.Billing;
+      const body = el('div', {});
+      const numF = el('input', { class: 'input', placeholder: '4242 4242 4242 4242', inputmode: 'numeric' });
+      const expF = el('input', { class: 'input', placeholder: 'MM / YY' });
+      const cvcF = el('input', { class: 'input', placeholder: 'CVC', inputmode: 'numeric' });
+      body.appendChild(fieldReturn('Card number', numF));
+      const row = el('div', { class: 'grid-2' }); row.appendChild(fieldReturn('Expiry', expF)); row.appendChild(fieldReturn('CVC', cvcF));
+      body.appendChild(row);
+      const err = el('div', { class: 'field-err', style: 'display:none' });
+      body.appendChild(err);
+      const foot = el('div', { class: 'modal__foot' });
+      const cancel = el('button', { class: 'btn btn--ghost', text: 'Cancel' });
+      const save = el('button', { class: 'btn btn--primary', text: 'Add card' });
+      foot.appendChild(cancel); foot.appendChild(save);
+      const { close } = simpleModal('Add payment method', body, foot);
+      cancel.onclick = () => close();
+      save.onclick = async () => {
+        err.style.display = 'none'; save.disabled = true; save.textContent = 'Saving…';
+        try {
+          const charge = await B.PaymentProcessor.charge({ number: numF.value, exp: expF.value, cvc: cvcF.value, amount: 0, currency: 'USD' });
+          charge.exp = expF.value;
+          await B.savePaymentMethod(S.user.id, charge, true);
+          close(); L.toast('Card added'); ctx.refresh();
+        } catch (e) { err.textContent = e.message; err.style.display = 'block'; save.disabled = false; save.textContent = 'Add card'; }
+      };
+    },
+
+    _invoiceReceipt(inv) {
+      const body = el('div', {});
+      body.innerHTML = `
+        <div style="text-align:center;margin-bottom:16px"><div class="brand__logo" style="width:40px;height:40px;margin:0 auto 8px">L</div><div style="font-weight:800;font-size:18px">Ledgerly</div><div class="hint">Receipt · ${inv.number}</div></div>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><td class="muted">Date</td><td class="num">${new Date(inv.createdAt).toLocaleDateString()}</td></tr>
+          <tr><td class="muted">Description</td><td class="num">${L.escape(inv.description)}</td></tr>
+          <tr><td class="muted">Billing cycle</td><td class="num">${L.titleCase(inv.cycle || 'monthly')}</td></tr>
+          ${inv.card ? `<tr><td class="muted">Paid with</td><td class="num">${inv.card.brand} •••• ${inv.card.last4}</td></tr>` : ''}
+          <tr><td class="muted">Status</td><td class="num">${L.titleCase(inv.status)}</td></tr>
+          <tr><td style="font-weight:800">Total</td><td class="num" style="font-weight:800;font-size:16px">${L.money(inv.amount, 'USD')}</td></tr>
+        </table></div>`;
+      const dl = el('button', { class: 'btn btn--primary btn--block', text: '⬇ Download CSV', style: 'margin-top:16px' });
+      dl.onclick = () => L.download(`${inv.number}.csv`, L.toCSV([[inv.number, new Date(inv.createdAt).toISOString(), inv.description, inv.amount.toFixed(2), inv.status]], ['Invoice', 'Date', 'Description', 'Amount USD', 'Status']), 'text/csv');
+      body.appendChild(dl);
+      simpleModal('Invoice ' + inv.number, body);
+    },
+
+    /* ================= TEAM ================= */
+    async team(ctx) {
+      const [members, ent] = await Promise.all([S.members(), S.entitlements()]);
+      const wrap = el('div', { class: 'page-enter' });
+      const add = el('button', { class: 'btn btn--primary btn--sm', text: '＋ Invite member' });
+      add.onclick = () => Views._inviteMember(ctx, members.length, ent);
+      const body = el('div', {});
+      const seatInfo = el('div', { class: 'hint', style: 'margin-bottom:12px' });
+      seatInfo.textContent = `${members.length} of ${ent.limits.seats === Infinity ? '∞' : ent.limits.seats} seats used`;
+      body.appendChild(seatInfo);
+      members.forEach((m, i) => {
+        const row = el('div', { class: 'txn-row', style: 'cursor:default' });
+        row.innerHTML = `
+          <div class="ava" style="width:42px;height:42px">${L.escape(L.initials(m.name))}</div>
+          <div class="txn-main"><div class="txn-vendor">${L.escape(m.name)}</div><div class="txn-meta"><span>${L.escape(m.email)}</span></div></div>
+          <div class="row" style="gap:8px"><span class="chip chip--sm">${L.titleCase(m.role)}</span>${m.status === 'invited' ? '<span class="chip chip--sm chip--accent">Invited</span>' : ''}</div>`;
+        if (m.role !== 'owner') {
+          const rm = el('button', { class: 'iconbtn', html: '🗑', style: 'width:34px;height:34px;margin-left:8px' });
+          rm.onclick = async () => { const ok = await M.confirm({ title: 'Remove member?', message: `Remove ${m.name} from this workspace?`, confirmText: 'Remove', danger: true }); if (!ok) return; await S.removeMember(m.id); L.toast('Member removed'); ctx.refresh(); };
+          row.appendChild(rm);
+        }
+        body.appendChild(row);
+        if (i < members.length - 1) body.appendChild(el('div', { class: 'list-divider' }));
+      });
+      wrap.appendChild(card('Team members', S.workspace.name, [body], add));
+      return wrap;
+    },
+
+    async _inviteMember(ctx, count, ent) {
+      const body = el('div', {});
+      const nameF = el('input', { class: 'input', placeholder: 'Jane Doe' });
+      const emailF = el('input', { class: 'input', type: 'email', placeholder: 'jane@company.com' });
+      const roleSel = el('select', { class: 'select' });
+      [['admin', 'Admin — manage everything'], ['member', 'Member — add & edit'], ['viewer', 'Viewer — read only']].forEach(([v, t]) => roleSel.appendChild(el('option', { value: v, text: t })));
+      body.appendChild(fieldReturn('Name', nameF));
+      body.appendChild(fieldReturn('Email', emailF));
+      body.appendChild(fieldReturn('Role', roleSel));
+      const err = el('div', { class: 'field-err', style: 'display:none' });
+      body.appendChild(err);
+      const foot = el('div', { class: 'modal__foot' });
+      const cancel = el('button', { class: 'btn btn--ghost', text: 'Cancel' });
+      const save = el('button', { class: 'btn btn--primary', text: 'Send invite' });
+      foot.appendChild(cancel); foot.appendChild(save);
+      const { close } = simpleModal('Invite team member', body, foot);
+      cancel.onclick = () => close();
+      save.onclick = async () => {
+        err.style.display = 'none';
+        try { await S.inviteMember({ name: nameF.value.trim(), email: emailF.value, role: roleSel.value }); close(); L.toast('Invitation sent'); ctx.refresh(); }
+        catch (e) { err.textContent = e.message; err.style.display = 'block'; }
+      };
+    },
+
     async _importCSV(ctx) {
       const body = el('div', {});
       body.innerHTML = `<p class="muted" style="margin-top:0">Upload a CSV with columns like <code>date, amount, vendor, category, note</code>. We'll map what we can and add them as expenses.</p>`;
@@ -639,6 +962,23 @@
     f.appendChild(el('label', { text: label }));
     f.appendChild(inputNode);
     return { field: f, input: inputNode };
+  }
+  function fieldReturn(label, inputNode) {
+    const f = el('div', { class: 'field' });
+    f.appendChild(el('label', { text: label }));
+    f.appendChild(inputNode);
+    return f;
+  }
+  function bannerEl(icon, title, msg, bg, color) {
+    const b = el('div', { class: 'card', style: `padding:16px 18px;display:flex;gap:14px;align-items:center;background:${bg};border-color:${color}33` });
+    b.innerHTML = `<div style="font-size:26px">${icon}</div><div><div style="font-weight:750;color:${color}">${L.escape(title)}</div><div style="font-size:13.5px;color:var(--ink-2)">${L.escape(msg)}</div></div>`;
+    return b;
+  }
+  function meter(label, used, limit, limitLabel) {
+    const pct = limit === Infinity ? Math.min(100, used * 10) : L.clamp((used / limit) * 100, 0, 100);
+    const over = limit !== Infinity && used >= limit;
+    return `<div class="lbl" style="display:flex;justify-content:space-between"><span>${label}</span><span class="tabular">${used} / ${limitLabel}</span></div>
+      <div class="progress" style="margin-top:2px"><div class="progress__bar" style="width:${pct}%;background:${over ? 'var(--warn)' : 'var(--accent)'}"></div></div>`;
   }
   function exportTxnsCSV(txns, catMap, accts) {
     const acctMap = new Map(accts.map((a) => [a.id, a.name]));

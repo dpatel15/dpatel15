@@ -1,0 +1,37 @@
+/* ============================================================
+   Ledgerly — admin.css
+   Super Admin console. Reuses app.css; re-themes to purple and
+   adds a few admin-only bits.
+   ============================================================ */
+:root {
+  --accent:#7C3AED; --accent-600:#6D28D9; --accent-700:#5B21B6;
+  --accent-soft:#EDE9FE; --accent-glow:rgba(124,58,237,.26);
+}
+:root[data-theme="dark"] {
+  --accent:#A78BFA; --accent-600:#8B5CF6; --accent-soft:#2A2140; --accent-glow:rgba(167,139,250,.3);
+}
+.brand__logo { background: linear-gradient(135deg,#7C3AED,#A855F7) !important; box-shadow: 0 4px 12px var(--accent-glow) !important; }
+.admin-tag { font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#fff; background:linear-gradient(135deg,#7C3AED,#A855F7); padding:3px 8px; border-radius:6px; }
+
+/* status pills */
+.pill { display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; font-size:12px; font-weight:700; }
+.pill--green { background:var(--income-soft); color:var(--income); }
+.pill--amber { background:#FEF3C7; color:#B45309; }
+.pill--red { background:#FEE2E2; color:#DC2626; }
+.pill--grey { background:var(--hover); color:var(--ink-3); }
+.pill--purple { background:var(--accent-soft); color:var(--accent-600); }
+:root[data-theme="dark"] .pill--amber { background:#3A2E14; color:#FCD34D; }
+:root[data-theme="dark"] .pill--red { background:#3A1A1A; color:#F87171; }
+
+.admin-login { min-height:100vh; display:grid; place-items:center; padding:24px; }
+.admin-login__box { width:100%; max-width:400px; background:var(--surface); border:1px solid var(--line); border-radius:22px; padding:34px; box-shadow:var(--shadow-lg); }
+.admin-login__box h2 { margin:0; font-size:24px; font-weight:850; letter-spacing:-.02em; }
+.cred-hint { background:var(--accent-soft); color:var(--accent-600); border-radius:12px; padding:12px 14px; font-size:12.5px; margin:16px 0; font-weight:600; }
+.cred-hint code { background:rgba(0,0,0,.06); padding:1px 5px; border-radius:5px; }
+
+.row-actions { display:flex; gap:6px; justify-content:flex-end; flex-wrap:wrap; }
+table.tbl td .ava { width:30px; height:30px; font-size:12px; }
+.kv { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:14px; }
+.kv:last-child { border-bottom:0; }
+.kv span:first-child { color:var(--ink-3); }
+.kv span:last-child { font-weight:700; }

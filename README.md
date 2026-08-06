@@ -43,6 +43,34 @@ dependencies** (no frameworks, no CDN calls — works fully offline).
 - **Dark mode**, fully **responsive**, **PWA** (installable, offline).
 - **Backup & restore** (JSON) and **CSV import**.
 
+### Subscriptions, billing & plans
+- **Three plans** — Starter (free), Pro, Business — monthly & annual pricing
+  (`assets/js/billing.js`).
+- **14-day Pro free trial** on every signup; converts to paid or drops to
+  Starter at trial end.
+- **Entitlements & feature gating** — plans grant features (recurring, budgets,
+  tax reports, multi-currency, multiple workspaces, team) and enforce limits
+  (workspaces, seats). Locked features show an in-app **paywall**.
+- **In-app Billing page** — trial/status banner, usage meters, upgrade /
+  downgrade, cancel / resume, saved **payment methods**, and **billing history**
+  with downloadable invoice receipts.
+- **Mock payment processor** — Luhn-validates cards, test cards (`4242…`
+  succeeds, `4000…0002` declines), issues invoices. Single drop-in point for
+  **Stripe** later.
+- **Team & seats** (Business) — invite members with roles; seat limits enforced.
+
+### Super Admin console  (`/admin/`)
+Role-gated platform console (log in as a `superadmin`):
+- **Overview** — MRR, ARR, net revenue, paying customers, trials, plan-mix donut,
+  revenue chart, recent signups.
+- **Users** — search, change plan (comp/grant), extend trial, suspend, delete,
+  and **impersonate** (view the app as any user).
+- **Subscriptions**, **Revenue** (invoices, refunds, CSV export),
+  **Plans** (edit pricing/limits/features live), and an **Audit log**.
+
+A demo super-admin (`admin@ledgerly.app` / `admin1234`) is auto-provisioned on
+first visit to `/admin/`.
+
 ---
 
 ## Architecture
@@ -57,18 +85,23 @@ receipt images). No build step.
 ├─ sw.js                      Service worker (offline app shell)
 ├─ app/
 │  └─ index.html              App shell
+├─ admin/
+│  └─ index.html              Super Admin console shell
 ├─ assets/
 │  ├─ css/
 │  │  ├─ app.css              App design system (light/dark)
-│  │  └─ landing.css          Marketing site styles
+│  │  ├─ landing.css          Marketing site styles
+│  │  └─ admin.css            Admin console theme
 │  └─ js/
 │     ├─ util.js              Helpers: currency, dates, DOM, CSV, hashing
 │     ├─ db.js                Promise-based IndexedDB wrapper
-│     ├─ store.js             Domain layer: auth, workspaces, CRUD, analytics
+│     ├─ store.js             Domain layer: auth, workspaces, CRUD, analytics, admin
+│     ├─ billing.js           Plans, entitlements, payment processor, invoices
 │     ├─ charts.js            Dependency-free SVG charts
 │     ├─ modals.js            Transaction / category / budget editors
-│     ├─ views.js             Screen renderers
-│     └─ app.js               Bootstrap, auth gate, hash router
+│     ├─ views.js             Screen renderers (incl. billing & team)
+│     ├─ app.js               Bootstrap, auth gate, hash router, feature gating
+│     └─ admin.js             Super Admin console
 └─ icons/                     App icons (SVG + PNG)
 ```
 
