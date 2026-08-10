@@ -7,7 +7,7 @@
 (function () {
   const L = (window.L = window.L || {});
   const DB_NAME = 'ledgerly';
-  const DB_VERSION = 2;
+  const DB_VERSION = 1;
 
   const STORES = {
     users: { keyPath: 'id', indexes: [{ name: 'email', keyPath: 'email', unique: true }] },
@@ -19,12 +19,6 @@
     recurring: { keyPath: 'id', indexes: [{ name: 'ws', keyPath: 'ws' }] },
     vendors: { keyPath: 'id', indexes: [{ name: 'ws', keyPath: 'ws' }] },
     receipts: { keyPath: 'id' }, // { id, blobDataUrl } — heavy, kept separate
-    // --- billing / SaaS (v2) ---
-    subscriptions: { keyPath: 'id', indexes: [{ name: 'userId', keyPath: 'userId' }] },
-    invoices: { keyPath: 'id', indexes: [{ name: 'userId', keyPath: 'userId' }] },
-    paymentMethods: { keyPath: 'id', indexes: [{ name: 'userId', keyPath: 'userId' }] },
-    members: { keyPath: 'id', indexes: [{ name: 'ws', keyPath: 'ws' }] },
-    adminlog: { keyPath: 'id' },
     meta: { keyPath: 'key' },
   };
 
