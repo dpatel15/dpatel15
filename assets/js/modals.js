@@ -63,7 +63,7 @@
 
     /* ---------- Transaction editor ---------- */
     async transaction(existing, onSaved) {
-      const [cats, accts, ent] = await Promise.all([S.categories(), S.accounts(), S.entitlements()]);
+      const [cats, accts] = await Promise.all([S.categories(), S.accounts()]);
       cats.sort((a, b) => (a.order || 0) - (b.order || 0));
       const t = Object.assign({
         type: 'expense', amount: '', currency: S.workspace.currency, date: L.today(),
@@ -96,7 +96,6 @@
         const o = L.el('option', { value: c.code, text: `${c.code}` }); if (c.code === t.currency) o.selected = true; curSel.appendChild(o);
       });
       curSel.onchange = () => { sym.textContent = (L.CURRENCIES[curSel.value] || {}).symbol || '$'; };
-      if (!ent.can('multiCurrency')) { curSel.value = S.workspace.currency; curSel.disabled = true; curSel.title = 'Multi-currency is a Pro feature'; sym.textContent = (L.CURRENCIES[S.workspace.currency] || {}).symbol || '$'; }
       amtRow.appendChild(amtGroup); amtRow.appendChild(curSel);
       amtField.appendChild(amtRow);
       body.appendChild(amtField);
