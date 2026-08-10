@@ -54,7 +54,7 @@
       const pwHash = await L.hash(password + '::' + email);
       const user = {
         id: L.uid('usr'), name: name || email.split('@')[0], email, pwHash,
-        createdAt: Date.now(), plan: 'free',
+        createdAt: Date.now(), plan: 'pro', role: 'owner', suspended: false,
       };
       await DB.put('users', user);
       const ws = await this.createWorkspace(user.id, {
@@ -62,6 +62,9 @@
         currency: currency || 'USD',
         seed: true,
       });
+      // Every new account starts on a 14-day Pro trial.
+      if (L.Billing) await L.Billing.startTrial(user.id);
+      await this._addOwnerMember(ws.id, user);
       await this._setSession(user.id, ws.id);
       return { user, ws };
     },
@@ -72,6 +75,8 @@
       if (!user) throw new Error('No account found for that email.');
       const pwHash = await L.hash(password + '::' + email);
       if (pwHash !== user.pwHash) throw new Error('Incorrect password.');
+      if (user.suspended) throw new Error('This account has been suspended. Contact support.');
+      if (L.Billing) await L.Billing.ensureSubscription(user.id);
       const wss = await DB.byIndex('workspaces', 'owner', user.id);
       const wsId = (wss[0] && wss[0].id) || (await this.createWorkspace(user.id, { name: user.name + "'s Business", currency: 'USD', seed: true })).id;
       await this._setSession(user.id, wsId);
@@ -121,6 +126,135 @@
       Object.assign(this.user, patch);
       await DB.put('users', this.user);
       return this.user;
+    },
+
+    /* ================= ENTITLEMENTS ================= */
+    async entitlements() {
+      const ent = await L.Billing.entitlements(this.user.id);
+      this._ent = ent;
+      return ent;
+    },
+    isSuper() { return !!(this.user && this.user.role === 'superadmin'); },
+    async canAddWorkspace() {
+      const ent = await this.entitlements();
+      const wss = await this.allWorkspaces();
+      return wss.length < ent.limits.workspaces;
+    },
+
+    /* ================= TEAM / SEATS ================= */
+    async _addOwnerMember(wsId, user) {
+      const existing = (await DB.byIndex('members', 'ws', wsId)).find((m) => m.email === user.email);
+      if (existing) return existing;
+      const m = { id: L.uid('mem'), ws: wsId, name: user.name, email: user.email, role: 'owner', status: 'active', invitedAt: Date.now(), userId: user.id };
+      await DB.put('members', m);
+      return m;
+    },
+    members(wsId) { return DB.byIndex('members', 'ws', wsId || this._ws()); },
+    async inviteMember({ name, email, role }) {
+      email = (email || '').trim().toLowerCase();
+      if (!email) throw new Error('Email is required.');
+      const list = await this.members();
+      if (list.find((m) => m.email === email)) throw new Error('That person is already a member.');
+      const ent = await this.entitlements();
+      if (list.length >= ent.limits.seats) throw new Error(`Your plan includes ${ent.limits.seats} seat${ent.limits.seats === 1 ? '' : 's'}. Upgrade to add more.`);
+      const m = { id: L.uid('mem'), ws: this._ws(), name: name || email.split('@')[0], email, role: role || 'member', status: 'invited', invitedAt: Date.now() };
+      await DB.put('members', m);
+      return m;
+    },
+    async updateMember(m) { await DB.put('members', m); return m; },
+    async removeMember(id) { await DB.del('members', id); },
+
+    /* ================= SUPER ADMIN ================= */
+    async ensureSuperAdmin() {
+      const existing = await DB.oneByIndex('users', 'email', 'admin@ledgerly.app').catch(() => null);
+      if (existing) { if (existing.role !== 'superadmin') { existing.role = 'superadmin'; await DB.put('users', existing); } return existing; }
+      const email = 'admin@ledgerly.app';
+      const pwHash = await L.hash('admin1234' + '::' + email);
+      const user = { id: L.uid('usr'), name: 'Platform Admin', email, pwHash, createdAt: Date.now(), plan: 'business', role: 'superadmin', suspended: false };
+      await DB.put('users', user);
+      return user;
+    },
+    async adminAllUsers() { return DB.getAll('users'); },
+    async adminAllSubscriptions() { return DB.getAll('subscriptions'); },
+    async adminAllInvoices() { return DB.getAll('invoices'); },
+    async adminAllWorkspaces() { return DB.getAll('workspaces'); },
+    async adminLog(action, detail) {
+      const entry = { id: L.uid('log'), action, detail: detail || '', actor: this.user ? this.user.email : 'system', at: Date.now() };
+      await DB.put('adminlog', entry);
+      return entry;
+    },
+    async adminAllLogs() { const l = await DB.getAll('adminlog'); return l.sort((a, b) => b.at - a.at); },
+    async adminSuspendUser(userId, suspend) {
+      const u = await DB.get('users', userId); if (!u) return;
+      u.suspended = !!suspend; await DB.put('users', u);
+      await this.adminLog(suspend ? 'suspend_user' : 'unsuspend_user', u.email);
+      return u;
+    },
+    async adminDeleteUser(userId) {
+      const wss = await DB.byIndex('workspaces', 'owner', userId);
+      for (const w of wss) {
+        for (const store of ['accounts', 'categories', 'transactions', 'budgets', 'recurring', 'vendors', 'members']) {
+          const items = await DB.byIndex(store, 'ws', w.id);
+          for (const it of items) await DB.del(store, it.id);
+        }
+        await DB.del('workspaces', w.id);
+      }
+      for (const store of ['subscriptions', 'invoices', 'paymentMethods']) {
+        const items = await DB.byIndex(store, 'userId', userId);
+        for (const it of items) await DB.del(store, it.id);
+      }
+      const u = await DB.get('users', userId);
+      await DB.del('users', userId);
+      await this.adminLog('delete_user', u ? u.email : userId);
+    },
+    async adminMetrics() {
+      const [users, subs, invoices, wss] = await Promise.all([
+        this.adminAllUsers(), this.adminAllSubscriptions(), this.adminAllInvoices(), this.adminAllWorkspaces(),
+      ]);
+      const B = L.Billing;
+      // Exclude platform admins from customer-facing metrics.
+      const adminIds = new Set(users.filter((u) => u.role === 'superadmin').map((u) => u.id));
+      const custSubs = subs.filter((s) => !adminIds.has(s.userId));
+      let mrr = 0, trialing = 0, activePaid = 0, canceled = 0;
+      const planCounts = { starter: 0, pro: 0, business: 0 };
+      for (const s of custSubs) {
+        const eff = B.effectivePlanId(s);
+        planCounts[eff] = (planCounts[eff] || 0) + 1;
+        if (s.status === 'trialing' && Date.now() < s.trialEnd) trialing++;
+        if (s.status === 'canceled') canceled++;
+        if ((s.status === 'active') && !s.comp && eff !== 'starter') { mrr += B.monthlyEquivalent(s.planId, s.billingCycle); activePaid++; }
+      }
+      const revenue = L.sum(invoices.filter((i) => i.status === 'paid'), (i) => i.amount);
+      const refunded = L.sum(invoices.filter((i) => i.status === 'refunded'), (i) => i.amount);
+      const realUsers = users.filter((u) => u.role !== 'superadmin');
+      return {
+        users, subs, invoices, workspaces: wss,
+        totalUsers: realUsers.length, totalWorkspaces: wss.length,
+        mrr, arr: mrr * 12, activePaid, trialing, canceled,
+        revenue, refunded, netRevenue: revenue - refunded,
+        planCounts, invoiceCount: invoices.length,
+      };
+    },
+
+    /* ================= IMPERSONATION ================= */
+    async impersonate(userId) {
+      const target = await DB.get('users', userId);
+      if (!target) throw new Error('User not found');
+      const wss = await DB.byIndex('workspaces', 'owner', userId);
+      if (!wss[0]) throw new Error('This user has no workspace to view.');
+      // remember who we were
+      localStorage.setItem('ledgerly.impersonator', JSON.stringify({ userId: this.user.id, wsId: this.workspace ? this.workspace.id : (wss[0].id) }));
+      await this.adminLog('impersonate', target.email);
+      await this._setSession(userId, wss[0].id);
+    },
+    isImpersonating() { return !!localStorage.getItem('ledgerly.impersonator'); },
+    async stopImpersonation() {
+      const raw = localStorage.getItem('ledgerly.impersonator');
+      localStorage.removeItem('ledgerly.impersonator');
+      if (!raw) return false;
+      const who = JSON.parse(raw);
+      await this._setSession(who.userId, who.wsId);
+      return true;
     },
 
     /* ================= WORKSPACES ================= */
