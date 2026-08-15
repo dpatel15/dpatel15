@@ -63,12 +63,12 @@
   }
 
   const NAV = [
-    { route: 'overview', icon: '📈', label: 'Overview' },
-    { route: 'users', icon: '👤', label: 'Users' },
-    { route: 'subscriptions', icon: '🔄', label: 'Subscriptions' },
-    { route: 'invoices', icon: '🧾', label: 'Revenue' },
-    { route: 'plans', icon: '🏷️', label: 'Plans' },
-    { route: 'audit', icon: '📜', label: 'Audit log' },
+    { route: 'overview', icon: 'chart', label: 'Overview' },
+    { route: 'users', icon: 'users', label: 'Users' },
+    { route: 'subscriptions', icon: 'repeat', label: 'Subscriptions' },
+    { route: 'invoices', icon: 'receipt', label: 'Revenue' },
+    { route: 'plans', icon: 'tag', label: 'Plans' },
+    { route: 'audit', icon: 'file', label: 'Audit log' },
   ];
 
   const admin = {
@@ -81,7 +81,7 @@
       try {
         const node = await this['view_' + this.route]();
         content.innerHTML = ''; content.appendChild(node); window.scrollTo(0, 0);
-      } catch (e) { console.error(e); content.innerHTML = '<div class="empty"><div class="empty__ic">⚠️</div><div>' + L.escape(e.message) + '</div></div>'; }
+      } catch (e) { console.error(e); content.innerHTML = '<div class="empty"><div class="empty__ic">' + L.icon('alert', { size: 34 }) + '</div><div>' + L.escape(e.message) + '</div></div>'; }
     },
 
     nav(route) { this.route = route; L.$('.sidebar') && L.$('.sidebar').classList.remove('is-open'); this.render(); },
@@ -92,35 +92,35 @@
       scrim.onclick = () => { L.$('.sidebar').classList.remove('is-open'); scrim.classList.remove('is-open'); };
       const sidebar = el('aside', { class: 'sidebar' });
       const brand = el('div', { class: 'brand' });
-      brand.innerHTML = `<div class="brand__logo">L</div><div><div class="brand__name">Ledgerly</div><span class="admin-tag">Admin</span></div>`;
+      brand.innerHTML = `<div class="brand__logo">${L.icon('logoBars',{size:17})}</div><div><div class="brand__name">Ledgerly</div><span class="admin-tag">Admin</span></div>`;
       sidebar.appendChild(brand);
       const nav = el('nav', { class: 'nav', style: 'margin-top:12px' });
       NAV.forEach((it) => {
         const n = el('div', { class: 'nav__item', 'data-route': it.route });
-        n.innerHTML = `<span class="ic">${it.icon}</span><span>${it.label}</span>`;
+        n.innerHTML = `<span class="ic">${L.icon(it.icon,{size:18})}</span><span>${it.label}</span>`;
         n.onclick = () => this.nav(it.route);
         nav.appendChild(n);
       });
       sidebar.appendChild(nav);
       sidebar.appendChild(el('div', { class: 'nav__spacer' }));
-      const appLink = el('a', { class: 'btn btn--ghost btn--block', href: '../app/', text: '← Back to app', style: 'margin:8px 0' });
+      const appLink = el('a', { class: 'btn btn--ghost btn--block', href: '../app/', html: L.icon('arrowRight',{size:15}) + ' Back to app', style: 'margin:8px 0' });
       sidebar.appendChild(appLink);
       const userCard = el('div', { class: 'user-card' });
-      userCard.innerHTML = `<div class="ava" style="background:linear-gradient(135deg,#7C3AED,#A855F7)">${L.escape(L.initials(S.user.name))}</div><div style="flex:1;min-width:0"><div style="font-weight:650;font-size:13.5px">${L.escape(S.user.name)}</div><div class="ws-switch__meta">Super admin</div></div>`;
-      const logout = el('button', { class: 'iconbtn', html: '🚪', title: 'Log out' });
+      userCard.innerHTML = `<div class="ava">${L.escape(L.initials(S.user.name))}</div><div style="flex:1;min-width:0"><div style="font-weight:650;font-size:13.5px">${L.escape(S.user.name)}</div><div class="ws-switch__meta">Super admin</div></div>`;
+      const logout = el('button', { class: 'iconbtn', html: L.icon('logout'), title: 'Log out' });
       logout.onclick = async () => { await S.logout(); location.reload(); };
       userCard.appendChild(logout);
       sidebar.appendChild(userCard);
 
       const main = el('main', { class: 'main' });
       const topbar = el('div', { class: 'topbar' });
-      const ham = el('button', { class: 'iconbtn hamburger', html: '☰' });
+      const ham = el('button', { class: 'iconbtn hamburger', html: L.icon('menu') });
       ham.onclick = () => { sidebar.classList.add('is-open'); scrim.classList.add('is-open'); };
       topbar.appendChild(ham);
       topbar.appendChild(el('div', {}, [el('div', { class: 'topbar__title', text: 'Admin Console' }), el('div', { class: 'topbar__sub', text: 'Platform management & analytics' })]));
       topbar.appendChild(el('div', { class: 'topbar__spacer' }));
-      const themeBtn = el('button', { class: 'iconbtn', html: document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙' });
-      themeBtn.onclick = () => { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; L.setTheme(t); themeBtn.innerHTML = t === 'dark' ? '☀️' : '🌙'; };
+      const themeBtn = el('button', { class: 'iconbtn', html: document.documentElement.getAttribute('data-theme') === 'dark' ? L.icon('sun') : L.icon('moon') });
+      themeBtn.onclick = () => { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; L.setTheme(t); themeBtn.innerHTML = t === 'dark' ? L.icon('sun') : L.icon('moon'); };
       topbar.appendChild(themeBtn);
       main.appendChild(topbar);
       main.appendChild(el('div', { class: 'content', id: 'admin-content' }));
@@ -136,21 +136,21 @@
       const wrap = el('div', { class: 'page-enter' });
       const stats = el('div', { class: 'stats' });
       const cards = [
-        { ic: '💵', bg: hexA('#16A34A', .14), label: 'MRR', val: money(m.mrr) },
-        { ic: '📅', bg: hexA('#7C3AED', .14), label: 'ARR', val: money(m.arr) },
-        { ic: '💰', bg: hexA('#0EA5E9', .14), label: 'Net revenue', val: money(m.netRevenue) },
-        { ic: '👥', bg: hexA('#FF385C', .14), label: 'Total users', val: m.totalUsers },
+        { ic: 'dollar', bg: 'rgba(6,118,71,.10)', fg: 'var(--income)', label: 'MRR', val: money(m.mrr) },
+        { ic: 'calendar', bg: 'var(--accent-soft)', fg: 'var(--accent)', label: 'ARR', val: money(m.arr) },
+        { ic: 'trendingUp', bg: 'rgba(16,117,105,.10)', fg: '#107569', label: 'Net revenue', val: money(m.netRevenue) },
+        { ic: 'users', bg: 'rgba(37,99,235,.10)', fg: '#2563EB', label: 'Total users', val: m.totalUsers },
       ];
-      cards.forEach((c) => { const s = el('div', { class: 'stat' }); s.innerHTML = `<div class="stat__ic" style="background:${c.bg}">${c.ic}</div><div class="stat__label">${c.label}</div><div class="stat__value tabular">${c.val}</div>`; stats.appendChild(s); });
+      cards.forEach((c) => { const s = el('div', { class: 'stat' }); s.innerHTML = `<div class="stat__ic" style="background:${c.bg};color:${c.fg||'var(--accent)'}">${L.icon(c.ic,{size:19})}</div><div class="stat__label">${c.label}</div><div class="stat__value tabular">${c.val}</div>`; stats.appendChild(s); });
       wrap.appendChild(stats);
 
       const row2 = el('div', { class: 'stats', style: 'margin-top:16px' });
       [
-        { ic: '✅', bg: hexA('#16A34A', .14), label: 'Paying customers', val: m.activePaid },
-        { ic: '🎁', bg: hexA('#7C3AED', .14), label: 'Active trials', val: m.trialing },
-        { ic: '🏢', bg: hexA('#0891B2', .14), label: 'Workspaces', val: m.totalWorkspaces },
-        { ic: '↩️', bg: hexA('#DC2626', .12), label: 'Refunded', val: money(m.refunded) },
-      ].forEach((c) => { const s = el('div', { class: 'stat' }); s.innerHTML = `<div class="stat__ic" style="background:${c.bg}">${c.ic}</div><div class="stat__label">${c.label}</div><div class="stat__value tabular">${c.val}</div>`; row2.appendChild(s); });
+        { ic: 'trendingUp', bg: 'rgba(6,118,71,.10)', fg: 'var(--income)', label: 'Paying customers', val: m.activePaid },
+        { ic: 'gift', bg: 'var(--accent-soft)', fg: 'var(--accent)', label: 'Active trials', val: m.trialing },
+        { ic: 'building', bg: 'rgba(16,117,105,.10)', fg: '#107569', label: 'Workspaces', val: m.totalWorkspaces },
+        { ic: 'receipt', bg: 'rgba(180,35,24,.10)', fg: 'var(--expense)', label: 'Refunded', val: money(m.refunded) },
+      ].forEach((c) => { const s = el('div', { class: 'stat' }); s.innerHTML = `<div class="stat__ic" style="background:${c.bg};color:${c.fg||'var(--accent)'}">${L.icon(c.ic,{size:19})}</div><div class="stat__label">${c.label}</div><div class="stat__value tabular">${c.val}</div>`; row2.appendChild(s); });
       wrap.appendChild(row2);
 
       const grid = el('div', { class: 'two-col', style: 'margin-top:16px' });
@@ -204,7 +204,7 @@
 
       const bar = el('div', { class: 'filterbar' });
       const search = el('div', { class: 'search-input' });
-      search.innerHTML = '<span class="si">🔍</span>';
+      search.innerHTML = `<span class="si">${L.icon('search',{size:16})}</span>`;
       const si = el('input', { class: 'input', placeholder: 'Search users by name or email…' });
       search.appendChild(si); bar.appendChild(search);
       wrap.appendChild(bar);
@@ -268,7 +268,7 @@
       body.appendChild(planRow);
 
       const foot = el('div', { class: 'modal__foot', style: 'flex-wrap:wrap' });
-      const imp = el('button', { class: 'btn btn--ghost btn--sm', text: '👁 Impersonate', style: 'margin-right:auto' });
+      const imp = el('button', { class: 'btn btn--ghost btn--sm', html: L.icon('eye',{size:15}) + ' Impersonate', style: 'margin-right:auto' });
       const trial = el('button', { class: 'btn btn--ghost btn--sm', text: '+7d trial' });
       const suspend = el('button', { class: 'btn btn--ghost btn--sm', text: u.suspended ? 'Unsuspend' : 'Suspend' });
       const del = el('button', { class: 'btn btn--danger btn--sm', text: 'Delete' });
@@ -328,14 +328,14 @@
 
       const stats = el('div', { class: 'stats' });
       [
-        { ic: '💰', bg: hexA('#16A34A', .14), label: 'Gross revenue', val: money(revenue) },
-        { ic: '↩️', bg: hexA('#DC2626', .12), label: 'Refunded', val: money(refunded) },
-        { ic: '📊', bg: hexA('#7C3AED', .14), label: 'Net revenue', val: money(revenue - refunded) },
-        { ic: '🧾', bg: hexA('#0EA5E9', .14), label: 'Invoices', val: invoices.length },
-      ].forEach((c) => { const s = el('div', { class: 'stat' }); s.innerHTML = `<div class="stat__ic" style="background:${c.bg}">${c.ic}</div><div class="stat__label">${c.label}</div><div class="stat__value tabular">${c.val}</div>`; stats.appendChild(s); });
+        { ic: 'dollar', bg: 'rgba(6,118,71,.10)', fg: 'var(--income)', label: 'Gross revenue', val: money(revenue) },
+        { ic: 'receipt', bg: 'rgba(180,35,24,.10)', fg: 'var(--expense)', label: 'Refunded', val: money(refunded) },
+        { ic: 'chart', bg: 'var(--accent-soft)', fg: 'var(--accent)', label: 'Net revenue', val: money(revenue - refunded) },
+        { ic: 'receipt', bg: 'rgba(16,117,105,.10)', fg: '#107569', label: 'Invoices', val: invoices.length },
+      ].forEach((c) => { const s = el('div', { class: 'stat' }); s.innerHTML = `<div class="stat__ic" style="background:${c.bg};color:${c.fg||'var(--accent)'}">${L.icon(c.ic,{size:19})}</div><div class="stat__label">${c.label}</div><div class="stat__value tabular">${c.val}</div>`; stats.appendChild(s); });
       wrap.appendChild(stats);
 
-      const exportBtn = el('button', { class: 'btn btn--ghost btn--sm', text: '⬇ Export CSV' });
+      const exportBtn = el('button', { class: 'btn btn--ghost btn--sm', html: L.icon('download',{size:15}) + ' Export CSV' });
       exportBtn.onclick = () => {
         const rows = invoices.map((i) => { const u = uMap.get(i.userId); return [i.number, new Date(i.createdAt).toISOString(), u ? u.email : '', i.description, i.amount.toFixed(2), i.status]; });
         L.download('ledgerly-invoices.csv', L.toCSV(rows, ['Invoice', 'Date', 'Customer', 'Description', 'Amount USD', 'Status']), 'text/csv');
@@ -470,7 +470,7 @@
     root.innerHTML = '';
     const wrap = el('div', { class: 'admin-login' });
     const box = el('div', { class: 'admin-login__box' });
-    box.innerHTML = `<div class="brand" style="padding:0 0 10px"><div class="brand__logo">L</div><div class="brand__name">Ledgerly <span class="admin-tag">Admin</span></div></div>
+    box.innerHTML = `<div class="brand" style="padding:0 0 10px"><div class="brand__logo">${L.icon('logoBars',{size:17})}</div><div class="brand__name">Ledgerly <span class="admin-tag">Admin</span></div></div>
       <h2>Super admin</h2><p class="muted" style="margin-top:4px">Sign in to the platform console.</p>
       <div class="cred-hint">Demo admin — email <code>admin@ledgerly.app</code>, password <code>admin1234</code></div>`;
     const form = el('form', { class: 'stack' });

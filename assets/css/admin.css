@@ -4,14 +4,14 @@
    adds a few admin-only bits.
    ============================================================ */
 :root {
-  --accent:#7C3AED; --accent-600:#6D28D9; --accent-700:#5B21B6;
-  --accent-soft:#EDE9FE; --accent-glow:rgba(124,58,237,.26);
+  --accent:#4F46E5; --accent-600:#4338CA; --accent-700:#3730A3;
+  --accent-soft:#EEF0FE; --accent-glow:rgba(79,70,229,.18);
 }
 :root[data-theme="dark"] {
-  --accent:#A78BFA; --accent-600:#8B5CF6; --accent-soft:#2A2140; --accent-glow:rgba(167,139,250,.3);
+  --accent:#818CF8; --accent-600:#6366F1; --accent-soft:#1B1E3A; --accent-glow:rgba(129,140,248,.24);
 }
-.brand__logo { background: linear-gradient(135deg,#7C3AED,#A855F7) !important; box-shadow: 0 4px 12px var(--accent-glow) !important; }
-.admin-tag { font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#fff; background:linear-gradient(135deg,#7C3AED,#A855F7); padding:3px 8px; border-radius:6px; }
+.brand__logo { background: var(--accent) !important; }
+.admin-tag { font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--accent); background:var(--accent-soft); padding:2px 7px; border-radius:5px; }
 
 /* status pills */
 .pill { display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; font-size:12px; font-weight:700; }

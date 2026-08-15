@@ -7,8 +7,8 @@
   const L = (window.L = window.L || {});
   const S = L.Store;
 
-  const ICONS = ['🗂️','💻','✈️','🍽️','📣','🏢','👥','⚖️','🖥️','🛡️','⛽','🏦','🧾','📦','💰','🤝','➕','📱','🎓','☕','🚕','🏨','🛒','💡','🔧','📸','🎨','🩺','🏋️','🐾','🎁','📚','🍔','🚗','✏️','🔌'];
-  const COLORS = ['#FF385C','#E01E45','#7C3AED','#6366F1','#0EA5E9','#0891B2','#14B8A6','#10B981','#16A34A','#F59E0B','#EF4444','#EC4899','#8B5CF6','#64748B','#475569','#94A3B8'];
+  const ICONS = ['tag','briefcase','monitor','plane','utensils','coffee','megaphone','building','users','scale','shield','fuel','landmark','bank','card','wallet','receipt','box','dollar','handshake','plusCircle','trendingUp','percent','globe','zap','settings','camera','edit','file','target','calendar','user'];
+  const COLORS = ['#2563EB','#4F46E5','#6938EF','#7A5AF8','#0E7090','#107569','#067647','#12B76A','#B54708','#C4320A','#B42318','#C11574','#344054','#475467','#667085','#0BA5EC'];
 
   /* ---------- Core modal plumbing ---------- */
   function open(node) {
@@ -111,7 +111,7 @@
         catWrap.innerHTML = '';
         catsForType().forEach((c) => {
           const opt = L.el('div', { class: 'cat-opt' + (c.id === t.categoryId ? ' is-sel' : '') });
-          opt.innerHTML = `<div class="cat-opt__ic">${c.icon}</div><div class="cat-opt__name">${L.escape(c.name)}</div>`;
+          opt.innerHTML = `<div class="cat-opt__ic">${L.catGlyph(c.icon,20)}</div><div class="cat-opt__name">${L.escape(c.name)}</div>`;
           opt.onclick = () => { t.categoryId = c.id; t.deductible = !!c.deductible; renderCats(); };
           catWrap.appendChild(opt);
         });
@@ -142,7 +142,7 @@
       const acctField = L.el('div', { class: 'field', style: 'margin:0' });
       acctField.innerHTML = `<label>Account</label>`;
       const acctSel = L.el('select', { class: 'select' });
-      accts.forEach((a) => { const o = L.el('option', { value: a.id, text: `${a.icon} ${a.name}` }); if (a.id === t.accountId) o.selected = true; acctSel.appendChild(o); });
+      accts.forEach((a) => { const o = L.el('option', { value: a.id, text: a.name }); if (a.id === t.accountId) o.selected = true; acctSel.appendChild(o); });
       acctField.appendChild(acctSel);
       const methodField = L.el('div', { class: 'field', style: 'margin:0' });
       methodField.innerHTML = `<label>Payment method</label>`;
@@ -193,7 +193,7 @@
           rcptHolder.appendChild(thumb);
         } else {
           const drop = L.el('div', { class: 'drop' });
-          drop.innerHTML = `<div style="font-size:26px">🧾</div><div style="font-weight:600;margin-top:6px">Tap to add a receipt photo</div><div class="hint" style="margin-top:2px">JPG or PNG, stored privately on your device</div>`;
+          drop.innerHTML = `<div style="color:var(--ink-3);display:flex;justify-content:center;margin-bottom:4px">${L.icon('camera',{size:26})}</div><div style="font-weight:600;margin-top:6px">Tap to add a receipt photo</div><div class="hint" style="margin-top:2px">JPG or PNG, stored privately on your device</div>`;
           drop.onclick = () => fileInput.click();
           drop.ondragover = (e) => { e.preventDefault(); drop.classList.add('is-drag'); };
           drop.ondragleave = () => drop.classList.remove('is-drag');
@@ -281,7 +281,7 @@
 
     /* ---------- Category editor ---------- */
     async category(existing, onSaved) {
-      const c = Object.assign({ name: '', icon: '📁', color: '#FF385C', kind: 'expense', deductible: false }, existing || {});
+      const c = Object.assign({ name: '', icon: 'tag', color: '#2563EB', kind: 'expense', deductible: false }, existing || {});
       const body = L.el('div', {});
       const nameField = L.el('div', { class: 'field' });
       nameField.innerHTML = `<label>Category name</label>`;
@@ -301,7 +301,7 @@
       iconField.innerHTML = `<label>Icon</label>`;
       const iconGrid = L.el('div', { class: 'icon-grid' });
       ICONS.forEach((ic) => {
-        const b = L.el('button', { text: ic, class: ic === c.icon ? 'is-sel' : '' });
+        const b = L.el('button', { html: L.icon(ic, { size: 20 }), class: ic === c.icon ? 'is-sel' : '' });
         b.onclick = () => { c.icon = ic; L.$$('.icon-grid button', iconGrid).forEach((x) => x.classList.remove('is-sel')); b.classList.add('is-sel'); };
         iconGrid.appendChild(b);
       });
@@ -340,14 +340,14 @@
 
     /* ---------- Account editor ---------- */
     async account(existing, onSaved) {
-      const a = Object.assign({ name: '', type: 'bank', icon: '🏦', color: '#FF385C', openingBalance: 0 }, existing || {});
+      const a = Object.assign({ name: '', type: 'bank', icon: 'landmark', color: '#2563EB', openingBalance: 0 }, existing || {});
       const body = L.el('div', {});
       const f1 = L.el('div', { class: 'field' }); f1.innerHTML = `<label>Account name</label>`;
       const nameInput = L.el('input', { class: 'input', placeholder: 'e.g. Business Checking', value: a.name }); f1.appendChild(nameInput); body.appendChild(f1);
       const row = L.el('div', { class: 'grid-2' });
       const f2 = L.el('div', { class: 'field', style: 'margin:0' }); f2.innerHTML = `<label>Type</label>`;
       const typeSel = L.el('select', { class: 'select' });
-      [['bank','🏦 Bank'],['card','💳 Card'],['cash','💵 Cash'],['savings','🐷 Savings'],['wallet','📲 Wallet']].forEach(([v,t]) => { const o = L.el('option', { value: v, text: t }); if (v === a.type) o.selected = true; typeSel.appendChild(o); });
+      [['bank','Bank account'],['card','Credit card'],['cash','Cash'],['savings','Savings'],['wallet','Wallet']].forEach(([v,t]) => { const o = L.el('option', { value: v, text: t }); if (v === a.type) o.selected = true; typeSel.appendChild(o); });
       f2.appendChild(typeSel);
       const f3 = L.el('div', { class: 'field', style: 'margin:0' }); f3.innerHTML = `<label>Opening balance</label>`;
       const balInput = L.el('input', { class: 'input', type: 'number', step: '0.01', value: a.openingBalance }); f3.appendChild(balInput);
@@ -360,10 +360,10 @@
       const { m, x } = shell(existing && existing.id ? 'Edit account' : 'New account', body, foot);
       const { close } = open(m);
       x.onclick = cancel.onclick = () => close();
-      const iconMap = { bank: '🏦', card: '💳', cash: '💵', savings: '🐷', wallet: '📲' };
+      const iconMap = { bank: 'landmark', card: 'card', cash: 'dollar', savings: 'wallet', wallet: 'wallet' };
       save.onclick = async () => {
         if (!nameInput.value.trim()) return L.toast('Name is required', 'error');
-        await S.saveAccount({ id: existing && existing.id, name: nameInput.value.trim(), type: typeSel.value, icon: iconMap[typeSel.value] || '🏦', color: a.color, openingBalance: parseFloat(balInput.value) || 0, order: existing ? existing.order : 999 });
+        await S.saveAccount({ id: existing && existing.id, name: nameInput.value.trim(), type: typeSel.value, icon: iconMap[typeSel.value] || 'landmark', color: a.color, openingBalance: parseFloat(balInput.value) || 0, order: existing ? existing.order : 999 });
         close(); L.toast('Account saved'); onSaved && onSaved();
       };
     },
@@ -375,7 +375,7 @@
       const body = L.el('div', {});
       const f1 = L.el('div', { class: 'field' }); f1.innerHTML = `<label>Category</label>`;
       const catSel = L.el('select', { class: 'select' });
-      cats.forEach((c) => { const o = L.el('option', { value: c.id, text: `${c.icon} ${c.name}` }); if (c.id === b.categoryId) o.selected = true; catSel.appendChild(o); });
+      cats.forEach((c) => { const o = L.el('option', { value: c.id, text: c.name }); if (c.id === b.categoryId) o.selected = true; catSel.appendChild(o); });
       f1.appendChild(catSel); body.appendChild(f1);
       const f2 = L.el('div', { class: 'field' }); f2.innerHTML = `<label>Monthly limit</label>`;
       const grp = L.el('div', { class: 'input-group' });
@@ -424,7 +424,7 @@
       const row2 = L.el('div', { class: 'grid-2' });
       const f4 = L.el('div', { class: 'field', style: 'margin:0' }); f4.innerHTML = `<label>Category</label>`;
       const catSel = L.el('select', { class: 'select' });
-      function fillCats() { catSel.innerHTML = ''; catsForType().forEach((c) => { const o = L.el('option', { value: c.id, text: `${c.icon} ${c.name}` }); if (c.id === r.categoryId) o.selected = true; catSel.appendChild(o); }); }
+      function fillCats() { catSel.innerHTML = ''; catsForType().forEach((c) => { const o = L.el('option', { value: c.id, text: c.name }); if (c.id === r.categoryId) o.selected = true; catSel.appendChild(o); }); }
       fillCats(); f4.appendChild(catSel);
       const f5 = L.el('div', { class: 'field', style: 'margin:0' }); f5.innerHTML = `<label>Next date</label>`;
       const dateInput = L.el('input', { class: 'input', type: 'date', value: r.nextDate }); f5.appendChild(dateInput);

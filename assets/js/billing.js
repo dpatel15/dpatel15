@@ -26,21 +26,21 @@
 
   const PLANS = {
     starter: {
-      id: 'starter', name: 'Starter', color: '#64748B',
+      id: 'starter', name: 'Starter', color: '#667085',
       tagline: 'For freelancers getting organized.',
       priceMonthly: 0, priceAnnual: 0,
       limits: { workspaces: 1, seats: 1 },
       features: [],
     },
     pro: {
-      id: 'pro', name: 'Pro', color: '#FF385C',
+      id: 'pro', name: 'Pro', color: '#2563EB',
       tagline: 'For growing businesses that want it all.',
       priceMonthly: 9, priceAnnual: 84,
       limits: { workspaces: 3, seats: 1 },
       features: ['recurring', 'budgets', 'taxReports', 'multiCurrency', 'multiWorkspace', 'prioritySupport'],
     },
     business: {
-      id: 'business', name: 'Business', color: '#7C3AED',
+      id: 'business', name: 'Business', color: '#6938EF',
       tagline: 'For teams managing serious money.',
       priceMonthly: 29, priceAnnual: 276,
       limits: { workspaces: Infinity, seats: 25 },

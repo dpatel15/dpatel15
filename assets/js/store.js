@@ -11,29 +11,29 @@
 
   /* ---------- Default category set ---------- */
   const DEFAULT_CATEGORIES = [
-    { name: 'Office & Supplies', icon: '🗂️', color: '#FF385C', kind: 'expense', deductible: true },
-    { name: 'Software & SaaS', icon: '💻', color: '#7C3AED', kind: 'expense', deductible: true },
-    { name: 'Travel', icon: '✈️', color: '#0EA5E9', kind: 'expense', deductible: true },
-    { name: 'Meals & Entertainment', icon: '🍽️', color: '#F59E0B', kind: 'expense', deductible: true },
-    { name: 'Marketing & Ads', icon: '📣', color: '#EC4899', kind: 'expense', deductible: true },
-    { name: 'Rent & Utilities', icon: '🏢', color: '#10B981', kind: 'expense', deductible: true },
-    { name: 'Payroll & Contractors', icon: '👥', color: '#6366F1', kind: 'expense', deductible: true },
-    { name: 'Professional Services', icon: '⚖️', color: '#14B8A6', kind: 'expense', deductible: true },
-    { name: 'Equipment', icon: '🖥️', color: '#8B5CF6', kind: 'expense', deductible: true },
-    { name: 'Insurance', icon: '🛡️', color: '#0891B2', kind: 'expense', deductible: true },
-    { name: 'Fuel & Mileage', icon: '⛽', color: '#EF4444', kind: 'expense', deductible: true },
-    { name: 'Bank & Fees', icon: '🏦', color: '#64748B', kind: 'expense', deductible: false },
-    { name: 'Taxes', icon: '🧾', color: '#475569', kind: 'expense', deductible: false },
-    { name: 'Other Expense', icon: '📦', color: '#94A3B8', kind: 'expense', deductible: false },
-    { name: 'Sales Revenue', icon: '💰', color: '#16A34A', kind: 'income', deductible: false },
-    { name: 'Consulting Income', icon: '🤝', color: '#059669', kind: 'income', deductible: false },
-    { name: 'Other Income', icon: '➕', color: '#22C55E', kind: 'income', deductible: false },
+    { name: 'Office & Supplies', icon: 'briefcase', color: '#2563EB', kind: 'expense', deductible: true },
+    { name: 'Software & SaaS', icon: 'monitor', color: '#6938EF', kind: 'expense', deductible: true },
+    { name: 'Travel', icon: 'plane', color: '#0E7090', kind: 'expense', deductible: true },
+    { name: 'Meals & Entertainment', icon: 'utensils', color: '#B54708', kind: 'expense', deductible: true },
+    { name: 'Marketing & Ads', icon: 'megaphone', color: '#C11574', kind: 'expense', deductible: true },
+    { name: 'Rent & Utilities', icon: 'building', color: '#107569', kind: 'expense', deductible: true },
+    { name: 'Payroll & Contractors', icon: 'users', color: '#4F46E5', kind: 'expense', deductible: true },
+    { name: 'Professional Services', icon: 'scale', color: '#3538CD', kind: 'expense', deductible: true },
+    { name: 'Equipment', icon: 'monitor', color: '#5925DC', kind: 'expense', deductible: true },
+    { name: 'Insurance', icon: 'shield', color: '#0E7090', kind: 'expense', deductible: true },
+    { name: 'Fuel & Mileage', icon: 'fuel', color: '#C4320A', kind: 'expense', deductible: true },
+    { name: 'Bank & Fees', icon: 'landmark', color: '#475467', kind: 'expense', deductible: false },
+    { name: 'Taxes', icon: 'receipt', color: '#344054', kind: 'expense', deductible: false },
+    { name: 'Other Expense', icon: 'box', color: '#667085', kind: 'expense', deductible: false },
+    { name: 'Sales Revenue', icon: 'trendingUp', color: '#067647', kind: 'income', deductible: false },
+    { name: 'Consulting Income', icon: 'handshake', color: '#107569', kind: 'income', deductible: false },
+    { name: 'Other Income', icon: 'plusCircle', color: '#12B76A', kind: 'income', deductible: false },
   ];
 
   const DEFAULT_ACCOUNTS = [
-    { name: 'Business Checking', type: 'bank', icon: '🏦', color: '#FF385C' },
-    { name: 'Business Card', type: 'card', icon: '💳', color: '#7C3AED' },
-    { name: 'Cash', type: 'cash', icon: '💵', color: '#10B981' },
+    { name: 'Business Checking', type: 'bank', icon: 'landmark', color: '#2563EB' },
+    { name: 'Business Card', type: 'card', icon: 'card', color: '#6938EF' },
+    { name: 'Cash', type: 'cash', icon: 'dollar', color: '#067647' },
   ];
 
   const PAYMENT_METHODS = ['Card', 'Bank Transfer', 'Cash', 'Cheque', 'PayPal', 'Direct Debit', 'Other'];
@@ -401,7 +401,7 @@
     getReceipt(id) { return DB.get('receipts', id); },
 
     async saveCategory(c) {
-      const rec = Object.assign({ id: L.uid('cat'), ws: this._ws(), icon: '📁', color: '#FF385C', kind: 'expense', deductible: false, order: 999 }, c);
+      const rec = Object.assign({ id: L.uid('cat'), ws: this._ws(), icon: 'tag', color: '#2563EB', kind: 'expense', deductible: false, order: 999 }, c);
       if (!rec.id) rec.id = L.uid('cat');
       rec.ws = this._ws();
       await DB.put('categories', rec);
@@ -410,7 +410,7 @@
     async deleteCategory(id) { await DB.del('categories', id); },
 
     async saveAccount(a) {
-      const rec = Object.assign({ id: L.uid('acc'), ws: this._ws(), type: 'bank', icon: '🏦', color: '#FF385C', openingBalance: 0, order: 999 }, a);
+      const rec = Object.assign({ id: L.uid('acc'), ws: this._ws(), type: 'bank', icon: 'landmark', color: '#2563EB', openingBalance: 0, order: 999 }, a);
       if (!rec.id) rec.id = L.uid('acc');
       rec.ws = this._ws();
       rec.openingBalance = Number(rec.openingBalance) || 0;
@@ -484,7 +484,7 @@
       for (const [cid, list] of catGroups) {
         const c = catMap.get(cid);
         byCat.push({
-          id: cid, name: c ? c.name : 'Uncategorized', icon: c ? c.icon : '❓', color: c ? c.color : '#94A3B8',
+          id: cid, name: c ? c.name : 'Uncategorized', icon: c ? c.icon : 'tag', color: c ? c.color : '#98A2B3',
           total: L.sum(list, (t) => this.baseAmount(t)), count: list.length,
         });
       }
@@ -509,7 +509,7 @@
       const budgetStatus = budgets.map((b) => {
         const spent = L.sum(monthExp.filter((t) => t.categoryId === b.categoryId), (t) => this.baseAmount(t));
         const c = catMap.get(b.categoryId);
-        return { ...b, name: c ? c.name : '—', icon: c ? c.icon : '📁', color: c ? c.color : '#FF385C', spent, pct: b.amount ? spent / b.amount : 0 };
+        return { ...b, name: c ? c.name : '—', icon: c ? c.icon : 'tag', color: c ? c.color : '#2563EB', spent, pct: b.amount ? spent / b.amount : 0 };
       }).sort((a, b) => b.pct - a.pct);
 
       return {
