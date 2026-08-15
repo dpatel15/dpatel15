@@ -635,7 +635,7 @@
       const ca = el('button', { text: 'Annual · save 20%', class: cycle === 'annual' ? 'is-active' : '' });
       cyc.appendChild(cm); cyc.appendChild(ca);
       head.appendChild(cyc); plansCard.appendChild(head);
-      const planGrid = el('div', { style: 'display:grid;grid-template-columns:repeat(3,1fr);gap:14px' });
+      const planGrid = el('div', { class: 'plan-grid' });
       plansCard.appendChild(planGrid);
       function renderPlans() {
         planGrid.innerHTML = '';

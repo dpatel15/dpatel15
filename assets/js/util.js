@@ -244,4 +244,33 @@
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
     return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
   };
+
+  /* ---------- Password hashing: PBKDF2-SHA256 with per-user salt ---------- */
+  L.PBKDF2_ITER = 150000;
+  function hex(bytes) { return Array.from(bytes).map((b) => b.toString(16).padStart(2, '0')).join(''); }
+  function fromHex(h) { return Uint8Array.from(h.match(/.{1,2}/g).map((x) => parseInt(x, 16))); }
+
+  L.randomSalt = function () {
+    return hex(crypto.getRandomValues(new Uint8Array(16)));
+  };
+
+  // Derive a 256-bit key from a password + salt using PBKDF2 (slow by design).
+  L.pbkdf2 = async function (password, saltHex, iterations) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits(
+      { name: 'PBKDF2', salt: fromHex(saltHex), iterations: iterations || L.PBKDF2_ITER, hash: 'SHA-256' },
+      keyMaterial, 256
+    );
+    return hex(new Uint8Array(bits));
+  };
+
+  // Constant-time string comparison (avoids timing side-channels).
+  L.constEq = function (a, b) {
+    a = String(a); b = String(b);
+    if (a.length !== b.length) return false;
+    let r = 0;
+    for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    return r === 0;
+  };
 })();

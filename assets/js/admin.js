@@ -367,7 +367,7 @@
     async view_plans() {
       const wrap = el('div', { class: 'page-enter' });
       wrap.appendChild(el('p', { class: 'muted', text: 'Edit plan pricing and limits. Changes apply across the whole platform immediately.', style: 'margin-top:0' }));
-      const grid = el('div', { style: 'display:grid;grid-template-columns:repeat(3,1fr);gap:16px' });
+      const grid = el('div', { class: 'plan-grid' });
       const self = this;
       B.PLAN_ORDER.forEach((pid) => {
         const p = B.PLANS[pid];

@@ -364,12 +364,6 @@
         : `New to Ledgerly? <a href="#" data-mode="signup">Create an account</a>`;
       alt.querySelector('a').onclick = (e) => { e.preventDefault(); this.render(e.target.dataset.mode); };
       box.appendChild(alt);
-
-      if (!isSignup) {
-        const demo = el('button', { class: 'btn btn--ghost btn--block', text: 'Try the live demo', style: 'margin-top:14px' });
-        demo.onclick = () => this.demo();
-        box.appendChild(demo);
-      }
       host.appendChild(box);
       setTimeout(() => (isSignup ? nameInput : emailInput).focus(), 60);
 
@@ -390,13 +384,6 @@
           submit.disabled = false; submit.textContent = isSignup ? 'Create account' : 'Log in';
         }
       };
-    },
-
-    async demo() {
-      const email = 'demo@ledgerly.app';
-      try { await S.login({ email, password: 'demo1234' }); }
-      catch (e) { await S.signup({ name: 'Demo User', email, password: 'demo1234', business: 'Ledgerly Demo Co.', currency: 'USD' }); }
-      app.start();
     },
   };
 

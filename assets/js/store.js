@@ -49,11 +49,14 @@
     async signup({ name, email, password, business, currency }) {
       email = (email || '').trim().toLowerCase();
       if (!email || !password) throw new Error('Email and password are required.');
+      if ((password || '').length < 6) throw new Error('Password must be at least 6 characters.');
       const existing = await DB.oneByIndex('users', 'email', email).catch(() => null);
       if (existing) throw new Error('An account with that email already exists.');
-      const pwHash = await L.hash(password + '::' + email);
+      const pwSalt = L.randomSalt();
+      const pwHash = await L.pbkdf2(password, pwSalt, L.PBKDF2_ITER);
       const user = {
-        id: L.uid('usr'), name: name || email.split('@')[0], email, pwHash,
+        id: L.uid('usr'), name: name || email.split('@')[0], email,
+        pwHash, pwSalt, pwIter: L.PBKDF2_ITER, pwVer: 2,
         createdAt: Date.now(), plan: 'pro', role: 'owner', suspended: false,
       };
       await DB.put('users', user);
@@ -73,8 +76,22 @@
       email = (email || '').trim().toLowerCase();
       const user = await DB.oneByIndex('users', 'email', email).catch(() => null);
       if (!user) throw new Error('No account found for that email.');
-      const pwHash = await L.hash(password + '::' + email);
-      if (pwHash !== user.pwHash) throw new Error('Incorrect password.');
+      // Verify password: PBKDF2 (v2) or legacy SHA-256, upgrading legacy on success.
+      let ok = false;
+      if (user.pwVer === 2) {
+        const h = await L.pbkdf2(password, user.pwSalt, user.pwIter || L.PBKDF2_ITER);
+        ok = L.constEq(h, user.pwHash);
+      } else {
+        const legacy = await L.hash(password + '::' + email);
+        ok = L.constEq(legacy, user.pwHash);
+        if (ok) {
+          const salt = L.randomSalt();
+          user.pwSalt = salt; user.pwIter = L.PBKDF2_ITER; user.pwVer = 2;
+          user.pwHash = await L.pbkdf2(password, salt, L.PBKDF2_ITER);
+          await DB.put('users', user);
+        }
+      }
+      if (!ok) throw new Error('Incorrect password.');
       if (user.suspended) throw new Error('This account has been suspended. Contact support.');
       if (L.Billing) await L.Billing.ensureSubscription(user.id);
       const wss = await DB.byIndex('workspaces', 'owner', user.id);
@@ -169,8 +186,9 @@
       const existing = await DB.oneByIndex('users', 'email', 'admin@ledgerly.app').catch(() => null);
       if (existing) { if (existing.role !== 'superadmin') { existing.role = 'superadmin'; await DB.put('users', existing); } return existing; }
       const email = 'admin@ledgerly.app';
-      const pwHash = await L.hash('admin1234' + '::' + email);
-      const user = { id: L.uid('usr'), name: 'Platform Admin', email, pwHash, createdAt: Date.now(), plan: 'business', role: 'superadmin', suspended: false };
+      const pwSalt = L.randomSalt();
+      const pwHash = await L.pbkdf2('admin1234', pwSalt, L.PBKDF2_ITER);
+      const user = { id: L.uid('usr'), name: 'Platform Admin', email, pwHash, pwSalt, pwIter: L.PBKDF2_ITER, pwVer: 2, createdAt: Date.now(), plan: 'business', role: 'superadmin', suspended: false };
       await DB.put('users', user);
       return user;
     },
