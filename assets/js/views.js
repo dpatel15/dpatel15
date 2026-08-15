@@ -21,28 +21,37 @@
     return c;
   }
 
-  function statCard({ icon, iconBg, label, value, delta, deltaKind }) {
+  function statCard({ icon, iconBg, iconColor, label, value, delta, deltaKind }) {
     const s = el('div', { class: 'stat' });
     s.innerHTML = `
-      <div class="stat__ic" style="background:${iconBg || 'var(--accent-soft)'};">${icon}</div>
+      <div class="stat__ic" style="background:${iconBg || 'var(--accent-soft)'};color:${iconColor || 'var(--accent)'}">${L.icon(icon || 'chart', { size: 19 })}</div>
       <div class="stat__label">${L.escape(label)}</div>
       <div class="stat__value tabular">${value}</div>
       ${delta != null ? `<div class="stat__delta stat__delta--${deltaKind || 'up'}">${delta}</div>` : ''}
     `;
     return s;
   }
+  // Tinted semantic palettes for stat/badge icons.
+  const TINT = {
+    red: { bg: 'rgba(180,35,24,.10)', fg: 'var(--expense)' },
+    green: { bg: 'rgba(6,118,71,.10)', fg: 'var(--income)' },
+    blue: { bg: 'var(--accent-soft)', fg: 'var(--accent)' },
+    teal: { bg: 'rgba(16,117,105,.10)', fg: '#107569' },
+    violet: { bg: 'rgba(105,56,239,.10)', fg: '#6938EF' },
+    slate: { bg: 'var(--hover)', fg: 'var(--ink-2)' },
+  };
 
   function txnRow(t, catMap, onClick) {
-    const c = catMap.get(t.categoryId) || { icon: '❓', color: '#94A3B8', name: 'Uncategorized' };
+    const c = catMap.get(t.categoryId) || { icon: 'tag', color: '#98A2B3', name: 'Uncategorized' };
     const row = el('div', { class: 'txn-row' });
     row.innerHTML = `
-      <div class="txn-ic" style="background:${hexA(c.color, 0.14)};color:${c.color}">${c.icon}</div>
+      <div class="txn-ic" style="background:${hexA(c.color, 0.14)};color:${c.color}">${L.catGlyph(c.icon)}</div>
       <div class="txn-main">
         <div class="txn-vendor">${L.escape(t.vendor || c.name)}</div>
         <div class="txn-meta">
           <span>${L.escape(c.name)}</span><span class="txn-dot"></span>
           <span>${L.escape(t.method || '')}</span>
-          ${t.receiptId ? '<span class="txn-dot"></span><span title="Has receipt">🧾</span>' : ''}
+          ${t.receiptId ? '<span class="txn-dot"></span><span title="Has receipt" style="display:inline-flex;vertical-align:-2px">' + L.icon('receipt', { size: 13 }) + '</span>' : ''}
           ${t.tags && t.tags.length ? '<span class="txn-dot"></span><span>' + t.tags.map((x) => '#' + L.escape(x)).join(' ') + '</span>' : ''}
         </div>
       </div>
@@ -62,7 +71,7 @@
 
   function emptyState(icon, title, msg, actionLabel, onAction) {
     const e = el('div', { class: 'empty' });
-    e.innerHTML = `<div class="empty__ic">${icon}</div><div class="empty__title">${L.escape(title)}</div><div>${L.escape(msg)}</div>`;
+    e.innerHTML = `<div class="empty__ic">${L.icon(icon, { size: 34 })}</div><div class="empty__title">${L.escape(title)}</div><div>${L.escape(msg)}</div>`;
     if (actionLabel) {
       const b = el('button', { class: 'btn btn--primary', text: actionLabel, style: 'margin-top:16px' });
       b.onclick = onAction; e.appendChild(b);
@@ -94,20 +103,20 @@
 
       const stats = el('div', { class: 'stats' });
       stats.appendChild(statCard({
-        icon: '💸', iconBg: hexA('#FF385C', .12), label: 'Total expenses', value: L.money(snap.totalExpense, cur()),
+        icon: 'receipt', iconBg: TINT.red.bg, iconColor: TINT.red.fg, label: 'Total expenses', value: L.money(snap.totalExpense, cur()),
         delta: deltaLabel(expDelta, true), deltaKind: expDelta > 0 ? 'down' : 'up',
       }));
       stats.appendChild(statCard({
-        icon: '💰', iconBg: hexA('#16A34A', .14), label: 'Total income', value: L.money(snap.totalIncome, cur()),
+        icon: 'trendingUp', iconBg: TINT.green.bg, iconColor: TINT.green.fg, label: 'Total income', value: L.money(snap.totalIncome, cur()),
         delta: deltaLabel(incDelta, false), deltaKind: incDelta >= 0 ? 'up' : 'down',
       }));
       stats.appendChild(statCard({
-        icon: snap.net >= 0 ? '📈' : '📉', iconBg: hexA(snap.net >= 0 ? '#16A34A' : '#DC2626', .12),
+        icon: 'dollar', iconBg: snap.net >= 0 ? TINT.green.bg : TINT.red.bg, iconColor: snap.net >= 0 ? TINT.green.fg : TINT.red.fg,
         label: 'Net profit', value: L.money(snap.net, cur()),
         delta: snap.net >= 0 ? 'Positive cash flow' : 'Spending exceeds income', deltaKind: snap.net >= 0 ? 'up' : 'down',
       }));
       stats.appendChild(statCard({
-        icon: '🧾', iconBg: hexA('#7C3AED', .12), label: 'Tax deductible', value: L.money(snap.deductible, cur()),
+        icon: 'percent', iconBg: TINT.blue.bg, iconColor: TINT.blue.fg, label: 'Tax deductible', value: L.money(snap.deductible, cur()),
         delta: `${snap.expenseCount} expenses tracked`, deltaKind: 'neutral',
       }));
       wrap.appendChild(stats);
@@ -143,14 +152,14 @@
       if (donutData.length) {
         donutHolder.appendChild(C.donut(donutData, { centerTop: L.moneyShort(snap.totalExpense, cur()), centerBottom: 'spent' }));
       } else {
-        donutHolder.appendChild(emptyState('🍩', 'No expenses yet', 'Add your first expense to see the breakdown.'));
+        donutHolder.appendChild(emptyState('chart', 'No expenses yet', 'Add your first expense to see the breakdown.'));
       }
       const legend = el('div', { class: 'legend' });
       snap.byCat.slice(0, 7).forEach((c) => {
         const pct = snap.totalExpense ? Math.round((c.total / snap.totalExpense) * 100) : 0;
         const item = el('div', { class: 'legend__item' });
         item.innerHTML = `<span class="legend__swatch" style="background:${c.color}"></span>
-          <span class="legend__name">${c.icon} ${L.escape(c.name)}</span>
+          <span class="legend__name">${L.escape(c.name)}</span>
           <span class="legend__val tabular">${L.money(c.total, cur())}</span>
           <span class="legend__pct">${pct}%</span>`;
         item.onclick = () => ctx.navigate('transactions?cat=' + c.id);
@@ -166,7 +175,7 @@
         viewAll.onclick = () => ctx.navigate('budgets');
         budgetBody.appendChild(viewAll);
       } else {
-        budgetBody.appendChild(emptyState('🎯', 'No budgets set', 'Set spending limits to stay on track.', 'Create a budget', () => M.budget(null, ctx.refresh)));
+        budgetBody.appendChild(emptyState('target', 'No budgets set', 'Set spending limits to stay on track.', 'Create a budget', () => M.budget(null, ctx.refresh)));
       }
       right.appendChild(card('Budgets', 'This month', [budgetBody]));
 
@@ -182,9 +191,9 @@
           if (i < recent.length - 1) recentBody.appendChild(el('div', { class: 'list-divider' }));
         });
       } else {
-        recentBody.appendChild(emptyState('📭', 'No transactions in this period', 'Try a different date range or add one.'));
+        recentBody.appendChild(emptyState('inbox', 'No transactions in this period', 'Try a different date range or add one.'));
       }
-      const seeAll = el('button', { class: 'btn btn--ghost btn--sm', text: 'View all →' });
+      const seeAll = el('button', { class: 'btn btn--ghost btn--sm', text: 'View all' });
       seeAll.onclick = () => ctx.navigate('transactions');
       wrap.appendChild(el('div', { style: 'margin-top:16px' }, [card('Recent activity', null, [recentBody], seeAll)]));
 
@@ -203,7 +212,7 @@
       // Filter bar
       const bar = el('div', { class: 'filterbar' });
       const search = el('div', { class: 'search-input' });
-      search.innerHTML = `<span class="si">🔍</span>`;
+      search.innerHTML = `<span class="si">${L.icon('search',{size:16})}</span>`;
       const searchInput = el('input', { class: 'input', placeholder: 'Search vendor, note, tag, amount…' });
       search.appendChild(searchInput);
       bar.appendChild(search);
@@ -212,13 +221,13 @@
       [['all','All types'],['expense','Expenses'],['income','Income']].forEach(([v,t]) => typeSel.appendChild(el('option', { value: v, text: t })));
       const catSel = el('select', { class: 'select' });
       catSel.appendChild(el('option', { value: 'all', text: 'All categories' }));
-      cats.forEach((c) => { const o = el('option', { value: c.id, text: `${c.icon} ${c.name}` }); if (c.id === state.cat) o.selected = true; catSel.appendChild(o); });
+      cats.forEach((c) => { const o = el('option', { value: c.id, text: c.name }); if (c.id === state.cat) o.selected = true; catSel.appendChild(o); });
       const acctSel = el('select', { class: 'select' });
       acctSel.appendChild(el('option', { value: 'all', text: 'All accounts' }));
-      accts.forEach((a) => acctSel.appendChild(el('option', { value: a.id, text: `${a.icon} ${a.name}` })));
+      accts.forEach((a) => acctSel.appendChild(el('option', { value: a.id, text: a.name })));
       bar.appendChild(typeSel); bar.appendChild(catSel); bar.appendChild(acctSel);
 
-      const exportBtn = el('button', { class: 'btn btn--ghost btn--sm', html: '⬇ Export CSV', style: 'margin-left:auto' });
+      const exportBtn = el('button', { class: 'btn btn--ghost btn--sm', html: L.icon('download',{size:15}) + ' Export CSV', style: 'margin-left:auto' });
       const addBtn = el('button', { class: 'btn btn--primary btn--sm', html: '＋ Add' });
       bar.appendChild(exportBtn); bar.appendChild(addBtn);
       wrap.appendChild(bar);
@@ -258,7 +267,7 @@
 
       function renderList(list) {
         listBody.innerHTML = '';
-        if (!list.length) { listBody.appendChild(emptyState('🔍', 'No matching transactions', 'Try adjusting your filters.')); return; }
+        if (!list.length) { listBody.appendChild(emptyState('search', 'No matching transactions', 'Try adjusting your filters.')); return; }
         // group by day
         const groups = L.groupBy(list, (t) => t.date);
         for (const [date, items] of groups) {
@@ -285,25 +294,25 @@
 
       const bar = el('div', { class: 'filterbar' });
       bar.appendChild(rangeSelect(ctx));
-      const printBtn = el('button', { class: 'btn btn--ghost btn--sm', html: '🖨 Print / PDF', style: 'margin-left:auto' });
-      const csvBtn = el('button', { class: 'btn btn--ghost btn--sm', html: '⬇ Category CSV' });
-      const taxBtn = el('button', { class: 'btn btn--primary btn--sm', html: '🧾 Tax report' });
+      const printBtn = el('button', { class: 'btn btn--ghost btn--sm', html: L.icon('printer',{size:15}) + ' Print', style: 'margin-left:auto' });
+      const csvBtn = el('button', { class: 'btn btn--ghost btn--sm', html: L.icon('download',{size:15}) + ' Category CSV' });
+      const taxBtn = el('button', { class: 'btn btn--primary btn--sm', html: L.icon('receipt',{size:15}) + ' Tax report' });
       bar.appendChild(csvBtn); bar.appendChild(printBtn); bar.appendChild(taxBtn);
       wrap.appendChild(bar);
 
       // headline
       const stats = el('div', { class: 'stats' });
-      stats.appendChild(statCard({ icon: '💸', iconBg: hexA('#FF385C', .12), label: 'Expenses', value: L.money(snap.totalExpense, cur()) }));
-      stats.appendChild(statCard({ icon: '💰', iconBg: hexA('#16A34A', .14), label: 'Income', value: L.money(snap.totalIncome, cur()) }));
-      stats.appendChild(statCard({ icon: '📊', iconBg: hexA('#7C3AED', .12), label: 'Net', value: L.money(snap.net, cur()) }));
-      stats.appendChild(statCard({ icon: '🧾', iconBg: hexA('#0891B2', .12), label: 'Deductible', value: L.money(snap.deductible, cur()) }));
+      stats.appendChild(statCard({ icon: 'receipt', iconBg: TINT.red.bg, iconColor: TINT.red.fg, label: 'Expenses', value: L.money(snap.totalExpense, cur()) }));
+      stats.appendChild(statCard({ icon: 'trendingUp', iconBg: TINT.green.bg, iconColor: TINT.green.fg, label: 'Income', value: L.money(snap.totalIncome, cur()) }));
+      stats.appendChild(statCard({ icon: 'chart', iconBg: TINT.blue.bg, iconColor: TINT.blue.fg, label: 'Net', value: L.money(snap.net, cur()) }));
+      stats.appendChild(statCard({ icon: 'percent', iconBg: TINT.teal.bg, iconColor: TINT.teal.fg, label: 'Deductible', value: L.money(snap.deductible, cur()) }));
       wrap.appendChild(stats);
 
       const two = el('div', { class: 'two-col', style: 'margin-top:16px' });
       // category breakdown table
       const tbl = el('div', { class: 'tbl-wrap' });
       let rows = snap.byCat.map((c) => `<tr>
-        <td><span class="row"><span class="txn-ic" style="width:30px;height:30px;font-size:15px;background:${hexA(c.color,.14)};color:${c.color}">${c.icon}</span> ${L.escape(c.name)}</span></td>
+        <td><span class="row"><span class="txn-ic" style="width:30px;height:30px;font-size:15px;background:${hexA(c.color,.14)};color:${c.color}">${L.catGlyph(c.icon,16)}</span> ${L.escape(c.name)}</span></td>
         <td class="num">${c.count}</td>
         <td class="num">${L.money(c.total, cur())}</td>
         <td class="num">${snap.totalExpense ? Math.round(c.total / snap.totalExpense * 100) : 0}%</td>
@@ -331,7 +340,7 @@
         if (ctx.ent && !ctx.ent.can('taxReports')) { L.toast('Tax reports are a Pro feature', 'error'); return ctx.navigate('billing'); }
         Views._taxReport(ctx, snap);
       };
-      if (ctx.ent && !ctx.ent.can('taxReports')) taxBtn.innerHTML = '🔒 Tax report';
+      if (ctx.ent && !ctx.ent.can('taxReports')) taxBtn.innerHTML = L.icon('lock',{size:15}) + ' Tax report';
       return wrap;
     },
 
@@ -345,12 +354,12 @@
       let rows = '';
       for (const [cid, items] of byCat) {
         const c = snap.catMap.get(cid);
-        rows += `<tr><td>${c ? c.icon + ' ' + L.escape(c.name) : '—'}</td><td class="num">${items.length}</td><td class="num">${L.money(L.sum(items, (t) => S.baseAmount(t)), cur())}</td></tr>`;
+        rows += `<tr><td>${c ? L.escape(c.name) : '—'}</td><td class="num">${items.length}</td><td class="num">${L.money(L.sum(items, (t) => S.baseAmount(t)), cur())}</td></tr>`;
       }
       const tbl = el('div', { class: 'tbl-wrap' });
       tbl.innerHTML = `<table class="tbl"><thead><tr><th>Category</th><th class="num">Items</th><th class="num">Deductible</th></tr></thead><tbody>${rows || '<tr><td colspan=3 class=muted style="text-align:center">None flagged deductible</td></tr>'}</tbody></table>`;
       body.appendChild(tbl);
-      const dl = el('button', { class: 'btn btn--primary btn--block', text: '⬇ Download detailed CSV', style: 'margin-top:16px' });
+      const dl = el('button', { class: 'btn btn--primary btn--block', text: 'Download detailed CSV', style: 'margin-top:16px' });
       dl.onclick = () => {
         const rows = deductibleTxns.map((t) => { const c = snap.catMap.get(t.categoryId); return [t.date, t.vendor, c ? c.name : '', t.method, S.baseAmount(t).toFixed(2)]; });
         L.download(`tax-deductible-${ctx.range.from}_${ctx.range.to}.csv`, L.toCSV(rows, ['Date', 'Vendor', 'Category', 'Method', 'Amount ' + cur()]), 'text/csv');
@@ -369,7 +378,7 @@
 
       const body = el('div', {});
       if (!snap.budgetStatus.length) {
-        body.appendChild(emptyState('🎯', 'No budgets yet', 'Set monthly limits per category to control spending and get alerts.', 'Create your first budget', () => M.budget(null, ctx.refresh)));
+        body.appendChild(emptyState('target', 'No budgets yet', 'Set monthly limits per category to control spending and get alerts.', 'Create your first budget', () => M.budget(null, ctx.refresh)));
       } else {
         const totalBudget = L.sum(snap.budgetStatus, (b) => b.amount);
         const totalSpent = L.sum(snap.budgetStatus, (b) => b.spent);
@@ -401,15 +410,15 @@
       add.onclick = () => M.recurring(null, ctx.refresh);
       const body = el('div', {});
       if (!recs.length) {
-        body.appendChild(emptyState('🔁', 'No recurring transactions', 'Automate rent, subscriptions, payroll and more. They post automatically when due.', 'Add recurring', () => M.recurring(null, ctx.refresh)));
+        body.appendChild(emptyState('repeat', 'No recurring transactions', 'Automate rent, subscriptions, payroll and more. They post automatically when due.', 'Add recurring', () => M.recurring(null, ctx.refresh)));
       } else {
         recs.sort((a, b) => a.nextDate.localeCompare(b.nextDate));
         recs.forEach((r, i) => {
-          const c = catMap.get(r.categoryId) || { icon: '🔁', color: '#94A3B8', name: '—' };
+          const c = catMap.get(r.categoryId) || { icon: 'repeat', color: '#98A2B3', name: '—' };
           const row = el('div', { class: 'txn-row' });
           const due = r.nextDate <= L.today();
           row.innerHTML = `
-            <div class="txn-ic" style="background:${hexA(c.color,.14)};color:${c.color}">${c.icon}</div>
+            <div class="txn-ic" style="background:${hexA(c.color,.14)};color:${c.color}">${L.catGlyph(c.icon)}</div>
             <div class="txn-main">
               <div class="txn-vendor">${L.escape(r.vendor || c.name)}</div>
               <div class="txn-meta"><span class="chip chip--sm">${L.titleCase(r.frequency)}</span><span class="txn-dot"></span><span>Next: ${L.fmtDate(r.nextDate)}</span>${due ? '<span class="chip chip--sm chip--accent">Due</span>' : ''}${!r.active ? '<span class="chip chip--sm">Paused</span>' : ''}</div>
@@ -436,7 +445,7 @@
         const body = el('div', { style: 'display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px' });
         list.forEach((c) => {
           const tile = el('div', { class: 'card', style: 'padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer' });
-          tile.innerHTML = `<div class="txn-ic" style="background:${hexA(c.color,.14)};color:${c.color}">${c.icon}</div>
+          tile.innerHTML = `<div class="txn-ic" style="background:${hexA(c.color,.14)};color:${c.color}">${L.catGlyph(c.icon)}</div>
             <div style="flex:1;min-width:0"><div style="font-weight:650">${L.escape(c.name)}</div>${c.deductible ? '<div class="hint" style="margin:0">Deductible</div>' : ''}</div>`;
           tile.onclick = () => M.category(c, ctx.refresh);
           body.appendChild(tile);
@@ -467,7 +476,7 @@
         const tile = el('div', { class: 'card card--pad', style: 'cursor:pointer' });
         tile.innerHTML = `
           <div class="row" style="justify-content:space-between">
-            <div class="txn-ic" style="background:${hexA(a.color || '#FF385C',.14)};color:${a.color || '#FF385C'}">${a.icon}</div>
+            <div class="txn-ic" style="background:${hexA(a.color || '#2563EB',.12)};color:${a.color || '#2563EB'}">${L.catGlyph(a.icon)}</div>
             <span class="chip chip--sm">${L.titleCase(a.type)}</span>
           </div>
           <div style="font-weight:700;margin-top:14px">${L.escape(a.name)}</div>
@@ -523,9 +532,9 @@
 
       // Data management
       const dataBody = el('div', { class: 'row wrap', style: 'gap:10px' });
-      const backup = el('button', { class: 'btn btn--ghost btn--sm', html: '⬇ Export backup (JSON)' });
+      const backup = el('button', { class: 'btn btn--ghost btn--sm', html: L.icon('download',{size:15}) + ' Export backup' });
       backup.onclick = async () => { const data = await S.exportAll(); L.download(`ledgerly-backup-${L.today()}.json`, JSON.stringify(data, null, 2), 'application/json'); L.toast('Backup downloaded'); };
-      const restore = el('button', { class: 'btn btn--ghost btn--sm', html: '⬆ Import backup' });
+      const restore = el('button', { class: 'btn btn--ghost btn--sm', html: L.icon('upload',{size:15}) + ' Import backup' });
       const restoreInput = el('input', { type: 'file', accept: '.json,application/json', style: 'display:none' });
       restore.onclick = () => restoreInput.click();
       restoreInput.onchange = () => {
@@ -542,7 +551,7 @@
         };
         r.readAsText(f);
       };
-      const importCsv = el('button', { class: 'btn btn--ghost btn--sm', html: '⬆ Import CSV' });
+      const importCsv = el('button', { class: 'btn btn--ghost btn--sm', html: L.icon('upload',{size:15}) + ' Import CSV' });
       importCsv.onclick = () => Views._importCSV(ctx);
       dataBody.appendChild(backup); dataBody.appendChild(restore); dataBody.appendChild(importCsv); dataBody.appendChild(restoreInput);
       wrap.appendChild(card('Data & backup', 'Your data lives privately in this browser. Back it up regularly.', [dataBody]));
@@ -571,7 +580,7 @@
       const wrap = el('div', { class: 'page-enter' });
       const box = el('div', { class: 'card card--pad', style: 'max-width:620px;margin:24px auto;text-align:center' });
       box.innerHTML = `
-        <div style="font-size:52px">🔒</div>
+        <div style="color:var(--ink-3);display:flex;justify-content:center;margin-bottom:4px">${L.icon('lock',{size:44})}</div>
         <h2 style="font-size:24px;letter-spacing:-.02em;margin:12px 0 6px">${L.escape(label)} is a paid feature</h2>
         <p class="muted" style="max-width:420px;margin:0 auto">Upgrade to unlock ${L.escape(label.toLowerCase())} and everything else in Pro. Your data stays exactly where it is.</p>`;
       const cta = el('button', { class: 'btn btn--primary btn--lg', text: 'View plans & upgrade', style: 'margin-top:22px' });
@@ -595,11 +604,11 @@
       let banner = null;
       if (sub.status === 'trialing' && now < sub.trialEnd) {
         const days = Math.ceil((sub.trialEnd - now) / 86400000);
-        banner = bannerEl('🎁', `You're on the Pro free trial`, `${days} day${days === 1 ? '' : 's'} left. Add a plan any time to keep Pro features after your trial.`, '#EDE9FE', '#7C3AED');
+        banner = bannerEl('gift', `You're on the Pro free trial`, `${days} day${days === 1 ? '' : 's'} left. Add a plan any time to keep Pro features after your trial.`, '#EDE9FE', '#7C3AED');
       } else if (sub.status === 'trialing') {
         banner = bannerEl('⏰', 'Your trial has ended', 'You\'re now on the free Starter plan. Upgrade to restore Pro features.', '#FEF3C7', '#D97706');
       } else if (sub.cancelAtPeriodEnd || sub.status === 'canceled') {
-        banner = bannerEl('⚠️', 'Subscription canceled', `You keep access until ${new Date(sub.currentPeriodEnd).toLocaleDateString()}.`, '#FEE2E2', '#DC2626');
+        banner = bannerEl('alert', 'Subscription canceled', `You keep access until ${new Date(sub.currentPeriodEnd).toLocaleDateString()}.`, '#FEE2E2', '#DC2626');
       }
       if (banner) wrap.appendChild(banner);
 
@@ -699,7 +708,7 @@
       if (!methods.length) pmCard.appendChild(el('div', { class: 'muted', text: 'No card on file.', style: 'font-size:14px' }));
       methods.forEach((m) => {
         const r = el('div', { class: 'row', style: 'justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)' });
-        r.innerHTML = `<div class="row" style="gap:10px"><span style="font-size:22px">💳</span><div><div style="font-weight:650">${m.brand} •••• ${m.last4}</div><div class="hint" style="margin:0">${m.exp ? 'Expires ' + m.exp : ''}${m.isDefault ? ' · Default' : ''}</div></div></div>`;
+        r.innerHTML = `<div class="row" style="gap:10px"><span style="color:var(--ink-2);display:inline-flex">${L.icon('card',{size:20})}</span><div><div style="font-weight:650">${m.brand} •••• ${m.last4}</div><div class="hint" style="margin:0">${m.exp ? 'Expires ' + m.exp : ''}${m.isDefault ? ' · Default' : ''}</div></div></div>`;
         const rm = el('button', { class: 'btn btn--danger btn--sm', text: 'Remove' });
         rm.onclick = async () => { await B.removePaymentMethod(m.id); L.toast('Card removed'); ctx.refresh(); };
         r.appendChild(rm); pmCard.appendChild(r);
@@ -750,7 +759,7 @@
       body.appendChild(row);
       const err = el('div', { class: 'field-err', style: 'display:none' });
       body.appendChild(err);
-      body.appendChild(el('div', { class: 'hint', html: '🔒 Demo checkout — use <strong>4242 4242 4242 4242</strong>. No real charge is made. Ready to connect Stripe.', style: 'text-align:center;margin-top:12px' }));
+      body.appendChild(el('div', { class: 'hint', html: 'Demo checkout — use <strong>4242 4242 4242 4242</strong>. No real charge is made. Ready to connect Stripe.', style: 'text-align:center;margin-top:12px' }));
 
       const foot = el('div', { class: 'modal__foot' });
       const cancel = el('button', { class: 'btn btn--ghost', text: 'Cancel' });
@@ -776,8 +785,8 @@
       const B = L.Billing;
       const body = el('div', { style: 'text-align:center;padding:8px 0' });
       body.innerHTML = `
-        <div style="width:64px;height:64px;border-radius:50%;background:var(--income-soft);color:var(--income);font-size:32px;display:grid;place-items:center;margin:6px auto 16px">✓</div>
-        <h3 style="margin:0 0 6px;font-size:20px">You're on ${B.PLANS[planId].name}! 🎉</h3>
+        <div style="width:64px;height:64px;border-radius:50%;background:var(--income-soft);color:var(--income);font-size:32px;display:grid;place-items:center;margin:6px auto 16px">${L.icon('check',{size:30})}</div>
+        <h3 style="margin:0 0 6px;font-size:20px">You're on ${B.PLANS[planId].name}!</h3>
         <p class="muted" style="margin:0 0 8px">All ${B.PLANS[planId].name} features are unlocked.${invoice ? ' Invoice ' + invoice.number + ' has been added to your billing history.' : ''}</p>`;
       const done = el('button', { class: 'btn btn--primary btn--block', text: 'Done', style: 'margin-top:16px' });
       const { close } = simpleModal('Payment successful', body);
@@ -825,7 +834,7 @@
           <tr><td class="muted">Status</td><td class="num">${L.titleCase(inv.status)}</td></tr>
           <tr><td style="font-weight:800">Total</td><td class="num" style="font-weight:800;font-size:16px">${L.money(inv.amount, 'USD')}</td></tr>
         </table></div>`;
-      const dl = el('button', { class: 'btn btn--primary btn--block', text: '⬇ Download CSV', style: 'margin-top:16px' });
+      const dl = el('button', { class: 'btn btn--primary btn--block', text: 'Download CSV', style: 'margin-top:16px' });
       dl.onclick = () => L.download(`${inv.number}.csv`, L.toCSV([[inv.number, new Date(inv.createdAt).toISOString(), inv.description, inv.amount.toFixed(2), inv.status]], ['Invoice', 'Date', 'Description', 'Amount USD', 'Status']), 'text/csv');
       body.appendChild(dl);
       simpleModal('Invoice ' + inv.number, body);
@@ -848,7 +857,7 @@
           <div class="txn-main"><div class="txn-vendor">${L.escape(m.name)}</div><div class="txn-meta"><span>${L.escape(m.email)}</span></div></div>
           <div class="row" style="gap:8px"><span class="chip chip--sm">${L.titleCase(m.role)}</span>${m.status === 'invited' ? '<span class="chip chip--sm chip--accent">Invited</span>' : ''}</div>`;
         if (m.role !== 'owner') {
-          const rm = el('button', { class: 'iconbtn', html: '🗑', style: 'width:34px;height:34px;margin-left:8px' });
+          const rm = el('button', { class: 'iconbtn', html: L.icon('trash',{size:16}), style: 'width:34px;height:34px;margin-left:8px' });
           rm.onclick = async () => { const ok = await M.confirm({ title: 'Remove member?', message: `Remove ${m.name} from this workspace?`, confirmText: 'Remove', danger: true }); if (!ok) return; await S.removeMember(m.id); L.toast('Member removed'); ctx.refresh(); };
           row.appendChild(rm);
         }
@@ -931,7 +940,7 @@
     const color = over ? 'var(--danger)' : b.pct > 0.85 ? 'var(--warn)' : 'var(--income)';
     item.innerHTML = `
       <div class="budget-top">
-        <span class="budget-name">${b.icon} ${L.escape(b.name)}</span>
+        <span class="budget-name"><span style="color:${b.color};display:inline-flex">${L.catGlyph(b.icon, 16)}</span> ${L.escape(b.name)}</span>
         <span class="tabular" style="font-size:${big ? '14px' : '13px'};font-weight:700">${L.money(b.spent, cur())} <span class="muted" style="font-weight:500">/ ${L.money(b.amount, cur())}</span></span>
       </div>
       <div class="progress"><div class="progress__bar" style="width:${Math.min(100, pct * 100)}%;background:${color}"></div></div>
@@ -970,8 +979,8 @@
     return f;
   }
   function bannerEl(icon, title, msg, bg, color) {
-    const b = el('div', { class: 'card', style: `padding:16px 18px;display:flex;gap:14px;align-items:center;background:${bg};border-color:${color}33` });
-    b.innerHTML = `<div style="font-size:26px">${icon}</div><div><div style="font-weight:750;color:${color}">${L.escape(title)}</div><div style="font-size:13.5px;color:var(--ink-2)">${L.escape(msg)}</div></div>`;
+    const b = el('div', { class: 'card', style: `padding:14px 16px;display:flex;gap:13px;align-items:center;background:${bg};border-color:${color}33` });
+    b.innerHTML = `<span style="color:${color};display:inline-flex;flex:none">${L.icon(icon, { size: 22 })}</span><div><div style="font-weight:650;color:${color}">${L.escape(title)}</div><div style="font-size:13.5px;color:var(--ink-2)">${L.escape(msg)}</div></div>`;
     return b;
   }
   function meter(label, used, limit, limitLabel) {

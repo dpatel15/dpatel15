@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Ledgerly — Expense management, beautifully simple</title>
 <meta name="description" content="Ledgerly is the beautifully simple way to track business expenses, capture receipts, set budgets and export tax-ready reports. Free to start." />
-<meta name="theme-color" content="#FF385C" />
+<meta name="theme-color" content="#FFFFFF" />
 <meta property="og:title" content="Ledgerly — Expense management, beautifully simple" />
 <meta property="og:description" content="Track expenses, capture receipts, set budgets and export tax-ready reports." />
 <meta property="og:type" content="website" />
@@ -13,6 +13,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png" />
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="stylesheet" href="assets/css/landing.css" />
+<script src="assets/js/icons.js"></script>
 </head>
 <body>
 
@@ -27,11 +28,11 @@
       <a href="#faq">FAQ</a>
     </nav>
     <div class="nav__right">
-      <button class="iconbtn" id="themeBtn" aria-label="Toggle theme">🌙</button>
+      <button class="iconbtn" id="themeBtn" aria-label="Toggle theme"></button>
       <a class="btn btn--ghost" href="app/#login">Log in</a>
       <a class="btn btn--primary" href="app/#signup">Get started free</a>
     </div>
-    <button class="iconbtn nav__toggle" id="navToggle" aria-label="Menu">☰</button>
+    <button class="iconbtn nav__toggle" id="navToggle" aria-label="Menu" data-ic="menu"></button>
   </div>
 </header>
 
@@ -41,7 +42,7 @@
 <section class="hero">
   <div class="hero__glow"></div>
   <div class="container hero__in">
-    <span class="badge">✨ Now with automated recurring expenses</span>
+    <span class="badge">New · Automated recurring expenses</span>
     <h1>Expense management, <span class="grad">beautifully simple</span>.</h1>
     <p class="sub">Track every dollar, snap receipts, set budgets and know exactly where your business stands — all in one gorgeous workspace you'll actually enjoy using.</p>
     <div class="hero__cta">
@@ -65,12 +66,12 @@
       <div class="mockup__body">
         <div class="mockup__side">
           <div class="logo" style="font-size:15px;padding:4px 8px 14px"><span class="logo__mark" style="width:24px;height:24px;font-size:13px">L</span>Ledgerly</div>
-          <div class="mockup__navitem on">🏠 Dashboard</div>
-          <div class="mockup__navitem">🧾 Transactions</div>
-          <div class="mockup__navitem">📊 Reports</div>
-          <div class="mockup__navitem">🎯 Budgets</div>
-          <div class="mockup__navitem">🔁 Recurring</div>
-          <div class="mockup__navitem">🏦 Accounts</div>
+          <div class="mockup__navitem on"><span data-ic="dashboard"></span> Dashboard</div>
+          <div class="mockup__navitem"><span data-ic="receipt"></span> Transactions</div>
+          <div class="mockup__navitem"><span data-ic="chart"></span> Reports</div>
+          <div class="mockup__navitem"><span data-ic="target"></span> Budgets</div>
+          <div class="mockup__navitem"><span data-ic="repeat"></span> Recurring</div>
+          <div class="mockup__navitem"><span data-ic="wallet"></span> Accounts</div>
         </div>
         <div class="mockup__main">
           <div class="mk-stats">
@@ -121,15 +122,15 @@
       <p>From the first receipt to the year-end tax report, Ledgerly handles it all — without the spreadsheet gymnastics.</p>
     </div>
     <div class="features">
-      <div class="feature"><div class="feature__ic" style="background:#FFE8EC;color:#FF385C">🧾</div><h3>Effortless expense tracking</h3><p>Log expenses and income in seconds with smart categories, vendors, payment methods and tags.</p></div>
-      <div class="feature"><div class="feature__ic" style="background:#EDE9FE;color:#7C3AED">📸</div><h3>Receipt capture</h3><p>Snap a photo and attach it to any transaction. Receipts are stored privately, right on your device.</p></div>
-      <div class="feature"><div class="feature__ic" style="background:#DBEAFE;color:#0EA5E9">📊</div><h3>Real-time dashboards</h3><p>Beautiful charts show spending trends, category breakdowns and income vs. expenses at a glance.</p></div>
-      <div class="feature"><div class="feature__ic" style="background:#DCFCE7;color:#16A34A">🎯</div><h3>Budgets & alerts</h3><p>Set monthly limits per category and watch progress bars keep you honest before you overspend.</p></div>
-      <div class="feature"><div class="feature__ic" style="background:#FEF3C7;color:#D97706">🔁</div><h3>Recurring automation</h3><p>Rent, subscriptions and payroll post themselves automatically — set it once and forget it.</p></div>
-      <div class="feature"><div class="feature__ic" style="background:#CFFAFE;color:#0891B2">🧮</div><h3>Tax-ready reports</h3><p>Flag deductibles, filter by any date range and export clean CSVs or print-perfect PDFs.</p></div>
-      <div class="feature"><div class="feature__ic" style="background:#F3E8FF;color:#8B5CF6">🌐</div><h3>Multi-currency</h3><p>Record expenses in 15+ currencies and see everything normalized to your base currency.</p></div>
-      <div class="feature"><div class="feature__ic" style="background:#FEE2E2;color:#EF4444">🏢</div><h3>Multiple workspaces</h3><p>Run several businesses side by side, each with its own accounts, categories and reports.</p></div>
-      <div class="feature"><div class="feature__ic" style="background:#E0E7FF;color:#6366F1">📱</div><h3>Works offline (PWA)</h3><p>Install Ledgerly like a native app. It works fully offline and syncs the moment you're back.</p></div>
+      <div class="feature"><div class="feature__ic" data-ic="receipt"></div><h3>Effortless expense tracking</h3><p>Log expenses and income in seconds with smart categories, vendors, payment methods and tags.</p></div>
+      <div class="feature"><div class="feature__ic" data-ic="camera"></div><h3>Receipt capture</h3><p>Snap a photo and attach it to any transaction. Receipts are stored privately, right on your device.</p></div>
+      <div class="feature"><div class="feature__ic" data-ic="chart"></div><h3>Real-time dashboards</h3><p>Beautiful charts show spending trends, category breakdowns and income vs. expenses at a glance.</p></div>
+      <div class="feature"><div class="feature__ic" data-ic="target"></div><h3>Budgets & alerts</h3><p>Set monthly limits per category and watch progress bars keep you honest before you overspend.</p></div>
+      <div class="feature"><div class="feature__ic" data-ic="repeat"></div><h3>Recurring automation</h3><p>Rent, subscriptions and payroll post themselves automatically — set it once and forget it.</p></div>
+      <div class="feature"><div class="feature__ic" data-ic="percent"></div><h3>Tax-ready reports</h3><p>Flag deductibles, filter by any date range and export clean CSVs or print-perfect PDFs.</p></div>
+      <div class="feature"><div class="feature__ic" data-ic="globe"></div><h3>Multi-currency</h3><p>Record expenses in 15+ currencies and see everything normalized to your base currency.</p></div>
+      <div class="feature"><div class="feature__ic" data-ic="building"></div><h3>Multiple workspaces</h3><p>Run several businesses side by side, each with its own accounts, categories and reports.</p></div>
+      <div class="feature"><div class="feature__ic" data-ic="monitor"></div><h3>Works offline (PWA)</h3><p>Install Ledgerly like a native app. It works fully offline and syncs the moment you're back.</p></div>
     </div>
   </div>
 </section>
@@ -144,10 +145,10 @@
           <div style="display:flex;gap:8px;margin-bottom:12px"><span class="btn btn--primary" style="flex:1;padding:8px">Expense</span><span class="btn btn--ghost" style="flex:1;padding:8px">Income</span></div>
           <div style="font-size:34px;font-weight:800;letter-spacing:-.02em">$248.00</div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px">
-            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--accent);border-radius:12px;background:var(--accent-soft)">✈️<div style="font-size:10px;font-weight:600">Travel</div></div>
-            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px">🍽️<div style="font-size:10px;font-weight:600">Meals</div></div>
-            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px">💻<div style="font-size:10px;font-weight:600">Software</div></div>
-            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px">📣<div style="font-size:10px;font-weight:600">Ads</div></div>
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--accent);border-radius:12px;background:var(--accent-soft);color:var(--accent)"><span data-ic="plane"></span><div style="font-size:10px;font-weight:600">Travel</div></div>
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px"><span data-ic="utensils"></span><div style="font-size:10px;font-weight:600">Meals</div></div>
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px"><span data-ic="monitor"></span><div style="font-size:10px;font-weight:600">Software</div></div>
+            <div style="text-align:center;padding:10px 4px;border:1.5px solid var(--line-2);border-radius:12px"><span data-ic="megaphone"></span><div style="font-size:10px;font-weight:600">Ads</div></div>
           </div>
         </div>
       </div>
@@ -318,8 +319,9 @@
 
 <script>
 (function () {
+  try { document.querySelectorAll('[data-ic]').forEach(function(e){ e.innerHTML = L.icon(e.getAttribute('data-ic'), { size: 20 }); }); } catch(_) {}
   // theme
-  function setTheme(t){ document.documentElement.setAttribute('data-theme', t); localStorage.setItem('ledgerly.theme', t); document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙'; document.querySelector('meta[name=theme-color]').setAttribute('content', t==='dark'?'#0E0F12':'#FF385C'); }
+  function setTheme(t){ document.documentElement.setAttribute('data-theme', t); localStorage.setItem('ledgerly.theme', t); document.getElementById('themeBtn').innerHTML = t === 'dark' ? L.icon('sun',{size:18}) : L.icon('moon',{size:18}); document.querySelector('meta[name=theme-color]').setAttribute('content', t==='dark'?'#0B0F17':'#FFFFFF'); }
   var saved = localStorage.getItem('ledgerly.theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   setTheme(saved);
   document.getElementById('themeBtn').onclick = function(){ setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); };
@@ -369,7 +371,7 @@
             '<div class="co__field"><label>CVC</label><input placeholder="123" /></div>'+
           '</div>'+
           '<button class="btn btn--primary btn--lg" style="width:100%;margin-top:6px" id="coPay">Pay '+price+'</button>'+
-          '<div class="co__note">🔒 This is a demo checkout. No card is charged. Connect Stripe to accept real payments.</div>'+
+          '<div class="co__note">This is a demo checkout. No card is charged. Connect Stripe to accept real payments.</div>'+
         '</div>'+
       '</div>';
     document.body.appendChild(overlay);

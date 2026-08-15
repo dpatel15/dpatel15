@@ -13,7 +13,7 @@
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('ledgerly.theme', theme);
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0E0F12' : '#FFFFFF');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0B0F17' : '#F4F6F8');
   };
   (function initTheme() {
     const saved = localStorage.getItem('ledgerly.theme');
@@ -22,18 +22,18 @@
 
   const NAV = [
     { section: 'Overview' },
-    { route: 'dashboard', icon: '🏠', label: 'Dashboard' },
-    { route: 'transactions', icon: '🧾', label: 'Transactions' },
-    { route: 'reports', icon: '📊', label: 'Reports' },
+    { route: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
+    { route: 'transactions', icon: 'receipt', label: 'Transactions' },
+    { route: 'reports', icon: 'chart', label: 'Reports' },
     { section: 'Manage' },
-    { route: 'budgets', icon: '🎯', label: 'Budgets' },
-    { route: 'recurring', icon: '🔁', label: 'Recurring' },
-    { route: 'accounts', icon: '🏦', label: 'Accounts' },
-    { route: 'categories', icon: '🏷️', label: 'Categories' },
-    { route: 'team', icon: '👥', label: 'Team' },
+    { route: 'budgets', icon: 'target', label: 'Budgets' },
+    { route: 'recurring', icon: 'repeat', label: 'Recurring' },
+    { route: 'accounts', icon: 'wallet', label: 'Accounts' },
+    { route: 'categories', icon: 'tag', label: 'Categories' },
+    { route: 'team', icon: 'users', label: 'Team' },
     { section: 'System' },
-    { route: 'billing', icon: '💳', label: 'Billing' },
-    { route: 'settings', icon: '⚙️', label: 'Settings' },
+    { route: 'billing', icon: 'card', label: 'Billing' },
+    { route: 'settings', icon: 'settings', label: 'Settings' },
   ];
 
   // Views that require a plan feature; otherwise a paywall is shown.
@@ -102,7 +102,7 @@
         window.scrollTo(0, 0);
       } catch (e) {
         console.error(e);
-        content.innerHTML = '<div class="empty"><div class="empty__ic">⚠️</div><div class="empty__title">Something went wrong</div><div>' + L.escape(e.message) + '</div></div>';
+        content.innerHTML = '<div class="empty"><div class="empty__ic">' + L.icon('alert', { size: 34 }) + '</div><div class="empty__title">Something went wrong</div><div>' + L.escape(e.message) + '</div></div>';
       }
     },
 
@@ -115,7 +115,7 @@
 
       const sidebar = el('aside', { class: 'sidebar' });
       const brand = el('div', { class: 'brand' });
-      brand.innerHTML = `<div class="brand__logo">L</div><div class="brand__name">Ledgerly</div>`;
+      brand.innerHTML = `<div class="brand__logo">${L.icon('logoBars',{size:18})}</div><div class="brand__name">Ledgerly</div>`;
       sidebar.appendChild(brand);
 
       // workspace switcher
@@ -123,7 +123,7 @@
       const planName = (S._ent && S._ent.plan) ? S._ent.plan.name : 'Starter';
       wsSwitch.innerHTML = `<div class="ws-switch__ava">${L.escape(L.initials(S.workspace.name))}</div>
         <div style="flex:1;min-width:0"><div class="ws-switch__name">${L.escape(S.workspace.name)}</div><div class="ws-switch__meta">${S.workspace.currency} · ${L.escape(planName)} plan</div></div>
-        <span class="muted">⌄</span>`;
+        <span class="muted" style="display:inline-flex">${L.icon('chevronDown',{size:14})}</span>`;
       wsSwitch.onclick = (e) => this.workspaceMenu(wsSwitch);
       sidebar.appendChild(wsSwitch);
 
@@ -132,7 +132,7 @@
       NAV.forEach((item) => {
         if (item.section) { nav.appendChild(el('div', { class: 'nav__section', text: item.section })); return; }
         const n = el('div', { class: 'nav__item', 'data-route': item.route });
-        n.innerHTML = `<span class="ic">${item.icon}</span><span>${item.label}</span>`;
+        n.innerHTML = `<span class="ic">${L.icon(item.icon,{size:18})}</span><span>${item.label}</span>`;
         n.onclick = () => this.navigate(item.route);
         nav.appendChild(n);
       });
@@ -140,7 +140,7 @@
       sidebar.appendChild(el('div', { class: 'nav__spacer' }));
 
       // add button
-      const addBtn = el('button', { class: 'btn btn--primary btn--block', html: '＋ Add transaction', style: 'margin:8px 0' });
+      const addBtn = el('button', { class: 'btn btn--primary btn--block', html: L.icon('plus',{size:16}) + ' Add transaction', style: 'margin:8px 0' });
       addBtn.onclick = () => M.transaction(null, () => this.render());
       sidebar.appendChild(addBtn);
 
@@ -154,22 +154,22 @@
       // main
       const main = el('main', { class: 'main' });
       const topbar = el('div', { class: 'topbar' });
-      const ham = el('button', { class: 'iconbtn hamburger', html: '☰' });
+      const ham = el('button', { class: 'iconbtn hamburger', html: L.icon('menu') });
       ham.onclick = () => { sidebar.classList.add('is-open'); scrim.classList.add('is-open'); };
       const titleBox = el('div', {});
       titleBox.innerHTML = `<div class="topbar__title" id="pageTitle">Dashboard</div><div class="topbar__sub" id="pageSub"></div>`;
       topbar.appendChild(ham); topbar.appendChild(titleBox);
       topbar.appendChild(el('div', { class: 'topbar__spacer' }));
-      const themeBtn = el('button', { class: 'iconbtn no-print', title: 'Toggle theme', html: document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙' });
-      themeBtn.onclick = () => { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; L.setTheme(t); themeBtn.innerHTML = t === 'dark' ? '☀️' : '🌙'; };
-      const quickAdd = el('button', { class: 'btn btn--primary btn--sm no-print hide-sm', html: '＋ New' });
+      const themeBtn = el('button', { class: 'iconbtn no-print', title: 'Toggle theme', html: document.documentElement.getAttribute('data-theme') === 'dark' ? L.icon('sun') : L.icon('moon') });
+      themeBtn.onclick = () => { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; L.setTheme(t); themeBtn.innerHTML = t === 'dark' ? L.icon('sun') : L.icon('moon'); };
+      const quickAdd = el('button', { class: 'btn btn--primary btn--sm no-print hide-sm', html: L.icon('plus',{size:15}) + ' New' });
       quickAdd.onclick = () => M.transaction(null, () => this.render());
       topbar.appendChild(themeBtn); topbar.appendChild(quickAdd);
       main.appendChild(topbar);
       // Impersonation banner
       if (S.isImpersonating()) {
         const imp = el('div', { style: 'background:#7C3AED;color:#fff;padding:9px 26px;display:flex;align-items:center;gap:12px;font-size:13.5px;font-weight:600' });
-        imp.innerHTML = `<span>👁️ Viewing as <strong>${L.escape(S.user.email)}</strong> (admin impersonation)</span>`;
+        imp.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px">${L.icon('eye',{size:16})} Viewing as <strong>${L.escape(S.user.email)}</strong> (admin impersonation)</span>`;
         const back = el('button', { class: 'btn btn--sm', text: 'Return to admin', style: 'margin-left:auto;background:#fff;color:#7C3AED' });
         back.onclick = async () => { await S.stopImpersonation(); location.href = '../admin/'; };
         imp.appendChild(back);
@@ -182,7 +182,7 @@
       root.appendChild(scrim); root.appendChild(appEl);
 
       // FAB
-      const fab = el('button', { class: 'fab no-print', html: '＋', 'aria-label': 'Add transaction' });
+      const fab = el('button', { class: 'fab no-print', html: L.icon('plus',{size:24}), 'aria-label': 'Add transaction' });
       fab.onclick = () => M.transaction(null, () => this.render());
       root.appendChild(fab);
     },
@@ -198,7 +198,7 @@
           menu.appendChild(it);
         });
         menu.appendChild(el('div', { class: 'menu__sep' }));
-        const add = el('div', { class: 'menu__item', html: '＋ New workspace' });
+        const add = el('div', { class: 'menu__item', html: L.icon('plus',{size:16}) + ' New workspace' });
         add.onclick = () => { closeMenus(); this.newWorkspace(); };
         menu.appendChild(add);
         positionMenu(menu, anchor);
@@ -208,18 +208,18 @@
     userMenu(anchor) {
       closeMenus();
       const menu = el('div', { class: 'menu' });
-      const settings = el('div', { class: 'menu__item', html: '⚙️ Settings' });
+      const settings = el('div', { class: 'menu__item', html: L.icon('settings',{size:16}) + ' Settings' });
       settings.onclick = () => { closeMenus(); this.navigate('settings'); };
-      const plans = el('div', { class: 'menu__item', html: '💳 Billing & plans' });
+      const plans = el('div', { class: 'menu__item', html: L.icon('card',{size:16}) + ' Billing &amp; plans' });
       plans.onclick = () => { closeMenus(); this.navigate('billing'); };
       menu.appendChild(settings); menu.appendChild(plans);
       if (S.isSuper()) {
-        const admin = el('div', { class: 'menu__item', html: '🛡️ Admin console', style: 'color:#7C3AED' });
+        const admin = el('div', { class: 'menu__item', html: L.icon('shield',{size:16}) + ' Admin console', style: 'color:var(--accent)' });
         admin.onclick = () => { location.href = '../admin/'; };
         menu.appendChild(admin);
       }
       const sep = el('div', { class: 'menu__sep' });
-      const logout = el('div', { class: 'menu__item', html: '🚪 Log out', style: 'color:var(--danger)' });
+      const logout = el('div', { class: 'menu__item', html: L.icon('logout',{size:16}) + ' Log out', style: 'color:var(--danger)' });
       logout.onclick = async () => { await S.logout(); location.reload(); };
       menu.appendChild(sep); menu.appendChild(logout);
       positionMenu(menu, anchor, true);
@@ -308,15 +308,15 @@
       const wrap = el('div', { class: 'auth' });
       wrap.innerHTML = `
         <div class="auth__aside">
-          <div class="auth__brand"><div class="brand__logo" style="width:40px;height:40px">L</div><span>Ledgerly</span></div>
+          <div class="auth__brand"><div class="brand__logo" style="width:40px;height:40px">${L.icon('logoBars',{size:22})}</div><span>Ledgerly</span></div>
           <div class="auth__pitch">
             <h1>Expense management,<br>beautifully simple.</h1>
             <p>Track every dollar, capture receipts, set budgets and know exactly where your business stands — all in one gorgeous workspace.</p>
             <ul class="auth__feats">
-              <li>📸 Snap & store receipts</li>
-              <li>📊 Real-time dashboards & reports</li>
-              <li>🧾 Tax-ready deductible tracking</li>
-              <li>🔁 Automated recurring expenses</li>
+              <li>${L.icon('camera',{size:17})} Snap &amp; store receipts</li>
+              <li>${L.icon('chart',{size:17})} Real-time dashboards &amp; reports</li>
+              <li>${L.icon('receipt',{size:17})} Tax-ready deductible tracking</li>
+              <li>${L.icon('repeat',{size:17})} Automated recurring expenses</li>
             </ul>
           </div>
           <div class="auth__foot">Your data stays private on your device.</div>
@@ -328,8 +328,8 @@
 
     renderForm(host, mode) {
       host.innerHTML = '';
-      const themeBtn = el('button', { class: 'iconbtn', html: document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙', style: 'position:absolute;top:22px;right:22px' });
-      themeBtn.onclick = () => { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; L.setTheme(t); themeBtn.innerHTML = t === 'dark' ? '☀️' : '🌙'; };
+      const themeBtn = el('button', { class: 'iconbtn', html: document.documentElement.getAttribute('data-theme') === 'dark' ? L.icon('sun') : L.icon('moon'), style: 'position:absolute;top:22px;right:22px' });
+      themeBtn.onclick = () => { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; L.setTheme(t); themeBtn.innerHTML = t === 'dark' ? L.icon('sun') : L.icon('moon'); };
       host.appendChild(themeBtn);
 
       const box = el('div', { class: 'auth__box' });
@@ -366,7 +366,7 @@
       box.appendChild(alt);
 
       if (!isSignup) {
-        const demo = el('button', { class: 'btn btn--ghost btn--block', text: '✨ Try the live demo', style: 'margin-top:14px' });
+        const demo = el('button', { class: 'btn btn--ghost btn--block', text: 'Try the live demo', style: 'margin-top:14px' });
         demo.onclick = () => this.demo();
         box.appendChild(demo);
       }
